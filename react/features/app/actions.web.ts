@@ -152,7 +152,7 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
                     if (window.opener) {
                         window.close();
                     } else {
-                        window.location.href = "about:blank";
+                        window.location.href = "https://bootcamp.likelion.net/";
                     }
                 },
                 options.showThankYou ? 3000 : 500
