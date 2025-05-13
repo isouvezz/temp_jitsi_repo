@@ -9,17 +9,20 @@ var subdir = '<!--# echo var="subdir" default="" -->';
 var subdomain = '<!--# echo var="subdomain" default="" -->';
 
 if (subdomain) {
-    subdomain = subdomain.substr(0, subdomain.length - 1).split('.')
-        .join('_')
-        .toLowerCase() + '.';
+    subdomain =
+        subdomain
+            .substr(0, subdomain.length - 1)
+            .split(".")
+            .join("_")
+            .toLowerCase() + ".";
 }
 
 // In case of no ssi provided by the webserver, use empty strings
-if (subdir.startsWith('<!--')) {
-    subdir = '';
+if (subdir.startsWith("<!--")) {
+    subdir = "";
 }
-if (subdomain.startsWith('<!--')) {
-    subdomain = '';
+if (subdomain.startsWith("<!--")) {
+    subdomain = "";
 }
 
 var enableJaaS = false;
@@ -30,7 +33,7 @@ var config = {
 
     hosts: {
         // XMPP domain.
-        domain: 'jitsi-meet.example.com',
+        domain: "jitsi-meet.example.com",
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
@@ -42,14 +45,14 @@ var config = {
         // focus: 'focus.jitsi-meet.example.com',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.' + subdomain + 'jitsi-meet.example.com',
+        muc: "conference." + subdomain + "jitsi-meet.example.com",
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: 'https://jitsi-meet.example.com/' + subdir + 'http-bind',
+    bosh: "https://jitsi-meet.example.com/" + subdir + "http-bind",
 
     // Websocket URL (XMPP)
-    websocket: 'wss://jitsi-meet.example.com/' + subdir + 'xmpp-websocket',
+    websocket: "wss://jitsi-meet.example.com/" + subdir + "xmpp-websocket",
 
     // websocketKeepAliveUrl: 'https://jitsi-meet.example.com/' + subdir + '_unlock',
 
@@ -72,7 +75,6 @@ var config = {
         // which does not match ignoreDomain, falling back to the first one that matches
         // ignoreDomain. Has no effect if undefined.
         // ignoreDomain: 'example.com',
-
         // Prefer SCTP (WebRTC data channels over the media path) over a colibri websocket.
         // If SCTP is available in the backend it will be used instead of a WS. Defaults to
         // false (SCTP is used only if available and no WS are available).
@@ -85,36 +87,26 @@ var config = {
     testing: {
         // Allows the setting of a custom bandwidth value from the UI.
         // assumeBandwidth: true,
-
         // Enables use of getDisplayMedia in electron
         // electronUseGetDisplayMedia: false,
-
         // Enables AV1 codec for FF. Note: By default it is disabled.
         // enableAV1ForFF: false,
-
         // Enables the use of the codec selection API supported by the browsers .
         // enableCodecSelectionAPI: false,
-
         // P2P test mode disables automatic switching to P2P when there are 2
         // participants in the conference.
         // p2pTestMode: false,
-
         // Enables the test specific features consumed by jitsi-meet-torture
         // testMode: false,
-
         // Disables the auto-play behavior of *all* newly created video element.
         // This is useful when the client runs on a host with limited resources.
         // noAutoPlayVideo: false,
-
         // Experiment: Whether to skip interim transcriptions.
         // skipInterimTranscriptions: false,
-
         // Dump transcripts to a <transcript> element for debugging.
         // dumpTranscript: false,
-
         // Log the audio levels.
         // debugAudioLevels: true,
-
         // Will replace ice candidates IPs with invalid ones in order to fail ice.
         // failICE: true,
     },
@@ -158,7 +150,6 @@ var config = {
     // Disables ICE/TCP by filtering out local and remote TCP candidates in
     // signalling.
     // webrtcIceTcpDisable: false,
-
 
     // Media
     //
@@ -211,7 +202,7 @@ var config = {
     // Specify audio quality stereo and opusMaxAverageBitrate values in order to enable HD audio.
     // Beware, by doing so, you are disabling echo cancellation, noise suppression and AGC.
     // Specify enableOpusDtx to enable support for opus-dtx where
-    // audio packets won’t be transmitted while participant is silent or muted.
+    // audio packets won't be transmitted while participant is silent or muted.
     // audioQuality: {
     //     stereo: false,
     //     opusMaxAverageBitrate: null, // Value to fit the 6000 to 510000 range.
@@ -503,7 +494,7 @@ var config = {
     // Misc
 
     // Default value for the channel "last N" attribute. -1 for unlimited.
-    channelLastN: 25,
+    channelLastN: 4,
 
     // Connection indicators
     // connectionIndicators: {
@@ -520,88 +511,87 @@ var config = {
     // startLastN: 1,
 
     // Specify the settings for video quality optimizations on the client.
-    // videoQuality: {
-    //
-    //    // Provides a way to set the codec preference on desktop based endpoints.
-    //    codecPreferenceOrder: [ 'AV1', 'VP9', 'VP8', 'H264' ],
-    //
-    //    // Provides a way to set the codec for screenshare.
-    //    screenshareCodec: 'AV1',
-    //    mobileScreenshareCodec: 'VP8',
-    //
-    //    // Enables the adaptive mode in the client that will make runtime adjustments to selected codecs and received
-    //    // videos for a better user experience. This mode will kick in only when CPU overuse is reported in the
-    //    // WebRTC statistics for the outbound video streams.
-    //    enableAdaptiveMode: false,
-    //
-    //    // Codec specific settings for scalability modes and max bitrates.
-    //    av1: {
-    //      maxBitratesVideo: {
-    //          low: 100000,
-    //          standard: 300000,
-    //          high: 1000000,
-    //          fullHd: 2000000,
-    //          ultraHd: 4000000,
-    //          ssHigh: 2500000
-    //      },
-    //      scalabilityModeEnabled: true,
-    //      useSimulcast: false,
-    //      useKSVC: true
-    //    },
-    //    h264: {
-    //      maxBitratesVideo: {
-    //          low: 200000,
-    //          standard: 500000,
-    //          high: 1500000,
-    //          fullHd: 3000000,
-    //          ultraHd: 6000000,
-    //          ssHigh: 2500000
-    //      },
-    //      scalabilityModeEnabled: true
-    //    },
-    //    vp8: {
-    //      maxBitratesVideo: {
-    //          low: 200000,
-    //          standard: 500000,
-    //          high: 1500000,
-    //          fullHd: 3000000,
-    //          ultraHd: 6000000,
-    //          ssHigh: 2500000
-    //      },
-    //      scalabilityModeEnabled: false
-    //    },
-    //    vp9: {
-    //      maxBitratesVideo: {
-    //          low: 100000,
-    //          standard: 300000,
-    //          high: 1200000,
-    //          fullHd: 2500000,
-    //          ultraHd: 5000000,
-    //          ssHigh: 2500000
-    //      },
-    //      scalabilityModeEnabled: true,
-    //      useSimulcast: false,
-    //      useKSVC: true
-    //    },
-    //
-    //    // The options can be used to override default thresholds of video thumbnail heights corresponding to
-    //    // the video quality levels used in the application. At the time of this writing the allowed levels are:
-    //    //     'low' - for the low quality level (180p at the time of this writing)
-    //    //     'standard' - for the medium quality level (360p)
-    //    //     'high' - for the high quality level (720p)
-    //    // The keys should be positive numbers which represent the minimal thumbnail height for the quality level.
-    //    //
-    //    // With the default config value below the application will use 'low' quality until the thumbnails are
-    //    // at least 360 pixels tall. If the thumbnail height reaches 720 pixels then the application will switch to
-    //    // the high quality.
-    //    minHeightForQualityLvl: {
-    //        360: 'standard',
-    //        720: 'high',
-    //    },
-    //
-    //    // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based endpoint
-    //    mobileCodecPreferenceOrder: [ 'VP8', 'VP9', 'H264', 'AV1' ],
-    // },
+    videoQuality: {
+        // Provides a way to set the codec preference on desktop based endpoints.
+        // codecPreferenceOrder: ["AV1", "VP9", "VP8", "H264"],
+
+        // Provides a way to set the codec for screenshare.
+        // screenshareCodec: "AV1",
+        // mobileScreenshareCodec: "VP8",
+
+        // Enables the adaptive mode in the client that will make runtime adjustments to selected codecs and received
+        // videos for a better user experience. This mode will kick in only when CPU overuse is reported in the
+        // WebRTC statistics for the outbound video streams.
+        // enableAdaptiveMode: false,
+
+        // Codec specific settings for scalability modes and max bitrates.
+        av1: {
+            maxBitratesVideo: {
+                low: 50000,
+                standard: 150000,
+                high: 500000,
+                fullHd: 1000000,
+                ultraHd: 2000000,
+                ssHigh: 1250000,
+            },
+            // scalabilityModeEnabled: true,
+            // useSimulcast: false,
+            useKSVC: true,
+        },
+        h264: {
+            maxBitratesVideo: {
+                low: 100000,
+                standard: 250000,
+                high: 750000,
+                fullHd: 1500000,
+                ultraHd: 3000000,
+                ssHigh: 1250000,
+            },
+            scalabilityModeEnabled: true,
+        },
+        vp8: {
+            maxBitratesVideo: {
+                low: 100000,
+                standard: 250000,
+                high: 750000,
+                fullHd: 1500000,
+                ultraHd: 3000000,
+                ssHigh: 1250000,
+            },
+            scalabilityModeEnabled: false,
+        },
+        vp9: {
+            maxBitratesVideo: {
+                low: 50000,
+                standard: 150000,
+                high: 600000,
+                fullHd: 1250000,
+                ultraHd: 2500000,
+                ssHigh: 1250000,
+            },
+            // scalabilityModeEnabled: true,
+            // useSimulcast: false,
+            useKSVC: true,
+        },
+
+        // The options can be used to override default thresholds of video thumbnail heights corresponding to
+        // the video quality levels used in the application. At the time of this writing the allowed levels are:
+        //     'low' - for the low quality level (180p at the time of this writing)
+        //     'standard' - for the medium quality level (360p)
+        //     'high' - for the high quality level (720p)
+        // The keys should be positive numbers which represent the minimal thumbnail height for the quality level.
+        //
+        // With the default config value below the application will use 'low' quality until the thumbnails are
+        // at least 360 pixels tall. If the thumbnail height reaches 720 pixels then the application will switch to
+        // the high quality.
+        minHeightForQualityLvl: {
+            360: "standard",
+            720: "high",
+        },
+
+        // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based endpoint
+        mobileCodecPreferenceOrder: ["VP8", "VP9", "H264", "AV1"],
+    },
 
     // Notification timeouts
     // notificationTimeouts: {
@@ -1055,7 +1045,6 @@ var config = {
     // will not function.
     // disableThirdPartyRequests: false,
 
-
     // Peer-To-Peer mode: used (if enabled) when there are just 2 participants.
     //
 
@@ -1093,31 +1082,25 @@ var config = {
 
         // The STUN servers that will be used in the peer to peer connections
         stunServers: [
-
             // { urls: 'stun:jitsi-meet.example.com:3478' },
-            { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' },
+            { urls: "stun:meet-jit-si-turnrelay.jitsi.net:443" },
         ],
     },
 
     analytics: {
         // True if the analytics should be disabled
         // disabled: false,
-
         // Matomo configuration:
         // matomoEndpoint: 'https://your-matomo-endpoint/',
         // matomoSiteID: '42',
-
         // The Amplitude APP Key:
         // amplitudeAPPKey: '<APP_KEY>',
-
         // Enables Amplitude UTM tracking:
         // Default value is false.
         // amplitudeIncludeUTM: false,
-
         // Obfuscates room name sent to analytics (amplitude, rtcstats)
         // Default value is false.
         // obfuscateRoomName: false,
-
         // Configuration for the rtcstats server:
         // By enabling rtcstats server every time a conference is joined the rtcstats
         // module connects to the provided rtcstatsEndpoint and sends statistics regarding
@@ -1125,24 +1108,19 @@ var config = {
         // interval.
         // rtcstatsEnabled: false,
         // rtcstatsStoreLogs: false,
-
         // In order to enable rtcstats one needs to provide a endpoint url.
         // rtcstatsEndpoint: wss://rtcstats-server-pilot.jitsi.net/,
-
         // The interval at which rtcstats will poll getStats, defaults to 10000ms.
         // If the value is set to 0 getStats won't be polled and the rtcstats client
         // will only send data related to RTCPeerConnection events.
         // rtcstatsPollInterval: 10000,
-
         // This determines if rtcstats sends the SDP to the rtcstats server or replaces
         // all SDPs with an empty string instead.
         // rtcstatsSendSdp: false,
-
         // Array of script URLs to load as lib-jitsi-meet "analytics handlers".
         // scriptURLs: [
         //      "https://example.com/my-custom-analytics.js",
         // ],
-
         // By enabling watchRTCEnabled option you would want to use watchRTC feature
         // This would also require to configure watchRTCConfigParams.
         // Please remember to keep rtcstatsEnabled disabled for watchRTC to work.
@@ -1590,7 +1568,6 @@ var config = {
     // For external entities (e. g. email), the localStorage key holding the token value for directory authentication
     // peopleSearchTokenLocation: "mytoken",
 
-
     // Options related to visitors.
     // visitors: {
     //     // Starts audio/video when the participant is promoted from visitor.
@@ -1785,7 +1762,7 @@ var config = {
         disabled: false,
         // The optimal number of tiles that are going to be shown in tile view. Depending on the screen size it may
         // not be possible to show the exact number of participants specified here.
-        numberOfVisibleTiles: 25,
+        numberOfVisibleTiles: 4,
     },
 
     // Specifies whether the chat emoticons are disabled or not
@@ -1882,7 +1859,7 @@ var config = {
 
 // Set the default values for JaaS customers
 if (enableJaaS) {
-    config.dialInNumbersUrl = 'https://conference-mapper.jitsi.net/v1/access/dids';
-    config.dialInConfCodeUrl = 'https://conference-mapper.jitsi.net/v1/access';
+    config.dialInNumbersUrl = "https://conference-mapper.jitsi.net/v1/access/dids";
+    config.dialInConfCodeUrl = "https://conference-mapper.jitsi.net/v1/access";
     config.roomPasswordNumberOfDigits = 10; // skip re-adding it (do not remove comment)
 }
