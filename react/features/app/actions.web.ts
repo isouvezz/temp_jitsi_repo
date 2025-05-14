@@ -98,7 +98,7 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
 
                 if (isOpenedInIframe) {
                     // @ts-ignore
-                    window.location = "about:blank";
+                    window.location = "https://bootcamp.likelion.net/";
                 } else {
                     dispatch(redirectToStaticPage("/"));
                 }

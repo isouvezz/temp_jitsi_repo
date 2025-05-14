@@ -130,31 +130,20 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
 
         case CONNECTION_FAILED: {
             const { error } = action;
-            const { dispatch, getState } = store;
+            const { getState } = store;
             const state = getState();
-            const config = state["features/base/config"];
             const { jwt } = state["features/base/jwt"];
-            const { conference } = state["features/base/conference"];
 
             if (
                 error &&
                 error.name === JitsiConnectionErrors.PASSWORD_REQUIRED &&
-                typeof error.recoverable === "undefined"
+                typeof error.recoverable === "undefined" &&
+                !jwt
             ) {
                 error.recoverable = true;
 
-                // 토큰으로 인증된 사용자이고 비밀번호가 걸려있는 경우
-                if (isTokenAuthEnabled(config) && jwt && conference?.room?.locked) {
-                    // 비밀번호 프롬프트를 표시하지 않고 바로 접근
-                    dispatch(connect());
-                } else if (conference?.room?.locked) {
-                    // 토큰이 없는 경우 비밀번호 프롬프트 표시
-                    dispatch(_openPasswordRequiredPrompt(conference));
-                } else {
-                    dispatch(connect());
-                }
+                _handleLogin(store);
             }
-            break;
         }
 
         case LOGIN: {
