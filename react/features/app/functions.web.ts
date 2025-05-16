@@ -1,8 +1,9 @@
-import { IStateful } from '../base/app/types';
-import { toState } from '../base/redux/functions';
-import { getServerURL } from '../base/settings/functions.web';
+import { IStateful } from "../base/app/types";
+import { toState } from "../base/redux/functions";
+import { getServerURL } from "../base/settings/functions.web";
+// import interfaceConfig from "../../../../interface_config.js";
 
-export * from './functions.any';
+export * from "./functions.any";
 
 /**
  * Retrieves the default URL for the app. This can either come from a prop to
@@ -29,5 +30,5 @@ export function getDefaultURL(stateful: IStateful) {
  * @returns {string} The application name.
  */
 export function getName() {
-    return interfaceConfig.APP_NAME;
+    return "라이브 룸";
 }

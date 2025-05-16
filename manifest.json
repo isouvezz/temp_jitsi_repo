@@ -7,8 +7,8 @@
       "platform": "chromeos_play"
     }
   ],
-  "short_name": "Jitsi Meet",
-  "name": "Jitsi Meet",
+  "short_name": "라이브 룸",
+  "name": "라이브 룸",
   "icons": [
     {
       "src": "static/pwa/icons/icon192.png",
