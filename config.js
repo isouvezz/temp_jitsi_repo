@@ -33,7 +33,7 @@ var config = {
 
     hosts: {
         // XMPP domain.
-        domain: "jitsi-meet.example.com",
+        domain: 'jitsi-semi.yk8s.me',
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
@@ -45,14 +45,14 @@ var config = {
         // focus: 'focus.jitsi-meet.example.com',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: "conference." + subdomain + "jitsi-meet.example.com",
+        muc: 'conference.' + subdomain + 'jitsi-semi.yk8s.me',
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: "https://jitsi-meet.example.com/" + subdir + "http-bind",
+    bosh: 'https://jitsi-semi.yk8s.me/' + subdir + 'http-bind',
 
     // Websocket URL (XMPP)
-    websocket: "wss://jitsi-meet.example.com/" + subdir + "xmpp-websocket",
+    websocket: 'wss://jitsi-semi.yk8s.me/' + subdir + 'xmpp-websocket',
 
     // websocketKeepAliveUrl: 'https://jitsi-meet.example.com/' + subdir + '_unlock',
 
@@ -368,14 +368,14 @@ var config = {
     // Recording
 
     // Enable the dropbox integration.
-    // dropbox: {
-    //     appKey: '<APP_KEY>', // Specify your app key here.
-    //     // A URL to redirect the user to, after authenticating
-    //     // by default uses:
-    //     // 'https://jitsi-meet.example.com/static/oauth.html'
-    //     redirectURI:
-    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html',
-    // },
+    dropbox: {
+        appKey: 'sl.u.AFveOtY9Ab3_nWAboYfrDh_jlMqwvURvsqnl6xd05ayzUxQ6rr6HTqDWEUJ-MA6aOkWaNxkYjDdsrJjezC7b983Jg_sFJaaRReavXC44J5o9eC8vPII5vrcEZ6WZrE3Qb3JhRkFFxOYG5uJIaKRdfdJm5wEalKRQkLnagI_rjjXkqIq3-XQvUcv8-h3y8dn3j2aBHsxt9o9cJOwwMmyLaOfD5_AWS4iSKBCiJm_pAce63ux3tE9dEPzIcvvWiAhFGrrzUgVQwWdVb6RgrPWXXNLntoiJT2o4pmfblR1tYCWg1o68S-WQ_Z941qF_YzQ2Svb-6AbUpAF3Z5sABv2Na0k3aY9m2rVsszEjcn_EpM_ZOn6LVDYA2fT6SdvQhqG_YQ97dIlc8O60lyh_viycZcTGWQ5KHWSoFJhgCwwdfmes2CJtaVbyodoEtlqk5f93Am1kZcp55nrG2F_bZqORpLsVf4MCIShsXwCGaPjJcwciGTCimS2koAepXA2SV9tjw8dvwaR1L-9UgmSCS6XXhFSaauKmYXIBwoKYCx0xm8dzmngQYjZ2RqFNRvNTJn0PWojjfdFi_sISxiYBEFngC-AbjnAKHdcObxE22QuE-NzHFksaKbZG-zT_W0kzCQuVLiH_n5N_JAXx8uldRr2pws5k3JNQLWGPj83n532MVvUMoPOBw0CcQJNbjSXiJ7gdGbBFDAboGgpLpmATCjbZdPtMH8jHD3ePvfodUtTgPqoM8f3vgWaDkQVSLkqja9A7KeNnkywIo-ea9aw1U_QsaoeRgH86-eUAuxgZnCrPe5NLynH9qbRIajVZGJj5vc5Dp3PE6fjcElLn1lmtd67rI7GaKKSOpbD_HhRvRKNN7BzzDDp0gYeOtFDYWntiOjzMr73RbN-TYzQZjynSdBfka1M6C2C3KmLdhv9qmia-xftXMnTQnvxQ0ASeZDiQHKdo_Ss-WHeJNQ_0jCpMf__-BePkJYYhph65oy_U2Du7KkbRO_qf7JquCx-mJXhlwVJweHInUGhWc0bjQHfF8-zi1sbngXiHcDFbPiwAR1qbfNSrH9-_-s6tE47an45XfXHnLXYkyCuN-v02LAzVsSOBqmiYKsvhllBo03XAegK7IldFwdWQZkzUaFElBDWi0hG_NYuvkf0LiBd5odQsMCDmXaJym1tOerFF2LK6nefv0BeL2kCbGCaxjI0XHX_zp6UQFJngtL2NgS39hiSkqDKJIMUmyabvCe2YHkVZfyyQtF7Uj6OWWiW1Sos0H2QNrFDdpEmUlHKRu6YPLfom9bXtGIzK', // Specify your app key here.
+        // A URL to redirect the user to, after authenticating
+        // by default uses:
+        // 'https://jitsi-meet.example.com/static/oauth.html'
+        redirectURI:
+             'https://jitsi-semi.yk8s.me/subfolder/static/oauth.html',
+    },
 
     // configuration for all things recording related. Existing settings will be migrated here in the future.
     // recordings: {
@@ -394,21 +394,21 @@ var config = {
     //    // requireConsent: true,
     // },
 
-    // recordingService: {
-    //     // When integrations like dropbox are enabled only that will be shown,
-    //     // by enabling fileRecordingsServiceEnabled, we show both the integrations
-    //     // and the generic recording service (its configuration and storage type
-    //     // depends on jibri configuration)
-    //     enabled: false,
+    recordingService: {
+        // When integrations like dropbox are enabled only that will be shown,
+        // by enabling fileRecordingsServiceEnabled, we show both the integrations
+        // and the generic recording service (its configuration and storage type
+        // depends on jibri configuration)
+        enabled: true,
 
-    //     // Whether to show the possibility to share file recording with other people
-    //     // (e.g. meeting participants), based on the actual implementation
-    //     // on the backend.
-    //     sharingEnabled: false,
+        // Whether to show the possibility to share file recording with other people
+        // (e.g. meeting participants), based on the actual implementation
+        // on the backend.
+        sharingEnabled: false,
 
-    //     // Hide the warning that says we only store the recording for 24 hours.
-    //     hideStorageWarning: false,
-    // },
+        // Hide the warning that says we only store the recording for 24 hours.
+        hideStorageWarning: false,
+    },
 
     // DEPRECATED. Use recordingService.enabled instead.
     // fileRecordingsServiceEnabled: false,
@@ -417,16 +417,16 @@ var config = {
     // fileRecordingsServiceSharingEnabled: false,
 
     // Local recording configuration.
-    // localRecording: {
-    //     // Whether to disable local recording or not.
-    //     disable: false,
+    localRecording: {
+        // Whether to disable local recording or not.
+        disable: true,
 
-    //     // Whether to notify all participants when a participant is recording locally.
-    //     notifyAllParticipants: false,
+        // Whether to notify all participants when a participant is recording locally.
+        // notifyAllParticipants: false,
 
-    //     // Whether to disable the self recording feature (only local participant streams).
-    //     disableSelfRecording: false,
-    // },
+        // Whether to disable the self recording feature (only local participant streams).
+        // disableSelfRecording: false,
+    },
 
     // Customize the Live Streaming dialog. Can be modified for a non-YouTube provider.
     // liveStreaming: {
@@ -527,51 +527,51 @@ var config = {
         // Codec specific settings for scalability modes and max bitrates.
         av1: {
             maxBitratesVideo: {
-                low: 50000,
-                standard: 150000,
-                high: 500000,
-                fullHd: 1000000,
-                ultraHd: 2000000,
-                ssHigh: 1250000,
+                low: 100000,
+                standard: 300000,
+                high: 1000000,
+                fullHd: 2000000,
+                ultraHd: 4000000,
+                ssHigh: 2500000,
             },
             // scalabilityModeEnabled: true,
             // useSimulcast: false,
-            useKSVC: true,
+            // useKSVC: true,
         },
         h264: {
             maxBitratesVideo: {
-                low: 100000,
-                standard: 250000,
-                high: 750000,
-                fullHd: 1500000,
-                ultraHd: 3000000,
-                ssHigh: 1250000,
+                low: 200000,
+                standard: 500000,
+                high: 1500000,
+                fullHd: 3000000,
+                ultraHd: 6000000,
+                ssHigh: 2500000,
             },
-            scalabilityModeEnabled: true,
+            // scalabilityModeEnabled: true,
         },
         vp8: {
             maxBitratesVideo: {
-                low: 100000,
-                standard: 250000,
-                high: 750000,
-                fullHd: 1500000,
-                ultraHd: 3000000,
-                ssHigh: 1250000,
+                low: 200000,
+                standard: 500000,
+                high: 1500000,
+                fullHd: 3000000,
+                ultraHd: 6000000,
+                ssHigh: 2500000,
             },
-            scalabilityModeEnabled: false,
+            // scalabilityModeEnabled: false,
         },
         vp9: {
             maxBitratesVideo: {
-                low: 50000,
-                standard: 150000,
-                high: 600000,
-                fullHd: 1250000,
-                ultraHd: 2500000,
-                ssHigh: 1250000,
+             low: 100000,
+             standard: 300000,
+             high: 1200000,
+             fullHd: 2500000,
+             ultraHd: 5000000,
+             ssHigh: 2500000
             },
             // scalabilityModeEnabled: true,
             // useSimulcast: false,
-            useKSVC: true,
+            // useKSVC: true,
         },
 
         // The options can be used to override default thresholds of video thumbnail heights corresponding to
