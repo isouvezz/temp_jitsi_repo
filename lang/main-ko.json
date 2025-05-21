@@ -425,7 +425,7 @@
         "sendPrivateMessageTitle": "비공개로 보낼까요?",
         "serviceUnavailable": "서비스를 사용할 수 없음",
         "sessTerminated": "통화 종료",
-        "sessTerminatedReason": "강의실가 종료되었습니다",
+        "sessTerminatedReason": "강의실이 종료되었습니다",
         "sessionRestarted": "연결 문제로 인해 통화가 재시작되었습니다.",
         "shareAudio": "계속",
         "shareAudioAltText": "원하는 콘텐츠를 공유하려면 \"브라우저 탭\"으로 이동하여 콘텐츠를 선택하고 \"오디오 공유\" 체크 표시를 활성화한 다음 \"공유\" 버튼을 클릭하십시오",
@@ -627,7 +627,7 @@
         "errorAPI": "YouTube 방송에 액세스하는 중에 오류가 발생했습니다. 다시 로그인하십시오.",
         "errorLiveStreamNotEnabled": "{{email}}에 의해 라이브 스트리밍이 활성화되지 않았습니다. 라이브 스트리밍을 활성화하거나 라이브 스트리밍이 활성화된 계정으로 로그인하십시오.",
         "expandedOff": "라이브 스트리밍이 중지되었습니다",
-        "expandedOn": "현재 강의실가 YouTube로 스트리밍되고 있습니다.",
+        "expandedOn": "현재 강의실이 YouTube로 스트리밍되고 있습니다.",
         "expandedPending": "라이브 스트리밍이 시작됩니다…",
         "failedToStart": "실시간 스트리밍 시작 실패",
         "getStreamKeyManually": "실시간 스트림을 가져올 수 없습니다. YouTube에서 실시간 스트림 키를 받아보세요.",
@@ -771,7 +771,7 @@
         "linkToSalesforceError": "강의실를 Salesforce에 연결하지 못했습니다",
         "linkToSalesforceKey": "이 강의실 연결",
         "linkToSalesforceProgress": "강의실를 Salesforce에 연결 중…",
-        "linkToSalesforceSuccess": "강의실가 Salesforce에 연결되었습니다",
+        "linkToSalesforceSuccess": "강의실이 Salesforce에 연결되었습니다",
         "localRecordingStarted": "{{name}}님이 로컬 녹화를 시작했습니다.",
         "localRecordingStopped": "{{name}}님이 로컬 녹화를 중지했습니다.",
         "me": "나",
@@ -833,7 +833,7 @@
         "viewVisitors": "방문자 보기",
         "waitingParticipants": "{{waitingParticipants}}명",
         "waitingVisitors": "대기열에서 대기 중인 방문자: {{waitingVisitors}}",
-        "waitingVisitorsTitle": "강의실가 아직 시작되지 않았습니다!",
+        "waitingVisitorsTitle": "강의실이 아직 시작되지 않았습니다!",
         "whiteboardLimitDescription": "진행 상황을 저장하세요. 사용자 한도에 곧 도달하여 화이트보드가 닫힐 것입니다.",
         "whiteboardLimitTitle": "화이트보드 사용"
     },
@@ -1007,7 +1007,7 @@
     "raisedHandsLabel": "손 든 사람 수",
     "record": {
         "already": {
-            "linked": "강의실가 이미 이 Salesforce 객체에 연결되었습니다."
+            "linked": "강의실이 이미 이 Salesforce 객체에 연결되었습니다."
         },
         "type": {
             "account": "계정",
@@ -1027,7 +1027,7 @@
         "error": "녹화가 실패했습니다. 다시 시도하십시오.",
         "errorFetchingLink": "녹화 링크를 가져오는 중 오류가 발생했습니다.",
         "expandedOff": "녹화가 중지됨",
-        "expandedOn": "강의실가 현재 녹화 중입니다.",
+        "expandedOn": "강의실이 현재 녹화 중입니다.",
         "expandedPending": "녹화가 시작됩니다…",
         "failedToStart": "녹화를 시작하지 못했습니다",
         "fileSharingdescription": "강의실 참가자와 녹화 공유",
@@ -1040,7 +1040,7 @@
         "limitNotificationDescriptionNative": "수요가 많아 녹화가 {{limit}}분으로 제한됩니다. 무제한 녹화를 사용하려면 {{app}}을 시도해 보세요.",
         "limitNotificationDescriptionWeb": "수요가 많아 녹화가 {{limit}}분으로 제한됩니다. 무제한 녹화를 사용하려면 <a href={{url}} rel='noopener noreferrer' target='_blank'>{{app}}</a>을 시도해 보세요.",
         "linkGenerated": "녹화에 대한 링크를 생성했습니다.",
-        "localRecordingNoNotificationWarning": "녹화가 다른 참가자에게 알리지 않습니다. 강의실가 녹화되고 있음을 알려야 합니다.",
+        "localRecordingNoNotificationWarning": "녹화가 다른 참가자에게 알리지 않습니다. 강의실이 녹화되고 있음을 알려야 합니다.",
         "localRecordingNoVideo": "비디오는 녹화되지 않습니다",
         "localRecordingStartWarning": "녹화를 저장하려면 강의실에서 나가기 전에 녹화를 중지해야 합니다.",
         "localRecordingStartWarningTitle": "저장을 위해 녹화를 중지하세요",
@@ -1403,7 +1403,7 @@
         "ccButtonTooltip": "자막 시작/종료",
         "expandedLabel": "현재 스크립트 작성 중",
         "failed": "자막 작성 실패",
-        "labelToolTip": "강의실가 기록되고 있습니다.",
+        "labelToolTip": "강의실이 기록되고 있습니다.",
         "sourceLanguageDesc": "현재 강의실 언어는 <b>{{sourceLanguage}}</b>로 설정되어 있습니다. <br/> 변경하려면 ",
         "sourceLanguageHere": "여기에서",
         "start": "자막 표시 시작",
@@ -1420,7 +1420,7 @@
         "busy": "자원을 확보하기 위해 노력하고 있습니다. 몇 분 후에 다시 시도하십시오.",
         "busyTitle": "서비스가 현재 사용 중입니다",
         "errorAlreadyInvited": "{{displayName}} 이미 초대되었습니다",
-        "errorInvite": "강의실가 아직 설정되지 않았습니다. 나중에 다시 시도 해주십시오.",
+        "errorInvite": "강의실이 아직 설정되지 않았습니다. 나중에 다시 시도 해주십시오.",
         "errorInviteFailed": "문제를 해결하기 위해 노력하고 있습니다. 나중에 다시 시도 해주십시오.",
         "errorInviteFailedTitle": "{{displayName}} 초대 실패",
         "errorInviteTitle": "초대하는 중에 오류가 발생했습니다",
@@ -1518,7 +1518,7 @@
             "notAllowedPromotion": "참가자가 먼저 귀하의 요청을 승인해야 합니다.",
             "title": "강의실에서 방문자입니다"
         },
-        "waitingMessage": "강의실가 시작되면 곧 참여하실 수 있습니다!"
+        "waitingMessage": "강의실이 시작되면 곧 참여하실 수 있습니다!"
     },
     "volumeSlider": "볼륨 슬라이더",
     "welcomepage": {
