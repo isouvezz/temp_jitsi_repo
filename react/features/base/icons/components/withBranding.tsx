@@ -13,20 +13,27 @@ import SvgXmlIcon from './SvgXmlIcon';
 const withBranding = ({ DefaultIcon, iconName }: {
     DefaultIcon: any;
     iconName: string;
-}) => (props: any) => {
-    const src = useSelector((state: IReduxState) =>
-        state['features/dynamic-branding']?.brandedIcons?.[iconName]
-    );
-
-    if (src) {
-        return (
-            <SvgXmlIcon
-                src = { src }
-                { ...props } />
+}) => {
+    const WrappedIcon = (props: any) => {
+        const src = useSelector((state: IReduxState) =>
+            state['features/dynamic-branding']?.brandedIcons?.[iconName]
         );
-    }
 
-    return <DefaultIcon { ...props } />;
+        if (src) {
+            return (
+                <SvgXmlIcon
+                    src = { src }
+                    { ...props } />
+            );
+        }
+
+        return <DefaultIcon { ...props } />;
+    };
+
+    // name 속성 유지
+    WrappedIcon.displayName = iconName;
+
+    return WrappedIcon;
 };
 
 export default withBranding;
