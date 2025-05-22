@@ -165,6 +165,7 @@ export default function Icon(props: IProps) {
 
     // stroke만 사용하는 아이콘 리스트
     const strokeOnlyIcons = ["IconAddUser", "IconTileView", "IconUsers", "IconHangup"];
+    // @ts-ignore
     const isStrokeOnlyIcon = strokeOnlyIcons.includes(IconComponent.displayName);
     const jitsiIconClassName = isStrokeOnlyIcon
         ? "jitsi-icon"
