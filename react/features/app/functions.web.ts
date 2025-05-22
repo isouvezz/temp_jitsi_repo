@@ -30,5 +30,5 @@ export function getDefaultURL(stateful: IStateful) {
  * @returns {string} The application name.
  */
 export function getName() {
-    return "라이브 룸";
+    return "라이브룸";
 }
