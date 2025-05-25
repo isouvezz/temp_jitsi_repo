@@ -167,7 +167,7 @@ div.hangup-menu-button {
         background: none;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #404040;
         }
     }
 }
@@ -200,4 +200,14 @@ div.hangup-menu-button {
             margin-bottom: 52px;
         }
     }
+}
+
+.toolbox-icon {
+    &:hover {
+        background: #ff6000;
+    }
+}
+
+.toolbox-icon:hover {
+    background: #515151;
 }

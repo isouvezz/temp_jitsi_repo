@@ -17,14 +17,14 @@
 
 .metr-l-0 {
     rect:first-child {
-        fill: #1EC26A;
+        fill: #ff6000;
     }
 }
 
 @for $i from 1 through 7 {
     .metr-l-#{$i} {
-        rect:nth-child(-n+#{$i+1}) {
-            fill: #1EC26A;
+        rect:nth-child(-n + #{$i + 1}) {
+            fill: #ff6000;
         }
     }
 }

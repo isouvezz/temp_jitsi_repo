@@ -164,9 +164,29 @@ export default function Icon(props: IProps) {
     );
 
     // stroke만 사용하는 아이콘 리스트
-    const strokeOnlyIcons = ["IconAddUser", "IconTileView", "IconUsers", "IconHangup"];
+    const strokeOnlyIcons = [
+        "IconAddUser",
+        "IconTileView",
+        "IconUsers",
+        "IconUser",
+        "IconHangup",
+        "IconShortcuts",
+        "IconBell",
+        "IconGear",
+        "IconImage",
+        "IconVolumeUp",
+        "IconVolumeOff",
+        "IconFaceSmile",
+    ];
+
+    // 특별한 fill 색상을 가진 아이콘 리스트
+    const specialFillIcons = ["IconCheck"];
+
     // @ts-ignore
     const isStrokeOnlyIcon = strokeOnlyIcons.includes(IconComponent.displayName);
+    // @ts-ignore
+    const isSpecialFillIcon = specialFillIcons.includes(IconComponent.displayName);
+
     const jitsiIconClassName = isStrokeOnlyIcon
         ? "jitsi-icon"
         : calculatedColor
@@ -181,6 +201,9 @@ export default function Icon(props: IProps) {
         : {
               "aria-hidden": true,
           };
+
+    // IconCheck일 경우 fill 색상을 #2F2F30으로 설정
+    const finalFillColor = isSpecialFillIcon ? "#2F2F30" : calculatedColor;
 
     return (
         <Container
@@ -205,7 +228,7 @@ export default function Icon(props: IProps) {
         >
             <IconComponent
                 {...iconProps}
-                fill={calculatedColor}
+                fill={finalFillColor}
                 height={calculatedSize}
                 id={id}
                 width={calculatedSize}

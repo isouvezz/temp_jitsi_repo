@@ -1,5 +1,5 @@
 import { default as IconRecordAccount } from "./account-record.svg";
-// import { default as IconAddUser } from "./add-user.svg";
+import { default as IconAddUser } from "./add-user.svg";
 import { default as IconArrowBack } from "./arrow-back.svg";
 import { default as IconArrowDownLarge } from "./arrow-down-large.svg";
 import { default as IconArrowDown } from "./arrow-down.svg";
@@ -106,12 +106,12 @@ import { default as IconWifi1Bar } from "./wifi-1.svg";
 import { default as IconWifi2Bars } from "./wifi-2.svg";
 import { default as IconWifi3Bars } from "./wifi-3.svg";
 import { default as IconYahoo } from "./yahoo.svg";
-import { UserAddIcon } from "@heroicons/react/outline";
+import { VolumeUpIcon, VolumeOffIcon } from "@heroicons/react/outline";
 /**
  * Map containing the default icons.
  */
 export const DEFAULT_ICON: Record<string, any> = {
-    IconAddUser: UserAddIcon,
+    IconAddUser,
     IconArrowBack,
     IconArrowDown,
     IconArrowDownLarge,
@@ -209,8 +209,8 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconUser,
     IconVideo,
     IconVideoOff,
-    IconVolumeOff,
-    IconVolumeUp,
+    IconVolumeOff: VolumeOffIcon,
+    IconVolumeUp: VolumeUpIcon,
     IconWarning,
     IconWarningCircle,
     IconWhiteboard,

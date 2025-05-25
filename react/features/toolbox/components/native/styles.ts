@@ -1,6 +1,6 @@
-import ColorSchemeRegistry from '../../../base/color-scheme/ColorSchemeRegistry';
-import { schemeColor } from '../../../base/color-scheme/functions';
-import BaseTheme from '../../../base/ui/components/BaseTheme.native';
+import ColorSchemeRegistry from "../../../base/color-scheme/ColorSchemeRegistry";
+import { schemeColor } from "../../../base/color-scheme/functions";
+import BaseTheme from "../../../base/ui/components/BaseTheme.native";
 
 const BUTTON_SIZE = 48;
 
@@ -13,30 +13,29 @@ const toolbarButton = {
     borderRadius: BaseTheme.shape.borderRadius,
     borderWidth: 0,
     flex: 0,
-    flexDirection: 'row',
+    flexDirection: "row",
     height: BUTTON_SIZE,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginHorizontal: 6,
     marginVertical: 6,
-    width: BUTTON_SIZE
+    width: BUTTON_SIZE,
 };
 
 /**
  * The icon style of the toolbar buttons.
  */
 const toolbarButtonIcon = {
-    alignSelf: 'center',
+    alignSelf: "center",
     color: BaseTheme.palette.icon04,
-    fontSize: 24
+    fontSize: 24,
 };
-
 
 /**
  * The icon style of toolbar buttons which display white icons.
  */
 const whiteToolbarButtonIcon = {
     ...toolbarButtonIcon,
-    color: BaseTheme.palette.icon01
+    color: BaseTheme.palette.icon01,
 };
 
 /**
@@ -44,15 +43,15 @@ const whiteToolbarButtonIcon = {
  */
 const reactionButton = {
     ...toolbarButton,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
+    backgroundColor: "transparent",
+    alignItems: "center",
     marginTop: 0,
-    marginHorizontal: 0
+    marginHorizontal: 0,
 };
 
 const gifButton = {
     ...reactionButton,
-    backgroundColor: '#000'
+    backgroundColor: "#000",
 };
 
 /**
@@ -60,36 +59,35 @@ const gifButton = {
  */
 const reactionEmoji = {
     fontSize: 20,
-    color: BaseTheme.palette.icon01
+    color: BaseTheme.palette.icon01,
 };
 
 const reactionMenu = {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: BaseTheme.palette.ui01
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: BaseTheme.palette.ui01,
 };
 
 /**
  * The Toolbox and toolbar related styles.
  */
 const styles = {
-
     sheetGestureRecognizer: {
-        alignItems: 'stretch',
-        flexDirection: 'column'
+        alignItems: "stretch",
+        flexDirection: "column",
     },
 
     /**
      * The style of the toolbar.
      */
     toolbox: {
-        alignItems: 'center',
+        alignItems: "center",
         backgroundColor: BaseTheme.palette.uiBackground,
         borderTopLeftRadius: 3,
         borderTopRightRadius: 3,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     /**
@@ -97,21 +95,21 @@ const styles = {
      */
     toolboxContainer: {
         backgroundColor: BaseTheme.palette.uiBackground,
-        flexDirection: 'column',
+        flexDirection: "column",
         maxWidth: 580,
-        marginHorizontal: 'auto',
+        marginHorizontal: "auto",
         marginVertical: BaseTheme.spacing[0],
         paddingHorizontal: BaseTheme.spacing[2],
-        width: '100%'
+        width: "100%",
     },
 
     toolboxButtonIconContainer: {
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: BaseTheme.shape.borderRadius,
         height: BaseTheme.spacing[7],
-        justifyContent: 'center',
-        width: BaseTheme.spacing[7]
-    }
+        justifyContent: "center",
+        width: BaseTheme.spacing[7],
+    },
 };
 
 export default styles;
@@ -119,88 +117,88 @@ export default styles;
 /**
  * Color schemed styles for the @{Toolbox} component.
  */
-ColorSchemeRegistry.register('Toolbox', {
+ColorSchemeRegistry.register("Toolbox", {
     /**
      * Styles for buttons in the toolbar.
      */
     buttonStyles: {
         iconStyle: toolbarButtonIcon,
-        style: toolbarButton
+        style: toolbarButton,
     },
 
     buttonStylesBorderless: {
         iconStyle: whiteToolbarButtonIcon,
         style: {
             ...toolbarButton,
-            backgroundColor: 'transparent'
+            backgroundColor: "transparent",
         },
-        underlayColor: 'transparent'
+        underlayColor: "transparent",
     },
 
     backgroundToggle: {
-        backgroundColor: BaseTheme.palette.ui04
+        backgroundColor: BaseTheme.palette.ui04,
     },
 
     hangupMenuContainer: {
         marginHorizontal: BaseTheme.spacing[2],
-        marginVertical: BaseTheme.spacing[2]
+        marginVertical: BaseTheme.spacing[2],
     },
 
     hangupButton: {
         flex: 1,
         marginHorizontal: BaseTheme.spacing[2],
-        marginVertical: BaseTheme.spacing[2]
+        marginVertical: BaseTheme.spacing[2],
     },
 
     hangupButtonStyles: {
         iconStyle: whiteToolbarButtonIcon,
         style: {
             ...toolbarButton,
-            backgroundColor: schemeColor('hangup')
+            backgroundColor: schemeColor("hangup"),
         },
-        underlayColor: BaseTheme.palette.ui04
+        underlayColor: BaseTheme.palette.ui04,
     },
 
     reactionDialog: {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'transparent'
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
     },
 
     overflowReactionMenu: {
         ...reactionMenu,
-        padding: BaseTheme.spacing[3]
+        padding: BaseTheme.spacing[3],
     },
 
     reactionMenu: {
         ...reactionMenu,
         paddingHorizontal: BaseTheme.spacing[3],
         borderRadius: 3,
-        width: 360
+        width: 360,
     },
 
     reactionRow: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     reactionButton: {
         gifButton,
         style: reactionButton,
         underlayColor: BaseTheme.palette.ui04,
-        emoji: reactionEmoji
+        emoji: reactionEmoji,
     },
 
     emojiAnimation: {
         color: BaseTheme.palette.icon01,
-        position: 'absolute',
+        position: "absolute",
         zIndex: 1001,
         elevation: 2,
         fontSize: 20,
-        left: '50%',
-        top: '100%'
+        left: "50%",
+        top: "100%",
     },
 
     /**
@@ -209,8 +207,8 @@ ColorSchemeRegistry.register('Toolbox', {
     toggledButtonStyles: {
         iconStyle: whiteToolbarButtonIcon,
         style: {
-            ...toolbarButton
+            ...toolbarButton,
         },
-        underlayColor: 'transparent'
-    }
+        underlayColor: "transparent",
+    },
 });
