@@ -404,7 +404,7 @@ var config = {
         // Whether to show the possibility to share file recording with other people
         // (e.g. meeting participants), based on the actual implementation
         // on the backend.
-        sharingEnabled: false,
+        sharingEnabled: true,
 
         // Hide the warning that says we only store the recording for 24 hours.
         hideStorageWarning: false,
