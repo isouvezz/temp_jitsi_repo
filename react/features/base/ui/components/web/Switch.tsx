@@ -17,7 +17,7 @@ const useStyles = makeStyles()((theme) => {
     return {
         container: {
             position: "relative",
-            backgroundColor: theme.palette.ui05,
+            backgroundColor: theme.palette.disabled01,
             borderRadius: "12px",
             width: "52px",
             height: "24px",
@@ -28,7 +28,7 @@ const useStyles = makeStyles()((theme) => {
             display: "inline-block",
 
             "&.disabled": {
-                backgroundColor: theme.palette.ui05,
+                backgroundColor: theme.palette.disabled01,
                 cursor: "default",
 
                 "& .toggle": {
@@ -52,7 +52,7 @@ const useStyles = makeStyles()((theme) => {
             height: "18px",
             position: "absolute",
             zIndex: 5,
-            top: "2px",
+            top: "3px",
             left: "3px",
             backgroundColor: theme.palette.ui10,
             borderRadius: "100%",
@@ -118,11 +118,11 @@ const useStyles = makeStyles()((theme) => {
         },
 
         labelOn: {
-            left: "8px",
+            left: "10px",
         },
 
         labelOff: {
-            right: "6px",
+            right: "5px",
         },
     };
 });
