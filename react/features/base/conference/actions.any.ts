@@ -726,10 +726,12 @@ export function endConference() {
                 }
             } catch (error) {
                 logger.error("Error in force end API:", error);
+            } finally {
+                conference?.end();
             }
+        } else {
+            conference?.end();
         }
-
-        conference?.end();
     };
 }
 
