@@ -230,7 +230,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             if (participantCount === 1) {
                 if (roomName.includes("rocketchat")) {
                     const callId = roomName.replace("rocketchat", "");
-                    fetch("https://kdt-backendj-17th.yk8s.me/api/video-conference.force-end", {
+                    fetch("https://kdt-backendj-17th.yk8s.me/api/v1/video-conference.force-end", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

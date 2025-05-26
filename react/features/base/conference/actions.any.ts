@@ -711,7 +711,7 @@ export function endConference() {
         if (roomName?.includes("rocketchat")) {
             const callId = roomName.replace("rocketchat", "");
             try {
-                const response = await fetch("https://kdt-backendj-17th.yk8s.me/api/video-conference.force-end", {
+                const response = await fetch("https://kdt-backendj-17th.yk8s.me/api/v1/video-conference.force-end", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
