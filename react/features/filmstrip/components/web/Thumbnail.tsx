@@ -327,7 +327,7 @@ const defaultStyles = (theme: Theme) => {
 
         myProfile: {
             "& .active-speaker-indicator": {
-                boxShadow: `inset 0px 0px 0px 3px ${theme.palette.action01Hover} !important`,
+                boxShadow: `inset 0px 0px 0px 3px #FF6000 !important`,
             },
         },
 
