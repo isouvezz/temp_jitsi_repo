@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { makeStyles } from "tss-react/mui";
+import { Theme } from "@mui/material/styles";
 
 import { isMobileBrowser } from "../../../environment/utils";
 import { ISwitchProps } from "../types";
@@ -13,7 +14,7 @@ interface IProps extends ISwitchProps {
     id?: string;
 }
 
-const useStyles = makeStyles()((theme) => {
+const useStyles = makeStyles<{ theme: Theme }>()((theme) => {
     return {
         container: {
             position: "relative",
@@ -111,7 +112,7 @@ const useStyles = makeStyles()((theme) => {
             position: "absolute",
             color: theme.palette.text01,
             fontSize: "12px",
-            fontWeight: "regular",
+            fontWeight: 400,
             zIndex: 4,
             top: "50%",
             transform: "translateY(-50%)",
