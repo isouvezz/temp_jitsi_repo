@@ -369,12 +369,12 @@ var config = {
 
     // Enable the dropbox integration.
     // dropbox: {
-        // appKey: 'sl.u.AFveOtY9Ab3_nWAboYfrDh_jlMqwvURvsqnl6xd05ayzUxQ6rr6HTqDWEUJ-MA6aOkWaNxkYjDdsrJjezC7b983Jg_sFJaaRReavXC44J5o9eC8vPII5vrcEZ6WZrE3Qb3JhRkFFxOYG5uJIaKRdfdJm5wEalKRQkLnagI_rjjXkqIq3-XQvUcv8-h3y8dn3j2aBHsxt9o9cJOwwMmyLaOfD5_AWS4iSKBCiJm_pAce63ux3tE9dEPzIcvvWiAhFGrrzUgVQwWdVb6RgrPWXXNLntoiJT2o4pmfblR1tYCWg1o68S-WQ_Z941qF_YzQ2Svb-6AbUpAF3Z5sABv2Na0k3aY9m2rVsszEjcn_EpM_ZOn6LVDYA2fT6SdvQhqG_YQ97dIlc8O60lyh_viycZcTGWQ5KHWSoFJhgCwwdfmes2CJtaVbyodoEtlqk5f93Am1kZcp55nrG2F_bZqORpLsVf4MCIShsXwCGaPjJcwciGTCimS2koAepXA2SV9tjw8dvwaR1L-9UgmSCS6XXhFSaauKmYXIBwoKYCx0xm8dzmngQYjZ2RqFNRvNTJn0PWojjfdFi_sISxiYBEFngC-AbjnAKHdcObxE22QuE-NzHFksaKbZG-zT_W0kzCQuVLiH_n5N_JAXx8uldRr2pws5k3JNQLWGPj83n532MVvUMoPOBw0CcQJNbjSXiJ7gdGbBFDAboGgpLpmATCjbZdPtMH8jHD3ePvfodUtTgPqoM8f3vgWaDkQVSLkqja9A7KeNnkywIo-ea9aw1U_QsaoeRgH86-eUAuxgZnCrPe5NLynH9qbRIajVZGJj5vc5Dp3PE6fjcElLn1lmtd67rI7GaKKSOpbD_HhRvRKNN7BzzDDp0gYeOtFDYWntiOjzMr73RbN-TYzQZjynSdBfka1M6C2C3KmLdhv9qmia-xftXMnTQnvxQ0ASeZDiQHKdo_Ss-WHeJNQ_0jCpMf__-BePkJYYhph65oy_U2Du7KkbRO_qf7JquCx-mJXhlwVJweHInUGhWc0bjQHfF8-zi1sbngXiHcDFbPiwAR1qbfNSrH9-_-s6tE47an45XfXHnLXYkyCuN-v02LAzVsSOBqmiYKsvhllBo03XAegK7IldFwdWQZkzUaFElBDWi0hG_NYuvkf0LiBd5odQsMCDmXaJym1tOerFF2LK6nefv0BeL2kCbGCaxjI0XHX_zp6UQFJngtL2NgS39hiSkqDKJIMUmyabvCe2YHkVZfyyQtF7Uj6OWWiW1Sos0H2QNrFDdpEmUlHKRu6YPLfom9bXtGIzK', // Specify your app key here.
-        // A URL to redirect the user to, after authenticating
-        // by default uses:
-        // 'https://jitsi-meet.example.com/static/oauth.html'
-        // redirectURI:
-        //      'https://jitsi-semi.yk8s.me/subfolder/static/oauth.html',
+    // appKey: 'sl.u.AFveOtY9Ab3_nWAboYfrDh_jlMqwvURvsqnl6xd05ayzUxQ6rr6HTqDWEUJ-MA6aOkWaNxkYjDdsrJjezC7b983Jg_sFJaaRReavXC44J5o9eC8vPII5vrcEZ6WZrE3Qb3JhRkFFxOYG5uJIaKRdfdJm5wEalKRQkLnagI_rjjXkqIq3-XQvUcv8-h3y8dn3j2aBHsxt9o9cJOwwMmyLaOfD5_AWS4iSKBCiJm_pAce63ux3tE9dEPzIcvvWiAhFGrrzUgVQwWdVb6RgrPWXXNLntoiJT2o4pmfblR1tYCWg1o68S-WQ_Z941qF_YzQ2Svb-6AbUpAF3Z5sABv2Na0k3aY9m2rVsszEjcn_EpM_ZOn6LVDYA2fT6SdvQhqG_YQ97dIlc8O60lyh_viycZcTGWQ5KHWSoFJhgCwwdfmes2CJtaVbyodoEtlqk5f93Am1kZcp55nrG2F_bZqORpLsVf4MCIShsXwCGaPjJcwciGTCimS2koAepXA2SV9tjw8dvwaR1L-9UgmSCS6XXhFSaauKmYXIBwoKYCx0xm8dzmngQYjZ2RqFNRvNTJn0PWojjfdFi_sISxiYBEFngC-AbjnAKHdcObxE22QuE-NzHFksaKbZG-zT_W0kzCQuVLiH_n5N_JAXx8uldRr2pws5k3JNQLWGPj83n532MVvUMoPOBw0CcQJNbjSXiJ7gdGbBFDAboGgpLpmATCjbZdPtMH8jHD3ePvfodUtTgPqoM8f3vgWaDkQVSLkqja9A7KeNnkywIo-ea9aw1U_QsaoeRgH86-eUAuxgZnCrPe5NLynH9qbRIajVZGJj5vc5Dp3PE6fjcElLn1lmtd67rI7GaKKSOpbD_HhRvRKNN7BzzDDp0gYeOtFDYWntiOjzMr73RbN-TYzQZjynSdBfka1M6C2C3KmLdhv9qmia-xftXMnTQnvxQ0ASeZDiQHKdo_Ss-WHeJNQ_0jCpMf__-BePkJYYhph65oy_U2Du7KkbRO_qf7JquCx-mJXhlwVJweHInUGhWc0bjQHfF8-zi1sbngXiHcDFbPiwAR1qbfNSrH9-_-s6tE47an45XfXHnLXYkyCuN-v02LAzVsSOBqmiYKsvhllBo03XAegK7IldFwdWQZkzUaFElBDWi0hG_NYuvkf0LiBd5odQsMCDmXaJym1tOerFF2LK6nefv0BeL2kCbGCaxjI0XHX_zp6UQFJngtL2NgS39hiSkqDKJIMUmyabvCe2YHkVZfyyQtF7Uj6OWWiW1Sos0H2QNrFDdpEmUlHKRu6YPLfom9bXtGIzK', // Specify your app key here.
+    // A URL to redirect the user to, after authenticating
+    // by default uses:
+    // 'https://jitsi-meet.example.com/static/oauth.html'
+    // redirectURI:
+    //      'https://jitsi-semi.yk8s.me/subfolder/static/oauth.html',
     // },
 
     // configuration for all things recording related. Existing settings will be migrated here in the future.
@@ -1633,6 +1633,7 @@ var config = {
      websocketKeepAlive
      websocketKeepAliveUrl
      */
+    hiddenDomain: "recorder.jitsi-semi.yk8s.me",
 
     /**
      * Default interval (milliseconds) for triggering mouseMoved iframe API event
