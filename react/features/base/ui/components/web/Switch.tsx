@@ -52,7 +52,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
         height: "18px",
         position: "absolute",
         zIndex: 5,
-        top: "3px",
+        top: "2px",
         left: "3px",
         backgroundColor: theme.palette.ui10,
         borderRadius: "100%",
