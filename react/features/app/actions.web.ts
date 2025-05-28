@@ -10,6 +10,7 @@ import { isVpaasMeeting } from "../jaas/functions";
 import { clearNotifications, showNotification } from "../notifications/actions";
 import { NOTIFICATION_TIMEOUT_TYPE } from "../notifications/constants";
 import { isWelcomePageEnabled } from "../welcome/functions";
+import { parseAndDecryptURLParams } from "../base/util/parseURLParams";
 
 import {
     maybeRedirectToTokenAuthUrl,
@@ -59,6 +60,14 @@ export function appNavigate(uri?: string) {
 
         const { room } = location;
         const locationURL = new URL(location.toString());
+
+        const decryptedParams = parseAndDecryptURLParams(uri || "");
+        if (decryptedParams.authToken) {
+            window.config.authToken = decryptedParams.authToken;
+        }
+        if (decryptedParams.userId) {
+            window.config.userId = decryptedParams.userId;
+        }
 
         // There are notifications now that gets displayed after we technically left
         // the conference, but we're still on the conference screen.
