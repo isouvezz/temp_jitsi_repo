@@ -707,6 +707,8 @@ export function endConference() {
     return async (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         const { conference } = getConferenceState(toState(getState));
         const roomName = conference?.getName();
+        const state = getState();
+        const { authToken, userId } = state["features/base/config"];
 
         if (roomName?.includes("rocketchat")) {
             const callId = roomName.replace("rocketchat", "");
@@ -714,6 +716,8 @@ export function endConference() {
                 const response = await fetch("https://kdt-backendj-17th.yk8s.me/api/v1/video-conference.force-end", {
                     method: "POST",
                     headers: {
+                        "x-auth-token": authToken || "",
+                        "x-user-id": userId || "",
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({

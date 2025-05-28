@@ -226,6 +226,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const state = getState();
             const participantCount = conference.getParticipantCount(state);
             const roomName = conference.getName();
+            const { authToken, userId } = state["features/base/config"];
 
             if (participantCount === 1) {
                 if (roomName.includes("rocketchat")) {
@@ -233,6 +234,8 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
                     fetch("https://kdt-backendj-17th.yk8s.me/api/v1/video-conference.force-end", {
                         method: "POST",
                         headers: {
+                            "x-auth-token": authToken || "",
+                            "x-user-id": userId || "",
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
