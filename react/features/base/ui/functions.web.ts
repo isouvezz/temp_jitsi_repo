@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Theme, adaptV4Theme, createTheme } from "@mui/material/styles";
+import { Theme, adaptV4Theme, createTheme } from '@mui/material/styles';
 
-import { ITypography, IPalette as Palette1 } from "../ui/types";
+import { ITypography, IPalette as Palette1 } from '../ui/types';
 
-import { createColorTokens } from "./utils";
+import { createColorTokens } from './utils';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Palette extends Palette1 {}
 
@@ -29,29 +29,17 @@ interface ThemeProps {
  * @returns {Object}
  */
 export function createWebTheme({ font, colorMap, shape, spacing, typography, breakpoints }: ThemeProps) {
-    return createTheme(
-        adaptV4Theme({
-            spacing,
-            palette: createColorTokens(colorMap),
-            shape,
-            typography: {
-                // @ts-ignore
-                font,
-                ...typography,
-            },
-            breakpoints,
-            components: {
-                MuiCssBaseline: {
-                    styleOverrides: {
-                        "*": {
-                            fontFamily:
-                                '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important',
-                        },
-                    },
-                },
-            },
-        })
-    );
+    return createTheme(adaptV4Theme({
+        spacing,
+        palette: createColorTokens(colorMap),
+        shape,
+        typography: {
+            // @ts-ignore
+            font,
+            ...typography
+        },
+        breakpoints
+    }));
 }
 
 /**
@@ -94,7 +82,7 @@ export function isElementInTheViewport(element?: Element): boolean {
     return false;
 }
 
-const enterKeyElements = ["select", "textarea", "summary", "a"];
+const enterKeyElements = [ 'select', 'textarea', 'summary', 'a' ];
 
 /**
  * Informs whether or not the given element does something on its own when pressing the Enter key.
@@ -112,7 +100,7 @@ export function operatesWithEnterKey(element: Element): boolean {
         return true;
     }
 
-    if (element.tagName.toLowerCase() === "button" && element.getAttribute("role") === "button") {
+    if (element.tagName.toLowerCase() === 'button' && element.getAttribute('role') === 'button') {
         return true;
     }
 
