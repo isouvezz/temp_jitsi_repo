@@ -28,7 +28,7 @@ function getPerformanceHints(options, size) {
     const { analyzeBundle, isProduction } = options;
 
     return {
-        hints: isProduction && !analyzeBundle ? "error" : false,
+        hints: false,
         maxAssetSize: size,
         maxEntrypointSize: size,
     };
@@ -340,29 +340,9 @@ module.exports = (_env, argv) => {
             entry: {
                 external_api: "./modules/API/external/index.js",
             },
-            output: {
-                ...config.output,
-                library: "JitsiMeetExternalAPI",
-                libraryTarget: "umd",
-                chunkFilename: "[name].chunk.js",
-            },
-            optimization: {
-                ...config.optimization,
-                splitChunks: {
-                    chunks: "all",
-                    minSize: 20000,
-                    maxSize: 70000,
-                    cacheGroups: {
-                        vendor: {
-                            test: /[\\/]node_modules[\\/]/,
-                            name: "vendors",
-                            chunks: "all",
-                        },
-                    },
-                },
-            },
+            output: { ...config.output, library: "JitsiMeetExternalAPI", libraryTarget: "umd" },
             plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, "external_api")],
-            performance: getPerformanceHints(perfHintOptions, 200 * 1024),
+            performance: getPerformanceHints(perfHintOptions, 95 * 1024),
         },
         {
             ...config,
