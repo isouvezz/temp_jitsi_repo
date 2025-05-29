@@ -18,6 +18,7 @@ import DialInSummary from "../../invite/components/dial-in-summary/web/DialInSum
 import { openWebApp } from "../actions";
 import { _TNS } from "../constants";
 import { generateDeepLinkingURL } from "../functions";
+import { isMobileBrowser } from "../../base/environment/utils";
 
 const PADDINGS = {
     topBottom: 24,
@@ -161,9 +162,9 @@ const DeepLinkingMobilePage: React.FC<WithTranslation> = ({ t }) => {
 
     useEffect(() => {
         sendAnalytics(createDeepLinkingPageEvent("displayed", "DeepLinkingMobile", { isMobileBrowser: true }));
-
-        // 모바일 접속 시 자동으로 웹 버전으로 전환
-        dispatch(openWebApp());
+        if (isMobileBrowser()) {
+            dispatch(openWebApp());
+        }
     }, [dispatch]);
 
     return (

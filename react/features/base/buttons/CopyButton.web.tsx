@@ -23,7 +23,7 @@ const useStyles = makeStyles()(theme => {
             color: theme.palette.text01,
 
             '&:hover': {
-                backgroundColor: theme.palette.action01Hover
+                backgroundColor: theme.palette.action01
             },
 
             '&.clicked': {

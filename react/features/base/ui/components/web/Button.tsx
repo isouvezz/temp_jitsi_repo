@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme) => {
             cursor: "pointer",
 
             "&:hover": {
-                backgroundColor: theme.palette.action01Hover,
+                backgroundColor: "#E05600",
             },
 
             "&:active": {
@@ -99,7 +99,7 @@ const useStyles = makeStyles()((theme) => {
 
         tertiary: {
             backgroundColor: theme.palette.action03,
-            color: "#FF6000",
+            color: "#EF4444",
 
             "&:hover": {
                 backgroundColor: theme.palette.action03Hover,

@@ -1,5 +1,5 @@
-import { breakpoints, colorMap, font, shape, spacing, typography } from '../Tokens';
-import { createWebTheme } from '../functions.web';
+import { breakpoints, colorMap, font, shape, spacing, typography } from "../Tokens";
+import { createWebTheme } from "../functions.web";
 
 export default createWebTheme({
     font,
@@ -7,5 +7,5 @@ export default createWebTheme({
     spacing,
     shape,
     typography,
-    breakpoints
+    breakpoints,
 });

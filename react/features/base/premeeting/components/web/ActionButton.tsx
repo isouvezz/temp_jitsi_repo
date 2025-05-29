@@ -152,7 +152,7 @@ const useStyles = makeStyles()(theme => {
             width: 36,
 
             '&:hover': {
-                backgroundColor: '#0262B6'
+                backgroundColor: '#E05600'
             },
 
             '& svg': {
