@@ -158,11 +158,12 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
         if (isWelcomePageEnabled(getState())) {
             setTimeout(
                 () => {
-                    if (window.opener) {
-                        window.close();
-                    } else {
-                        window.location.href = "https://bootcamp.likelion.net/";
-                    }
+                    // if (window.opener) {
+                    //     window.close();
+                    // } else {
+                    //     window.location.href = "https://bootcamp.likelion.net/";
+                    // }
+                    window.location.href = "https://bootcamp.likelion.net/";
                 },
                 options.showThankYou ? 3000 : 500
             );
