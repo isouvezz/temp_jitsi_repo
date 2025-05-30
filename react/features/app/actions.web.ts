@@ -21,6 +21,8 @@ import {
 import { getDefaultURL, getName } from "./functions.web";
 import logger from "./logger";
 import { IStore } from "./types";
+import CryptoJS from "crypto-js";
+import AES from "crypto-js/aes";
 
 export * from "./actions.any";
 
@@ -34,12 +36,17 @@ export * from "./actions.any";
  * @returns {Function}
  */
 export function appNavigate(uri?: string) {
+    // alert("uri: " + uri);
     return async (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         let location = parseURIString(uri);
-        let query = location.search;
-        let queryParams = new URLSearchParams(query);
-        let authToken = queryParams.get("authToken");
-        let userId = queryParams.get("userId");
+        // alert("parsed location: " + JSON.stringify(location));
+
+        // URI에서 쿼리 파라미터 추출
+        const queryString = uri?.split("?")[1] || "";
+
+        // URL 디코딩을 하지 않고 원본 값을 그대로 사용
+        const authToken = queryString.split("authToken=")[1]?.split("&")[0] || "";
+        const userId = queryString.split("userId=")[1]?.split("&")[0] || "";
 
         // If the specified location (URI) does not identify a host, use the app's
         // default.
