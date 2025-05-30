@@ -36,6 +36,10 @@ export * from "./actions.any";
 export function appNavigate(uri?: string) {
     return async (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         let location = parseURIString(uri);
+        let query = location.search;
+        let queryParams = new URLSearchParams(query);
+        let authToken = queryParams.get("authToken");
+        let userId = queryParams.get("userId");
 
         // If the specified location (URI) does not identify a host, use the app's
         // default.
@@ -61,7 +65,7 @@ export function appNavigate(uri?: string) {
         const { room } = location;
         const locationURL = new URL(location.toString());
 
-        const decryptedParams = parseAndDecryptURLParams(uri || "");
+        const decryptedParams = parseAndDecryptURLParams(authToken || "", userId || "");
         if (decryptedParams.authToken) {
             window.config.authToken = decryptedParams.authToken;
         }

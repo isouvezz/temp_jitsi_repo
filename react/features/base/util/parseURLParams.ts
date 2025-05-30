@@ -112,17 +112,11 @@ export function parseURLParams(url: URL | string, dontParse = false, source = "h
  * @param {URL} url - The URL to parse
  * @returns {Object} The parsed and decrypted parameters
  */
-export function parseAndDecryptURLParams(url: URL | string) {
+export function parseAndDecryptURLParams(authToken: string, userId: string) {
     // dontParse를 true로 설정하여 JSON 파싱을 시도하지 않도록 함
-    const params = parseURLParams(url, true);
     const decryptedParams: any = {};
-
-    if (params["config.authToken"]) {
-        decryptedParams.authToken = decrypt(params["config.authToken"]);
-    }
-    if (params["config.userId"]) {
-        decryptedParams.userId = decrypt(params["config.userId"]);
-    }
+    decryptedParams.authToken = decrypt(authToken);
+    decryptedParams.userId = decrypt(userId);
 
     return decryptedParams;
 }
