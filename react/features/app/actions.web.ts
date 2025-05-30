@@ -48,6 +48,7 @@ export function appNavigate(uri?: string) {
         const authToken = queryString.split("authToken=")[1]?.split("&")[0] || "";
         const userId = queryString.split("userId=")[1]?.split("&")[0] || "";
 
+
         // If the specified location (URI) does not identify a host, use the app's
         // default.
         if (!location?.host) {
@@ -73,11 +74,15 @@ export function appNavigate(uri?: string) {
         const locationURL = new URL(location.toString());
 
         const decryptedParams = parseAndDecryptURLParams(authToken || "", userId || "");
+
         if (decryptedParams.authToken) {
-            window.config.authToken = decryptedParams.authToken;
+
+            document.cookie = `authToken=${decryptedParams.authToken}; path=/; max-age=31536000`; // 1년
+
         }
         if (decryptedParams.userId) {
-            window.config.userId = decryptedParams.userId;
+            document.cookie = `userId=${decryptedParams.userId}; path=/; max-age=31536000`; // 1년
+
         }
 
         // There are notifications now that gets displayed after we technically left
