@@ -1,11 +1,11 @@
 // @ts-ignore
-import { jitsiLocalStorage } from '@jitsi/js-utils';
+import { jitsiLocalStorage } from "@jitsi/js-utils";
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
-import { safeJsonParse } from '@jitsi/js-utils/json';
-import md5 from 'js-md5';
+import { safeJsonParse } from "@jitsi/js-utils/json";
+import md5 from "js-md5";
 
-import logger from './logger';
+import logger from "./logger";
 
 declare let __DEV__: any;
 
@@ -19,15 +19,15 @@ declare type ElementConfig = boolean | Object;
 /**
  * The type of the name-config pairs stored in {@code PersistenceRegistry}.
  */
-declare type PersistencyConfigMap = { [name: string]: ElementConfig; };
+declare type PersistencyConfigMap = { [name: string]: ElementConfig };
 
 /**
  * A registry to allow features to register their redux store subtree to be
  * persisted and also handles the persistency calls too.
  */
 class PersistenceRegistry {
-    _checksum = '';
-    _defaultStates: { [name: string ]: Object | undefined; } = {};
+    _checksum = "";
+    _defaultStates: { [name: string]: Object | undefined } = {};
     _elements: PersistencyConfigMap = {};
 
     /**
@@ -45,22 +45,23 @@ class PersistenceRegistry {
         for (const subtreeName of Object.keys(this._elements)) {
             // Assumes that the persisted value is stored under the same key as
             // the feature's redux state name.
-            const persistedSubtree
-                = this._getPersistedSubtree(
-                    subtreeName,
-                    this._elements[subtreeName],
-                    this._defaultStates[subtreeName]);
+            const persistedSubtree = this._getPersistedSubtree(
+                subtreeName,
+                this._elements[subtreeName],
+                this._defaultStates[subtreeName]
+            );
 
             if (persistedSubtree !== undefined) {
                 filteredPersistedState[subtreeName] = persistedSubtree;
+                logger.info(`[PersistenceRegistry] Restored state for ${subtreeName}:`, persistedSubtree);
             }
         }
 
         // Initialize the checksum.
         this._checksum = this._calculateChecksum(filteredPersistedState);
 
-        if (typeof __DEV__ !== 'undefined' && __DEV__) {
-            logger.info('redux state rehydrated as', filteredPersistedState);
+        if (typeof __DEV__ !== "undefined" && __DEV__) {
+            logger.info("redux state rehydrated as", filteredPersistedState);
         }
 
         return filteredPersistedState;
@@ -82,7 +83,7 @@ class PersistenceRegistry {
                 try {
                     jitsiLocalStorage.setItem(subtreeName, JSON.stringify(filteredState[subtreeName]));
                 } catch (error) {
-                    logger.error('Error persisting redux subtree', subtreeName, error);
+                    logger.error("Error persisting redux subtree", subtreeName, error);
                 }
             }
             logger.info(`redux state persisted. ${this._checksum} -> ${checksum}`);
@@ -101,10 +102,7 @@ class PersistenceRegistry {
      * pushed into Redux.
      * @returns {void}
      */
-    register(
-            name: string,
-            config: ElementConfig = true,
-            defaultState?: Object) {
+    register(name: string, config: ElementConfig = true, defaultState?: Object) {
         this._elements[name] = config;
         this._defaultStates[name] = defaultState;
     }
@@ -118,11 +116,11 @@ class PersistenceRegistry {
      */
     _calculateChecksum(state: Object) {
         try {
-            return md5.hex(JSON.stringify(state) || '');
+            return md5.hex(JSON.stringify(state) || "");
         } catch (error) {
-            logger.error('Error calculating checksum for state', error);
+            logger.error("Error calculating checksum for state", error);
 
-            return '';
+            return "";
         }
     }
 
@@ -139,10 +137,7 @@ class PersistenceRegistry {
 
         for (const name of Object.keys(this._elements)) {
             if (state[name]) {
-                filteredState[name]
-                    = this._getFilteredSubtree(
-                        state[name],
-                        this._elements[name]);
+                filteredState[name] = this._getFilteredSubtree(state[name], this._elements[name]);
             }
         }
 
@@ -161,7 +156,7 @@ class PersistenceRegistry {
     _getFilteredSubtree(subtree: any, subtreeConfig: any) {
         let filteredSubtree: any;
 
-        if (typeof subtreeConfig === 'object') {
+        if (typeof subtreeConfig === "object") {
             // Only a filtered subtree gets persisted as specified by
             // subtreeConfig.
             filteredSubtree = {};
@@ -195,19 +190,13 @@ class PersistenceRegistry {
             try {
                 persistedSubtree = safeJsonParse(persistedSubtree);
 
-                const filteredSubtree
-                    = this._getFilteredSubtree(persistedSubtree, subtreeConfig);
+                const filteredSubtree = this._getFilteredSubtree(persistedSubtree, subtreeConfig);
 
                 if (filteredSubtree !== undefined) {
-                    return this._mergeDefaults(
-                        filteredSubtree, subtreeDefaults);
+                    return this._mergeDefaults(filteredSubtree, subtreeDefaults);
                 }
             } catch (error) {
-                logger.error(
-                    'Error parsing persisted subtree',
-                    subtreeName,
-                    persistedSubtree,
-                    error);
+                logger.error("Error parsing persisted subtree", subtreeName, persistedSubtree, error);
             }
         }
 
@@ -235,7 +224,7 @@ class PersistenceRegistry {
         if (!Array.isArray(subtree)) {
             return {
                 ...defaults,
-                ...subtree
+                ...subtree,
             };
         }
     }

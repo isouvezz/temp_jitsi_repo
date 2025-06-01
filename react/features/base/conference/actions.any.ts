@@ -78,6 +78,7 @@ import {
 import logger from "./logger";
 import { IConferenceMetadata, IJitsiConference } from "./reducer";
 
+
 /**
  * Adds conference (event) listeners.
  *
@@ -708,17 +709,7 @@ export function endConference() {
         const { conference } = getConferenceState(toState(getState));
         const roomName = conference?.getName();
         const state = getState();
-
-        // 쿠키에서 값 가져오기
-        const getCookie = (name: string) => {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop()?.split(";").shift();
-            return null;
-        };
-
-        const authToken = getCookie("authToken");
-        const userId = getCookie("userId");
+        const { authToken, userId } = state["features/base/auth"];
 
         if (roomName?.includes("rocketchat")) {
             const callId = roomName.replace("rocketchat", "");

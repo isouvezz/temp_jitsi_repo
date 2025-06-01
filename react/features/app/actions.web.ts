@@ -11,6 +11,7 @@ import { clearNotifications, showNotification } from "../notifications/actions";
 import { NOTIFICATION_TIMEOUT_TYPE } from "../notifications/constants";
 import { isWelcomePageEnabled } from "../welcome/functions";
 import { parseAndDecryptURLParams } from "../base/util/parseURLParams";
+import { setAuthToken, setUserId } from "../base/auth/actions";
 
 import {
     maybeRedirectToTokenAuthUrl,
@@ -48,7 +49,6 @@ export function appNavigate(uri?: string) {
         const authToken = queryString.split("authToken=")[1]?.split("&")[0] || "";
         const userId = queryString.split("userId=")[1]?.split("&")[0] || "";
 
-
         // If the specified location (URI) does not identify a host, use the app's
         // default.
         if (!location?.host) {
@@ -73,16 +73,15 @@ export function appNavigate(uri?: string) {
         const { room } = location;
         const locationURL = new URL(location.toString());
 
-        const decryptedParams = parseAndDecryptURLParams(authToken || "", userId || "");
+        const decryptedParams = parseAndDecryptURLParams(authToken, userId);
+  
 
         if (decryptedParams.authToken) {
-
-            document.cookie = `authToken=${decryptedParams.authToken}; path=/; max-age=31536000`; // 1년
-
+            dispatch(setAuthToken(decryptedParams.authToken));
         }
         if (decryptedParams.userId) {
-            document.cookie = `userId=${decryptedParams.userId}; path=/; max-age=31536000`; // 1년
 
+            dispatch(setUserId(decryptedParams.userId));
         }
 
         // There are notifications now that gets displayed after we technically left

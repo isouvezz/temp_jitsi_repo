@@ -226,15 +226,12 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const state = getState();
             const participantCount = conference.getParticipantCount(state);
             const roomName = conference.getName();
-            const getCookie = (name: string) => {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop()?.split(";").shift();
-                return null;
-            };
 
-            const authToken = getCookie("authToken");
-            const userId = getCookie("userId"); 
+            const auth = state["features/base/auth"];
+
+
+            const { authToken, userId } = auth;
+
 
             if (participantCount === 1) {
                 if (roomName.includes("rocketchat")) {
