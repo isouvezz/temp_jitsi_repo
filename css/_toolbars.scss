@@ -49,6 +49,22 @@
     }
 }
 
+.empty-button {
+    cursor: pointer !important;
+
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        width: 48px;
+
+        svg {
+            fill: #fff !important;
+        }
+    }
+}
+
 .toolbox-content {
     align-items: center;
     box-sizing: border-box;
@@ -94,7 +110,7 @@
             border-radius: 3px !important;
 
             &:hover {
-                background-color: #ff6000 !important;
+                background-color: #e05600 !important;
             }
 
             svg {
@@ -214,5 +230,3 @@ div.hangup-menu-button {
         }
     }
 }
-
-
