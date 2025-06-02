@@ -21,6 +21,7 @@ import HangupMenuButton from "./HangupMenuButton";
 import { LeaveConferenceButton } from "./LeaveConferenceButton";
 import OverflowMenuButton from "./OverflowMenuButton";
 import Separator from "./Separator";
+import EmptyButton from "./EmptyButton";
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -256,6 +257,7 @@ export default function Toolbox({ toolbarButtons }: IProps) {
                           })}
                 >
                     <div className="toolbox-content-items" ref={_toolboxRef}>
+                        <EmptyButton/>
                         {mainMenuButtons.map(
                             ({ Content, key, ...rest }) =>
                                 Content !== Separator && <Content {...rest} buttonKey={key} key={key} />

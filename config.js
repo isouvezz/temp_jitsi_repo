@@ -44,7 +44,7 @@ var config = {
 
     hosts: {
         // XMPP domain.
-        domain: "liveroom.42s.me",
+        domain: "jitsi-hoi.yk8s.me",
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
@@ -56,14 +56,14 @@ var config = {
         // focus: 'focus.jitsi-meet.example.com',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: "conference." + subdomain + "liveroom.42s.me",
+        muc: "conference." + subdomain + "jitsi-hoi.yk8s.me",
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: "https://liveroom.42s.me/" + subdir + "http-bind",
+    bosh: "https://jitsi-hoi.yk8s.me/" + subdir + "http-bind",
 
     // Websocket URL (XMPP)
-    websocket: "wss://liveroom.42s.me/" + subdir + "xmpp-websocket",
+    websocket: "wss://jitsi-hoi.yk8s.me/" + subdir + "xmpp-websocket",
 
     // websocketKeepAliveUrl: 'https://jitsi-meet.example.com/' + subdir + '_unlock',
 
@@ -1644,7 +1644,7 @@ var config = {
      websocketKeepAlive
      websocketKeepAliveUrl
      */
-    hiddenDomain: "recorder.liveroom.42s.me",
+    hiddenDomain: "recorder.jitsi-hoi.yk8s.me",
 
     /**
      * Default interval (milliseconds) for triggering mouseMoved iframe API event

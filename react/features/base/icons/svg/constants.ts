@@ -106,6 +106,7 @@ import { default as IconWifi1Bar } from "./wifi-1.svg";
 import { default as IconWifi2Bars } from "./wifi-2.svg";
 import { default as IconWifi3Bars } from "./wifi-3.svg";
 import { default as IconYahoo } from "./yahoo.svg";
+import { default as IconLikelion } from "./likelion_symbol.svg";
 import { VolumeUpIcon, VolumeOffIcon } from "@heroicons/react/outline";
 /**
  * Map containing the default icons.
@@ -219,4 +220,5 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconWifi2Bars,
     IconWifi3Bars,
     IconYahoo,
+    IconLikelion,
 };

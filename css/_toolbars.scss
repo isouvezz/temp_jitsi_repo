@@ -88,6 +88,19 @@
 
     .toolbox-content-items {
         @include ltr;
+
+        > div:first-child {
+            background-color: #ff6000 !important;
+            border-radius: 3px !important;
+
+            &:hover {
+                background-color: #ff6000 !important;
+            }
+
+            svg {
+                fill: #fff !important;
+            }
+        }
     }
 }
 
@@ -202,12 +215,4 @@ div.hangup-menu-button {
     }
 }
 
-.toolbox-icon {
-    &:hover {
-        background: #ff6000;
-    }
-}
 
-.toolbox-icon:hover {
-    background: #515151;
-}
