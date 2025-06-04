@@ -73,11 +73,11 @@ const useStyles = makeStyles()(theme => {
             cursor: 'pointer'
         },
         [COLORS.white]: {
-            background: theme.palette.ui09,
-            color: theme.palette.text04,
+            background: "rgba(0, 0, 0, 0.6)",
+            color: "#FFFFFF",
 
             '& svg': {
-                fill: theme.palette.icon04
+                fill: "#FFFFFF"
             }
         },
         [COLORS.green]: {

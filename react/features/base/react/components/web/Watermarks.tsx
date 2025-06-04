@@ -97,7 +97,7 @@ class Watermarks extends Component<IProps, State> {
     override render() {
         return (
             <div>
-                {/* {this._renderJitsiWatermark()} */}
+                {this._renderJitsiWatermark()}
                 {this._renderBrandWatermark()}
                 {this._renderPoweredBy()}
             </div>
@@ -209,16 +209,17 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         logoClickUrl,
         logoImageUrl = "images/likelion-icon.svg",
     } = state["features/dynamic-branding"];
-    const isValidRoom = state["features/base/conference"].room;
+    const isConferenceJoined = Boolean(state["features/base/conference"].conference);
     const { defaultLogoUrl } = state["features/base/config"];
     const { JITSI_WATERMARK_LINK, SHOW_JITSI_WATERMARK } = interfaceConfig;
-    let _showJitsiWatermark = (customizationReady && !customizationFailed && SHOW_JITSI_WATERMARK) || !isValidRoom;
+
+    // conference 객체 존재 여부로 워터마크 표시 여부 결정
+    let _showJitsiWatermark = !isConferenceJoined;
     let _logoUrl: string | undefined = logoImageUrl;
     let _logoLink = "https://bootcamp.glob-dev.kong.yk8s.me/";
 
     if (useDynamicBrandingData) {
         if (isVpaasMeeting(state)) {
-            // don't show logo if request fails or no logo set for vpaas meetings
             _showJitsiWatermark = !customizationFailed && Boolean(logoImageUrl);
         } else if (defaultBranding) {
             _logoUrl = defaultLogoUrl;

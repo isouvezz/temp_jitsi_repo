@@ -198,7 +198,7 @@ function CopyButton({
             <>
                 <Icon className={classes.icon} size={24} src={IconCopy} />
                 <div className={classes.content}>
-                    <span> {isHovered ? textOnHover : displayedText} </span>
+                    <span> {isHovered ? displayedText : textOnHover} </span>
                 </div>
             </>
         );

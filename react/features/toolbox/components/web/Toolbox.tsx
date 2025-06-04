@@ -61,6 +61,9 @@ export default function Toolbox({ toolbarButtons }: IProps) {
     const _toolboxRef = useRef<HTMLDivElement>(null);
 
     const conference = useSelector((state: IReduxState) => state["features/base/conference"].conference);
+    const isConferenceJoined = useSelector((state: IReduxState) =>
+        Boolean(state["features/base/conference"].conference)
+    );
     const isNarrowLayout = useSelector((state: IReduxState) => state["features/base/responsive-ui"].isNarrowLayout);
     const clientWidth = useSelector((state: IReduxState) => state["features/base/responsive-ui"].clientWidth);
     const isModerator = useSelector(isLocalParticipantModerator);
@@ -257,7 +260,7 @@ export default function Toolbox({ toolbarButtons }: IProps) {
                           })}
                 >
                     <div className="toolbox-content-items" ref={_toolboxRef}>
-                        <EmptyButton/>
+                        {isConferenceJoined && <EmptyButton />}
                         {mainMenuButtons.map(
                             ({ Content, key, ...rest }) =>
                                 Content !== Separator && <Content {...rest} buttonKey={key} key={key} />

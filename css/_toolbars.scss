@@ -51,6 +51,12 @@
 
 .empty-button {
     cursor: pointer !important;
+    background-color: #ff6000 !important;
+    border-radius: 3px !important;
+
+    &:hover {
+        background-color: #e05600 !important;
+    }
 
     > div {
         display: flex;
@@ -104,19 +110,6 @@
 
     .toolbox-content-items {
         @include ltr;
-
-        > div:first-child {
-            background-color: #ff6000 !important;
-            border-radius: 3px !important;
-
-            &:hover {
-                background-color: #e05600 !important;
-            }
-
-            svg {
-                fill: #fff !important;
-            }
-        }
     }
 }
 
