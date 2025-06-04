@@ -1,62 +1,61 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "tss-react/mui";
 
-import Icon from '../icons/components/Icon';
-import { IconCheck, IconCopy } from '../icons/svg';
-import { withPixelLineHeight } from '../styles/functions.web';
-import { copyText } from '../util/copyText.web';
+import Icon from "../icons/components/Icon";
+import { IconCheck, IconCopy } from "../icons/svg";
+import { withPixelLineHeight } from "../styles/functions.web";
+import { copyText } from "../util/copyText.web";
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         copyButton: {
             ...withPixelLineHeight(theme.typography.bodyShortBold),
             borderRadius: theme.shape.borderRadius,
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
             padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
-            width: '100%',
-            boxSizing: 'border-box',
+            width: "100%",
+            boxSizing: "border-box",
             background: theme.palette.action01,
-            cursor: 'pointer',
+            cursor: "pointer",
             color: theme.palette.text01,
 
-            '&:hover': {
-                backgroundColor: theme.palette.action01
+            "&:hover": {
+                backgroundColor: theme.palette.action01Hover,
             },
 
-            '&.clicked': {
-                background: theme.palette.success02
+            "&.clicked": {
+                background: theme.palette.success02,
             },
 
-            '& > div > svg': {
-                fill: theme.palette.icon01
-            }
+            "& > div > svg": {
+                fill: theme.palette.icon01,
+            },
         },
 
         content: {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap' as const,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap" as const,
             maxWidth: 292,
             marginRight: theme.spacing(3),
 
-            '&.selected': {
-                fontWeight: 600
-            }
+            "&.selected": {
+                fontWeight: 600,
+            },
         },
 
         icon: {
-            marginRight: theme.spacing(2)
-        }
+            marginRight: theme.spacing(2),
+        },
     };
 });
 
 let mounted: boolean;
 
 interface IProps {
-
     /**
      * The invisible text for screen readers.
      *
@@ -103,16 +102,16 @@ interface IProps {
  */
 function CopyButton({
     accessibilityText,
-    className = '',
+    className = "",
     displayedText,
     textToCopy,
     textOnHover,
     textOnCopySuccess,
-    id
+    id,
 }: IProps) {
     const { classes, cx } = useStyles();
-    const [ isClicked, setIsClicked ] = useState(false);
-    const [ isHovered, setIsHovered ] = useState(false);
+    const [isClicked, setIsClicked] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
         mounted = true;
@@ -172,7 +171,7 @@ function CopyButton({
      * @returns {void}
      */
     function onKeyPress(e: React.KeyboardEvent) {
-        if (onClick && (e.key === ' ' || e.key === 'Enter')) {
+        if (onClick && (e.key === " " || e.key === "Enter")) {
             e.preventDefault();
             onClick();
         }
@@ -187,12 +186,9 @@ function CopyButton({
         if (isClicked) {
             return (
                 <>
-                    <Icon
-                        className = { classes.icon }
-                        size = { 24 }
-                        src = { IconCheck } />
-                    <div className = { cx(classes.content, 'selected') }>
-                        <span role = { 'alert' }>{ textOnCopySuccess }</span>
+                    <Icon className={classes.icon} size={24} src={IconCheck} />
+                    <div className={cx(classes.content, "selected")}>
+                        <span role={"alert"}>{textOnCopySuccess}</span>
                     </div>
                 </>
             );
@@ -200,12 +196,9 @@ function CopyButton({
 
         return (
             <>
-                <Icon
-                    className = { classes.icon }
-                    size = { 24 }
-                    src = { IconCopy } />
-                <div className = { classes.content }>
-                    <span> { isHovered ? textOnHover : displayedText } </span>
+                <Icon className={classes.icon} size={24} src={IconCopy} />
+                <div className={classes.content}>
+                    <span> {isHovered ? textOnHover : displayedText} </span>
                 </div>
             </>
         );
@@ -214,28 +207,25 @@ function CopyButton({
     return (
         <>
             <div
-                aria-describedby = { displayedText === textOnHover
-                    ? undefined
-                    : `${id}-sr-text` }
-                aria-label = { displayedText === textOnHover ? accessibilityText : textOnHover }
-                className = { cx(className, classes.copyButton, isClicked ? ' clicked' : '') }
-                id = { id }
-                onBlur = { onHoverOut }
-                onClick = { onClick }
-                onFocus = { onHoverIn }
-                onKeyPress = { onKeyPress }
-                onMouseOut = { onHoverOut }
-                onMouseOver = { onHoverIn }
-                role = 'button'
-                tabIndex = { 0 }>
-                { renderContent() }
+                aria-describedby={displayedText === textOnHover ? undefined : `${id}-sr-text`}
+                aria-label={displayedText === textOnHover ? accessibilityText : textOnHover}
+                className={cx(className, classes.copyButton, isClicked ? " clicked" : "")}
+                id={id}
+                onBlur={onHoverOut}
+                onClick={onClick}
+                onFocus={onHoverIn}
+                onKeyPress={onKeyPress}
+                onMouseOut={onHoverOut}
+                onMouseOver={onHoverIn}
+                role="button"
+                tabIndex={0}
+            >
+                {renderContent()}
             </div>
 
-            { displayedText !== textOnHover && (
-                <span
-                    className = 'sr-only'
-                    id = { `${id}-sr-text` }>
-                    { accessibilityText }
+            {displayedText !== textOnHover && (
+                <span className="sr-only" id={`${id}-sr-text`}>
+                    {accessibilityText}
                 </span>
             )}
         </>

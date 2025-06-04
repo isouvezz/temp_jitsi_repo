@@ -74,13 +74,11 @@ export function appNavigate(uri?: string) {
         const locationURL = new URL(location.toString());
 
         const decryptedParams = parseAndDecryptURLParams(authToken, userId);
-  
 
         if (decryptedParams.authToken) {
             dispatch(setAuthToken(decryptedParams.authToken));
         }
         if (decryptedParams.userId) {
-
             dispatch(setUserId(decryptedParams.userId));
         }
 
@@ -171,14 +169,14 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
         // if Welcome page is enabled redirect to welcome page after 3 sec, if
         // there is a thank you message to be shown, 0.5s otherwise.
         if (isWelcomePageEnabled(getState())) {
+            // 3초 후에 창 닫기(창 열어둔 상태에서 창 닫기)
             setTimeout(
                 () => {
-                    // if (window.opener) {
-                    //     window.close();
-                    // } else {
-                    //     window.location.href = "https://bootcamp.likelion.net/";
-                    // }
-                    window.location.href = "https://bootcamp.likelion.net/";
+                    if (window.opener) {
+                        window.close();
+                    } else {
+                        window.location.href = "https://bootcamp.likelion.net/";
+                    }
                 },
                 options.showThankYou ? 3000 : 500
             );
