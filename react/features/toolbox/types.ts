@@ -54,6 +54,7 @@ export type ToolbarButton =
     | "toggle-camera"
     | "videoquality"
     | "whiteboard"
+    | "lastn"
     | "__end";
 
 export enum NOTIFY_CLICK_MODE {

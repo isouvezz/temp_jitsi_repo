@@ -1397,7 +1397,9 @@
         "videoSettings": "비디오 설정",
         "videomute": "카메라 시작/중지",
         "videomuteGUMPending": "카메라 연결 중",
-        "videounmute": "카메라 시작"
+        "videounmute": "카메라 시작",
+        "lastN": "비디오 스트림 수 제한",
+        "disableLastN": "비디오 스트림 모두 표시"
     },
     "transcribing": {
         "ccButtonTooltip": "자막 시작/종료",
