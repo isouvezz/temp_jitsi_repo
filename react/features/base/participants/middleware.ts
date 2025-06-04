@@ -241,7 +241,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const conference = getCurrentConference(state);
 
             // 모든 참가자에게 호스트 권한 부여
-            conference?.grantOwner(participant.id);
+            // conference?.grantOwner(participant.id);
 
             // Do not play sounds when a screenshare or whiteboard participant tile is created for screenshare.
             !isScreenShareParticipant(action.participant) &&
