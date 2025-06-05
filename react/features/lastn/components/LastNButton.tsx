@@ -32,7 +32,7 @@ class LastNButton extends AbstractButton<IProps> {
     override _handleClick() {
         const { dispatch } = this.props;
 
-        dispatch(setLastN(this.props._isLastNUnlimited ? this.props._lastN : -1));
+        dispatch(setLastN(this.props._isLastNUnlimited ? this.props._lastN ?? -1 : -1));
     }
 
     /**
