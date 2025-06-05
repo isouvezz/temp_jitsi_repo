@@ -8,7 +8,7 @@
  *     room: string
  * }
  */
-export const CONFIG_WILL_LOAD = 'CONFIG_WILL_LOAD';
+export const CONFIG_WILL_LOAD = "CONFIG_WILL_LOAD";
 
 /**
  * The redux action which signals that a configuration (commonly known in Jitsi
@@ -20,7 +20,7 @@ export const CONFIG_WILL_LOAD = 'CONFIG_WILL_LOAD';
  *     locationURL: URL
  * }
  */
-export const LOAD_CONFIG_ERROR = 'LOAD_CONFIG_ERROR';
+export const LOAD_CONFIG_ERROR = "LOAD_CONFIG_ERROR";
 
 /**
  * The redux action which sets the configuration represented by the feature
@@ -33,7 +33,7 @@ export const LOAD_CONFIG_ERROR = 'LOAD_CONFIG_ERROR';
  *     config: Object
  * }
  */
-export const SET_CONFIG = 'SET_CONFIG';
+export const SET_CONFIG = "SET_CONFIG";
 
 /**
  * The redux action which updates the configuration represented by the feature
@@ -47,7 +47,7 @@ export const SET_CONFIG = 'SET_CONFIG';
  *     config: Object
  * }
  */
-export const UPDATE_CONFIG = 'UPDATE_CONFIG';
+export const UPDATE_CONFIG = "UPDATE_CONFIG";
 
 /**
  * The redux action which overwrites configurations represented by the feature
@@ -58,4 +58,14 @@ export const UPDATE_CONFIG = 'UPDATE_CONFIG';
  *     config: Object
  * }
  */
-export const OVERWRITE_CONFIG = 'OVERWRITE_CONFIG';
+export const OVERWRITE_CONFIG = "OVERWRITE_CONFIG";
+
+/**
+ * The redux action which sets the number of visible tiles.
+ *
+ * {
+ *     type: SET_NUMBER_OF_VISIBLE_TILES,
+ *     numberOfVisibleTiles: number
+ * }
+ */
+export const SET_NUMBER_OF_VISIBLE_TILES = "SET_NUMBER_OF_VISIBLE_TILES";

@@ -7,7 +7,14 @@ import { CONNECTION_PROPERTIES_UPDATED } from "../connection/actionTypes";
 import ReducerRegistry from "../redux/ReducerRegistry";
 import { equals } from "../redux/functions";
 
-import { CONFIG_WILL_LOAD, LOAD_CONFIG_ERROR, OVERWRITE_CONFIG, SET_CONFIG, UPDATE_CONFIG } from "./actionTypes";
+import {
+    CONFIG_WILL_LOAD,
+    LOAD_CONFIG_ERROR,
+    OVERWRITE_CONFIG,
+    SET_CONFIG,
+    UPDATE_CONFIG,
+    SET_NUMBER_OF_VISIBLE_TILES,
+} from "./actionTypes";
 import {
     IConfig,
     IDeeplinkingConfig,
@@ -134,6 +141,16 @@ ReducerRegistry.register<IConfigState>("features/base/config", (state = _getInit
                 ...state,
                 ...action.config,
             };
+
+        case SET_NUMBER_OF_VISIBLE_TILES: {
+            return {
+                ...state,
+                tileView: {
+                    ...state.tileView,
+                    numberOfVisibleTiles: action.numberOfVisibleTiles,
+                },
+            };
+        }
     }
 
     return state;
