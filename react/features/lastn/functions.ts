@@ -13,3 +13,7 @@ export function isLastNUnlimited(state: IReduxState): boolean {
 export function getLastN(state: IReduxState): number {
     return state["features/base/config"].channelLastN ?? 4;
 }
+
+export function getNumberOfVisibleTiles(state: IReduxState): number {
+    return state["features/base/config"].tileView?.numberOfVisibleTiles ?? 4;
+}
