@@ -23,7 +23,8 @@ import Whiteboard from '../../whiteboard/components/web/Whiteboard';
 import { isWhiteboardEnabled } from '../../whiteboard/functions';
 import { setSeeWhatIsBeingShared } from '../actions.web';
 import { getLargeVideoParticipant } from '../functions';
-
+import { setLastN } from '../../lastn/actions';
+import { getLastN } from '../../lastn/functions';
 import ScreenSharePlaceholder from './ScreenSharePlaceholder.web';
 
 
@@ -68,6 +69,11 @@ interface IProps {
      * Whether or not the local screen share is on large-video.
      */
     _isScreenSharing: boolean;
+
+    /**
+     * Whether or not there is any screen sharing in the conference.
+     */
+    _isHasSharingScreen: boolean;
 
     /**
      * The large video participant id.
@@ -126,6 +132,11 @@ interface IProps {
     _whiteboardEnabled: boolean;
 
     /**
+     * The configured lastN value from config.
+     */
+    _configLastN: number;
+
+    /**
      * The Redux dispatch function.
      */
     dispatch: IStore['dispatch'];
@@ -169,10 +180,12 @@ class LargeVideo extends Component<IProps> {
         const {
             _visibleFilmstrip,
             _isScreenSharing,
+            _isHasSharingScreen,
             _seeWhatIsBeingShared,
             _largeVideoParticipantId,
             _hideSelfView,
-            _localParticipantId } = this.props;
+            _localParticipantId,
+            _configLastN } = this.props;
 
         if (prevProps._visibleFilmstrip !== _visibleFilmstrip) {
             this._updateLayout();
@@ -182,7 +195,14 @@ class LargeVideo extends Component<IProps> {
             this.props.dispatch(setSeeWhatIsBeingShared(false));
         }
 
+        if (_isHasSharingScreen) {
+            this.props.dispatch(setLastN(0));
+        } else {
+            this.props.dispatch(setLastN(_configLastN));
+        }
+
         if (_isScreenSharing && _seeWhatIsBeingShared) {
+            this.props.dispatch(setLastN(1));
             VideoLayout.updateLargeVideo(_largeVideoParticipantId, true, true);
         }
 
@@ -213,26 +233,26 @@ class LargeVideo extends Component<IProps> {
 
         return (
             <div
-                className = { className }
-                id = 'largeVideoContainer'
-                ref = { this._containerRef }
-                style = { style }>
+                className={className}
+                id='largeVideoContainer'
+                ref={this._containerRef}
+                style={style}>
                 <SharedVideo />
                 {_whiteboardEnabled && <Whiteboard />}
-                <div id = 'etherpad' />
+                <div id='etherpad' />
 
                 <Watermarks />
 
                 <div
-                    id = 'dominantSpeaker'
-                    onTouchEnd = { this._onDoubleTap }>
-                    <div className = 'dynamic-shadow' />
-                    <div id = 'dominantSpeakerAvatarContainer' />
+                    id='dominantSpeaker'
+                    onTouchEnd={this._onDoubleTap}>
+                    <div className='dynamic-shadow' />
+                    <div id='dominantSpeakerAvatarContainer' />
                 </div>
-                <div id = 'remotePresenceMessage' />
-                <span id = 'remoteConnectionMessage' />
-                <div id = 'largeVideoElementsContainer'>
-                    <div id = 'largeVideoBackgroundContainer' />
+                <div id='remotePresenceMessage' />
+                <span id='remoteConnectionMessage' />
+                <div id='largeVideoElementsContainer'>
+                    <div id='largeVideoBackgroundContainer' />
                     {/*
                       * FIXME: the architecture of elements related to the large
                       * video and the naming. The background is not part of
@@ -241,21 +261,21 @@ class LargeVideo extends Component<IProps> {
                       * another container for the background and the
                       * largeVideoWrapper in order to hide/show them.
                       */}
-                    { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> : <></>}
+                    {_displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> : <></>}
                     <div
-                        id = 'largeVideoWrapper'
-                        onTouchEnd = { this._onDoubleTap }
-                        ref = { this._wrapperRef }
-                        role = 'figure' >
+                        id='largeVideoWrapper'
+                        onTouchEnd={this._onDoubleTap}
+                        ref={this._wrapperRef}
+                        role='figure' >
                         <video
-                            autoPlay = { !_noAutoPlayVideo }
-                            id = 'largeVideo'
-                            muted = { true }
-                            playsInline = { true } /* for Safari on iOS to work */ />
+                            autoPlay={!_noAutoPlayVideo}
+                            id='largeVideo'
+                            muted={true}
+                            playsInline={true} /* for Safari on iOS to work */ />
                     </div>
                 </div>
-                { (!interfaceConfig.DISABLE_TRANSCRIPTION_SUBTITLES && _showSubtitles)
-                    && <Captions /> }
+                {(!interfaceConfig.DISABLE_TRANSCRIPTION_SUBTITLES && _showSubtitles)
+                    && <Captions />}
                 {
                     _isDisplayNameVisible
                     && (
@@ -378,16 +398,27 @@ function _mapStateToProps(state: IReduxState) {
     const isLocalScreenshareOnLargeVideo = largeVideoParticipant?.id?.includes(localParticipantId ?? '')
         && videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
 
+    // 모든 참가자의 비디오 트랙 확인
+    const participants = state['features/base/participants'];
+    const hasScreenShare = Array.from(participants.remote.values()).some(participant => {
+        const participantVideoTrack = getVideoTrackByParticipant(state, participant);
+        return participantVideoTrack?.videoType === VIDEO_TYPE.DESKTOP;
+    });
+
+    const configLastN = state['features/base/config'].channelLastN ?? 4;
+
     return {
         _backgroundAlpha: state['features/base/config'].backgroundAlpha,
         _customBackgroundColor: backgroundColor,
         _customBackgroundImageUrl: backgroundImageUrl,
+        _configLastN: configLastN,
         _displayScreenSharingPlaceholder:
             Boolean(isLocalScreenshareOnLargeVideo && !seeWhatIsBeingShared && !isSpotTV()),
         _hideSelfView: getHideSelfView(state),
         _isChatOpen: isChatOpen,
         _isDisplayNameVisible: isDisplayNameVisible(state),
         _isScreenSharing: Boolean(isLocalScreenshareOnLargeVideo),
+        _isHasSharingScreen: hasScreenShare,
         _largeVideoParticipantId: largeVideoParticipant?.id ?? '',
         _localParticipantId: localParticipantId ?? '',
         _noAutoPlayVideo: Boolean(testingConfig?.noAutoPlayVideo),
