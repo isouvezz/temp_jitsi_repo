@@ -67,8 +67,11 @@ const _updateLastN = debounce(({ dispatch, getState }: IStore) => {
 
     const { lastN } = state["features/base/lastn"];
 
-    if (lastN !== lastNSelected) {
+    //화면 공유중일때만 1이기 때문에 화면 공유 중일때는 1로 설정
+    if (lastN !== lastNSelected && lastN !== 1) {
         dispatch(setLastN(lastNSelected));
+    } else {
+        dispatch(setLastN(1));
     }
 }, 1000); /* Don't send this more often than once a second. */
 
