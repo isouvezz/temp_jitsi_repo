@@ -346,6 +346,8 @@
         "kickParticipantTitle": "Kick this participant?",
         "kickSystemTitle": "Ouch! You were kicked out of the classroom",
         "kickTitle": "Ouch! {{participantDisplayName}} kicked you out of the classroom",
+        "leaveConferenceTitle": "Delegate Host Authority",
+        "leaveConferenceHostConfirm": "You are the only host in this meeting. Please delegate host authority before leaving.",
         "linkclassroom": "Link classroom",
         "linkclassroomTitle": "Link classroom to Salesforce",
         "liveStreaming": "Live Streaming",
@@ -1421,7 +1423,9 @@
         "videoSettings": "Video settings",
         "videomute": "Stop camera",
         "videomuteGUMPending": "Connecting your camera",
-        "videounmute": "Start camera"
+        "videounmute": "Start camera",
+        "lastN": "Limit video streams",
+        "disableLastN": "Show all video streams"
     },
     "transcribing": {
         "ccButtonTooltip": "Start / Stop subtitles",
