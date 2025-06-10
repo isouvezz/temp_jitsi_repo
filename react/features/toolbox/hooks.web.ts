@@ -10,7 +10,7 @@ import { HELP_BUTTON_ENABLED } from "../base/flags/constants";
 import { getFeatureFlag } from "../base/flags/functions";
 import JitsiMeetJS from "../base/lib-jitsi-meet";
 import { raiseHand } from "../base/participants/actions";
-import { getLocalParticipant, hasRaisedHand } from "../base/participants/functions";
+import { getLocalParticipant, hasRaisedHand, isLocalParticipantModerator } from "../base/participants/functions";
 import { isToggleCameraEnabled } from "../base/tracks/functions.web";
 import { toggleChat } from "../chat/actions.web";
 import ChatButton from "../chat/components/web/ChatButton";
@@ -293,6 +293,8 @@ export function useToolboxButtons(_customToolbarButtons?: ICustomToolbarButton[]
     const feedback = useFeedbackButton();
     const _download = useDownloadButton();
     const _help = useHelpButton();
+    const state = useSelector((state: IReduxState) => state);
+    const isModerator = isLocalParticipantModerator(state);
 
     const buttons: { [key in ToolbarButton]?: IToolboxButton } = {
         microphone,
@@ -310,8 +312,8 @@ export function useToolboxButtons(_customToolbarButtons?: ICustomToolbarButton[]
         fullscreen: _fullscreen,
         security,
         closedcaptions: cc,
-        recording,
-        livestreaming: liveStreaming,
+        recording: isModerator ? recording : undefined,
+        livestreaming: isModerator ? liveStreaming : undefined,
         linktosalesforce,
         sharedvideo: shareVideo,
         shareaudio,
@@ -326,7 +328,7 @@ export function useToolboxButtons(_customToolbarButtons?: ICustomToolbarButton[]
         feedback,
         download: _download,
         help: _help,
-        lastn,
+        lastn: isModerator ? lastn : undefined,
     };
     const buttonKeys = Object.keys(buttons) as ToolbarButton[];
 
