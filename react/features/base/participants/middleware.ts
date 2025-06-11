@@ -81,6 +81,7 @@ import {
 import logger from "./logger";
 import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE } from "./sounds";
 import { IJitsiParticipant } from "./types";
+import { setSpeakerTag } from "../lastn/actions";
 
 import "./subscriber";
 
@@ -114,6 +115,9 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const participant = getLocalParticipant(state);
             const dominantSpeaker = getDominantSpeakerParticipant(state);
             const isLocal = participant && participant.id === id;
+
+            // 화자 태그 설정 - 화자가 변경될 때마다 설정
+            store.dispatch(setSpeakerTag(id));
 
             if (
                 isLocal &&

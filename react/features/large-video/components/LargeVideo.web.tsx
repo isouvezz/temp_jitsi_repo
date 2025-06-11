@@ -24,7 +24,7 @@ import { isWhiteboardEnabled } from "../../whiteboard/functions";
 import { setSeeWhatIsBeingShared } from "../actions.web";
 import { getLargeVideoParticipant } from "../functions";
 import { setLastN } from "../../lastn/actions";
-import { getLastN } from "../../lastn/functions";
+import { getLastN, isCurrentSpeaker } from "../../lastn/functions";
 import ScreenSharePlaceholder from "./ScreenSharePlaceholder.web";
 
 interface IProps {
@@ -135,6 +135,16 @@ interface IProps {
     _configLastN: number;
 
     /**
+     * The lastN value set by the component.
+     */
+    _setLastN: number;
+
+    /**
+     * Whether the local participant is the dominant speaker.
+     */
+    _isDominantSpeaker: boolean;
+
+    /**
      * The Redux dispatch function.
      */
     dispatch: IStore["dispatch"];
@@ -195,13 +205,12 @@ class LargeVideo extends Component<IProps> {
         }
 
         if (_isHasSharingScreen) {
-            this.props.dispatch(setLastN(1));
+            this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 1 : 2));
         } else {
             this.props.dispatch(setLastN(_configLastN));
         }
 
         if (_isScreenSharing && _seeWhatIsBeingShared) {
-            this.props.dispatch(setLastN(1));
             VideoLayout.updateLargeVideo(_largeVideoParticipantId, true, true);
         }
 
@@ -374,11 +383,11 @@ function _mapStateToProps(state: IReduxState) {
     const { width: verticalFilmstripWidth, visible } = state["features/filmstrip"];
     const { hideDominantSpeakerBadge } = state["features/base/config"];
     const { seeWhatIsBeingShared } = state["features/large-video"];
-    const localParticipantId = getLocalParticipant(state)?.id;
+    const localParticipant = getLocalParticipant(state);
     const largeVideoParticipant = getLargeVideoParticipant(state);
     const videoTrack = getVideoTrackByParticipant(state, largeVideoParticipant);
     const isLocalScreenshareOnLargeVideo =
-        largeVideoParticipant?.id?.includes(localParticipantId ?? "") && videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
+        largeVideoParticipant?.id?.includes(localParticipant?.id ?? "") && videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
 
     // 모든 참가자의 비디오 트랙 확인
     const participants = state["features/base/participants"];
@@ -388,12 +397,15 @@ function _mapStateToProps(state: IReduxState) {
     });
 
     const configLastN = state["features/base/config"].channelLastN ?? 4;
+    const setLastN = state["features/base/lastn"]?.lastN ?? configLastN;
+    const isDominantSpeaker = localParticipant?.id === state["features/base/lastn"].speakerId;
 
     return {
         _backgroundAlpha: state["features/base/config"].backgroundAlpha,
         _customBackgroundColor: backgroundColor,
         _customBackgroundImageUrl: backgroundImageUrl,
         _configLastN: configLastN,
+        _setLastN: setLastN,
         _displayScreenSharingPlaceholder: Boolean(
             isLocalScreenshareOnLargeVideo && !seeWhatIsBeingShared && !isSpotTV()
         ),
@@ -403,7 +415,7 @@ function _mapStateToProps(state: IReduxState) {
         _isScreenSharing: Boolean(isLocalScreenshareOnLargeVideo),
         _isHasSharingScreen: hasScreenShare,
         _largeVideoParticipantId: largeVideoParticipant?.id ?? "",
-        _localParticipantId: localParticipantId ?? "",
+        _localParticipantId: localParticipant?.id ?? "",
         _noAutoPlayVideo: Boolean(testingConfig?.noAutoPlayVideo),
         _resizableFilmstrip: isFilmstripResizable(state),
         _seeWhatIsBeingShared: Boolean(seeWhatIsBeingShared),
@@ -414,6 +426,7 @@ function _mapStateToProps(state: IReduxState) {
         _verticalViewMaxWidth: getVerticalViewMaxWidth(state),
         _visibleFilmstrip: visible,
         _whiteboardEnabled: isWhiteboardEnabled(state),
+        _isDominantSpeaker: isDominantSpeaker,
     };
 }
 
