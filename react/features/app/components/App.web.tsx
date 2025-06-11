@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import GlobalStyles from '../../base/ui/components/GlobalStyles.web';
-import JitsiThemeProvider from '../../base/ui/components/JitsiThemeProvider.web';
-import DialogContainer from '../../base/ui/components/web/DialogContainer';
-import ChromeExtensionBanner from '../../chrome-extension-banner/components/ChromeExtensionBanner.web';
-import OverlayContainer from '../../overlay/components/web/OverlayContainer';
+import GlobalStyles from "../../base/ui/components/GlobalStyles.web";
+import JitsiThemeProvider from "../../base/ui/components/JitsiThemeProvider.web";
+import DialogContainer from "../../base/ui/components/web/DialogContainer";
+import ChromeExtensionBanner from "../../chrome-extension-banner/components/ChromeExtensionBanner.web";
+import OverlayContainer from "../../overlay/components/web/OverlayContainer";
+import LastNIndicator from "../../lastn/components/LastNIndicator";
 
-import { AbstractApp } from './AbstractApp';
+import { AbstractApp } from "./AbstractApp";
 
 // Register middlewares and reducers.
-import '../middlewares';
-import '../reducers';
-
+import "../middlewares";
+import "../reducers";
 
 /**
  * Root app {@code Component} on Web/React.
@@ -19,7 +19,6 @@ import '../reducers';
  * @augments AbstractApp
  */
 export class App extends AbstractApp {
-
     /**
      * Creates an extra {@link ReactElement}s to be added (unconditionally)
      * alongside the main element.
@@ -32,6 +31,7 @@ export class App extends AbstractApp {
         return (
             <JitsiThemeProvider>
                 <OverlayContainer />
+                <LastNIndicator />
             </JitsiThemeProvider>
         );
     }
@@ -47,7 +47,7 @@ export class App extends AbstractApp {
             <JitsiThemeProvider>
                 <GlobalStyles />
                 <ChromeExtensionBanner />
-                { super._createMainElement(component, props) }
+                {super._createMainElement(component, props)}
             </JitsiThemeProvider>
         );
     }
