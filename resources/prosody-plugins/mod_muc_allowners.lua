@@ -13,10 +13,10 @@ local room_jid_match_rewrite = util.room_jid_match_rewrite;
 local presence_check_status = util.presence_check_status;
 local MUC_NS = 'http://jabber.org/protocol/muc';
 
-local disable_revoke_owners;
+local disable_revoke_owners = true;
 
 local function load_config()
-    disable_revoke_owners = module:get_option_boolean("allowners_disable_revoke_owners", false);
+    disable_revoke_owners = module:get_option_boolean("allowners_disable_revoke_owners", true);
 end
 load_config();
 
