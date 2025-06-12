@@ -6,7 +6,7 @@ import VideoLayout from "../../../../modules/UI/videolayout/VideoLayout";
 import { IReduxState, IStore } from "../../app/types";
 import { isDisplayNameVisible } from "../../base/config/functions.web";
 import { VIDEO_TYPE } from "../../base/media/constants";
-import { getLocalParticipant } from "../../base/participants/functions";
+import { getLocalParticipant, getScreenshareParticipantIds } from "../../base/participants/functions";
 import Watermarks from "../../base/react/components/web/Watermarks";
 import { getHideSelfView } from "../../base/settings/functions.any";
 import { getVideoTrackByParticipant } from "../../base/tracks/functions.web";
@@ -24,8 +24,8 @@ import { isWhiteboardEnabled } from "../../whiteboard/functions";
 import { setSeeWhatIsBeingShared } from "../actions.web";
 import { getLargeVideoParticipant } from "../functions";
 import { setLastN } from "../../lastn/actions";
-import { getLastN, isCurrentSpeaker } from "../../lastn/functions";
 import ScreenSharePlaceholder from "./ScreenSharePlaceholder.web";
+import { isLayoutTileView } from "../../video-layout/functions.any";
 
 interface IProps {
     /**
@@ -67,6 +67,11 @@ interface IProps {
      * Whether or not the local screen share is on large-video.
      */
     _isScreenSharing: boolean;
+
+    /**
+     * Whether or not the local screen share is on large-video.
+     */
+    _isLocalScreenShare: boolean;
 
     /**
      * Whether or not there is any screen sharing in the conference.
@@ -145,6 +150,11 @@ interface IProps {
     _isDominantSpeaker: boolean;
 
     /**
+     * Whether the tile view is enabled.
+     */
+    _tileViewEnabled: boolean;
+
+    /**
      * The Redux dispatch function.
      */
     dispatch: IStore["dispatch"];
@@ -194,6 +204,8 @@ class LargeVideo extends Component<IProps> {
             _hideSelfView,
             _localParticipantId,
             _configLastN,
+            _tileViewEnabled,
+            _isLocalScreenShare,
         } = this.props;
 
         if (prevProps._visibleFilmstrip !== _visibleFilmstrip) {
@@ -204,8 +216,12 @@ class LargeVideo extends Component<IProps> {
             this.props.dispatch(setSeeWhatIsBeingShared(false));
         }
 
-        if (_isHasSharingScreen) {
-            this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 1 : 2));
+        if (_isHasSharingScreen && !_tileViewEnabled) {
+            if (_isLocalScreenShare) {
+                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 0 : 1));
+            } else {
+                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 1 : 2));
+            }
         } else {
             this.props.dispatch(setLastN(_configLastN));
         }
@@ -391,14 +407,14 @@ function _mapStateToProps(state: IReduxState) {
 
     // 모든 참가자의 비디오 트랙 확인
     const participants = state["features/base/participants"];
-    const hasScreenShare = Array.from(participants.remote.values()).some((participant) => {
-        const participantVideoTrack = getVideoTrackByParticipant(state, participant);
-        return participantVideoTrack?.videoType === VIDEO_TYPE.DESKTOP;
-    });
+    const screenshareParticipantIds = getScreenshareParticipantIds(state);
+    const isLocalScreenShare = screenshareParticipantIds.includes(localParticipant?.id ?? "");
+    const hasScreenShare = screenshareParticipantIds.length > 0;
 
     const configLastN = state["features/base/config"].channelLastN ?? 4;
     const setLastN = state["features/base/lastn"]?.lastN ?? configLastN;
     const isDominantSpeaker = localParticipant?.id === state["features/base/lastn"].speakerId;
+    const isTileView = isLayoutTileView(state);
 
     return {
         _backgroundAlpha: state["features/base/config"].backgroundAlpha,
@@ -413,6 +429,7 @@ function _mapStateToProps(state: IReduxState) {
         _isChatOpen: isChatOpen,
         _isDisplayNameVisible: isDisplayNameVisible(state),
         _isScreenSharing: Boolean(isLocalScreenshareOnLargeVideo),
+        _isLocalScreenShare: Boolean(isLocalScreenShare),
         _isHasSharingScreen: hasScreenShare,
         _largeVideoParticipantId: largeVideoParticipant?.id ?? "",
         _localParticipantId: localParticipant?.id ?? "",
@@ -427,6 +444,7 @@ function _mapStateToProps(state: IReduxState) {
         _visibleFilmstrip: visible,
         _whiteboardEnabled: isWhiteboardEnabled(state),
         _isDominantSpeaker: isDominantSpeaker,
+        _tileViewEnabled: isTileView,
     };
 }
 
