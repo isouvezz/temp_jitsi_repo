@@ -6,8 +6,7 @@
  *     participantId: (string|undefined)
  * }
  */
-export const SELECT_LARGE_VIDEO_PARTICIPANT
-    = 'SELECT_LARGE_VIDEO_PARTICIPANT';
+export const SELECT_LARGE_VIDEO_PARTICIPANT = "SELECT_LARGE_VIDEO_PARTICIPANT";
 
 /**
  * Action to set the dimensions of the large video.
@@ -18,7 +17,7 @@ export const SELECT_LARGE_VIDEO_PARTICIPANT
  *     width: number
  * }
  */
-export const SET_LARGE_VIDEO_DIMENSIONS = 'SET_LARGE_VIDEO_DIMENSIONS';
+export const SET_LARGE_VIDEO_DIMENSIONS = "SET_LARGE_VIDEO_DIMENSIONS";
 
 /**
  * Action to update the redux store with the current resolution of large video.
@@ -28,8 +27,7 @@ export const SET_LARGE_VIDEO_DIMENSIONS = 'SET_LARGE_VIDEO_DIMENSIONS';
  *     resolution: number
  * }}
  */
-export const UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION
-    = 'UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION';
+export const UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION = "UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION";
 
 /**
  * Action to set the redux store of the current show me what I'm sharing flag value.
@@ -39,5 +37,14 @@ export const UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION
  *     seeWhatIsBeingShared: boolean
  * }}
  */
-export const SET_SEE_WHAT_IS_BEING_SHARED
-        = 'SET_SEE_WHAT_IS_BEING_SHARED';
+export const SET_SEE_WHAT_IS_BEING_SHARED = "SET_SEE_WHAT_IS_BEING_SHARED";
+
+/**
+ * Action to update the speaker queue.
+ *
+ * @returns {{
+ *     type: SPEAKER_QUEUE_UPDATED,
+ *     speakerQueue: Array<string>
+ * }}
+ */
+export const SPEAKER_QUEUE_UPDATED = "SPEAKER_QUEUE_UPDATED";

@@ -26,6 +26,7 @@ import { getLargeVideoParticipant } from "../functions";
 import { setLastN } from "../../lastn/actions";
 import ScreenSharePlaceholder from "./ScreenSharePlaceholder.web";
 import { isLayoutTileView } from "../../video-layout/functions.any";
+import { speakerQueue } from "../speakerQueue";
 
 interface IProps {
     /**
@@ -158,6 +159,16 @@ interface IProps {
      * The Redux dispatch function.
      */
     dispatch: IStore["dispatch"];
+
+    /**
+     * The speakers array.
+     */
+    _speakers: any[];
+
+    /**
+     * The speaker count.
+     */
+    _speakerCount: number;
 }
 
 /** .
@@ -168,16 +179,9 @@ interface IProps {
  */
 class LargeVideo extends Component<IProps> {
     _tappedTimeout: number | undefined;
-
     _containerRef: React.RefObject<HTMLDivElement>;
-
     _wrapperRef: React.RefObject<HTMLDivElement>;
 
-    /**
-     * Constructor of the component.
-     *
-     * @inheritdoc
-     */
     constructor(props: IProps) {
         super(props);
 
@@ -189,11 +193,11 @@ class LargeVideo extends Component<IProps> {
         this._updateLayout = this._updateLayout.bind(this);
     }
 
-    /**
-     * Implements {@code Component#componentDidUpdate}.
-     *
-     * @inheritdoc
-     */
+    override componentDidMount() {
+        // speakerQueue에 dispatch 함수 전달
+        speakerQueue.setDispatchCallback(this.props.dispatch);
+    }
+
     override componentDidUpdate(prevProps: IProps) {
         const {
             _visibleFilmstrip,
@@ -206,6 +210,7 @@ class LargeVideo extends Component<IProps> {
             _configLastN,
             _tileViewEnabled,
             _isLocalScreenShare,
+            _speakerCount,
         } = this.props;
 
         if (prevProps._visibleFilmstrip !== _visibleFilmstrip) {
@@ -218,9 +223,9 @@ class LargeVideo extends Component<IProps> {
 
         if (_isHasSharingScreen && !_tileViewEnabled) {
             if (_isLocalScreenShare) {
-                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 0 : 1));
+                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount - 1 : _speakerCount));
             } else {
-                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? 1 : 2));
+                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount : _speakerCount + 1));
             }
         } else {
             this.props.dispatch(setLastN(_configLastN));
@@ -398,7 +403,7 @@ function _mapStateToProps(state: IReduxState) {
     const { isOpen: isChatOpen } = state["features/chat"];
     const { width: verticalFilmstripWidth, visible } = state["features/filmstrip"];
     const { hideDominantSpeakerBadge } = state["features/base/config"];
-    const { seeWhatIsBeingShared } = state["features/large-video"];
+    const { seeWhatIsBeingShared, speakers, speakerCount } = state["features/large-video"];
     const localParticipant = getLocalParticipant(state);
     const largeVideoParticipant = getLargeVideoParticipant(state);
     const videoTrack = getVideoTrackByParticipant(state, largeVideoParticipant);
@@ -445,6 +450,8 @@ function _mapStateToProps(state: IReduxState) {
         _whiteboardEnabled: isWhiteboardEnabled(state),
         _isDominantSpeaker: isDominantSpeaker,
         _tileViewEnabled: isTileView,
+        _speakers: speakers,
+        _speakerCount: speakerCount,
     };
 }
 
