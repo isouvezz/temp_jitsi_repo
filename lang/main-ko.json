@@ -336,7 +336,8 @@
         "kickParticipantTitle": "이 참가자를 추방 하시겠습니까?",
         "kickTitle": "{{participantDisplayName}} 님이 강의실에서 퇴장했습니다.",
         "leaveConferenceTitle": "강의실 호스트 권한 위임",
-        "leaveConferenceHostConfirm": "현재 회의에서 유일한 호스트입니다. 호스트 권한을 위임하고 강의실을 나가주세요.",
+        "information": "안내",
+        "leaveConferenceHostConfirm": "현재 회의에서 유일한 호스트입니다.\n나가시면 회의가 종료됩니다.\n정말로 나가시겠습니까?",
         "linkMeeting": "강의실 연결",
         "linkMeetingTitle": "강의실을 Salesforce에 연결",
         "liveStreaming": "실시간 스트리밍",
@@ -1402,7 +1403,7 @@
         "videounmute": "카메라 시작",
         "lastN": "비디오 스트림 수 제한",
         "disableLastN": "비디오 스트림 모두 표시",
-        "leaveConferenceHostConfirm": "현재 회의에서 유일한 호스트입니다. 나가시면 회의가 종료됩니다. 정말로 나가시겠습니까?"
+        "leaveConferenceHostConfirm": "현재 회의에서 유일한 호스트입니다.\n나가시면 회의가 종료됩니다.\n정말로 나가시겠습니까?"
     },
     "transcribing": {
         "ccButtonTooltip": "자막 시작/종료",

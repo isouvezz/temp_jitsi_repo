@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import { IStore } from "../../../app/types";
 import { translate } from "../../../base/i18n/functions";
+import { endConference } from "../../../base/conference/actions.any";
 import Dialog from "../../../base/ui/components/web/Dialog";
 
 /**
@@ -34,11 +35,22 @@ class LeaveConferenceDialog extends React.Component<IProps> {
      * @returns {ReactElement}
      */
     override render() {
-        const { t } = this.props;
+        const { t, dispatch } = this.props;
 
         return (
-            <Dialog ok={{ translationKey: "dialog.confirm" }} cancel={{}} titleKey="dialog.leaveConferenceTitle">
-                <div>{t("dialog.leaveConferenceHostConfirm")}</div>
+            <Dialog
+                ok={{
+                    translationKey: "dialog.confirm",
+                }}
+                cancel={{
+                    translationKey: "dialog.close",
+                }}
+                onSubmit={() => dispatch(endConference())}
+                titleKey="dialog.information"
+            >
+                <div style={{ fontSize: "1.125rem", whiteSpace: "pre-line" }}>
+                    {t("dialog.leaveConferenceHostConfirm")}
+                </div>
             </Dialog>
         );
     }

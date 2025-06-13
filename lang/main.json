@@ -347,7 +347,7 @@
         "kickSystemTitle": "Ouch! You were kicked out of the classroom",
         "kickTitle": "Ouch! {{participantDisplayName}} kicked you out of the classroom",
         "leaveConferenceTitle": "Delegate Host Authority",
-        "leaveConferenceHostConfirm": "You are the only host in this meeting. Please delegate host authority before leaving.",
+        "leaveConferenceHostConfirm": "You are the only host in this meeting.\nIf you leave,\nthe meeting will end. Are you sure you want to leave?",
         "linkclassroom": "Link classroom",
         "linkclassroomTitle": "Link classroom to Salesforce",
         "liveStreaming": "Live Streaming",

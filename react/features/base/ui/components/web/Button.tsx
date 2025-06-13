@@ -56,7 +56,7 @@ const useStyles = makeStyles()((theme) => {
             alignItems: "center",
             justifyContent: "center",
             border: 0,
-            ...withPixelLineHeight(theme.typography.bodyShortBold),
+            ...withPixelLineHeight(theme.typography.bodyShortBoldLarge),
             transition: "background .2s",
             cursor: "pointer",
 
