@@ -10,6 +10,12 @@ import {
     SPEAKER_QUEUE_UPDATED,
 } from "./actionTypes";
 
+interface SpeakerEntry {
+    id: string;
+    timestamp: number;
+    audioLevel: number;
+}
+
 export interface ILargeVideoState {
     height?: number;
     participantId?: string;
@@ -18,11 +24,13 @@ export interface ILargeVideoState {
     width?: number;
     speakers: string[];
     speakerCount: number;
+    queue: SpeakerEntry[];
 }
 
 const DEFAULT_STATE: ILargeVideoState = {
     speakers: [],
     speakerCount: 0,
+    queue: [],
 };
 
 ReducerRegistry.register<ILargeVideoState>(
@@ -71,8 +79,9 @@ ReducerRegistry.register<ILargeVideoState>(
             case SPEAKER_QUEUE_UPDATED:
                 return {
                     ...state,
-                    speakers: action.payload.speakers,
-                    speakerCount: action.payload.speakerCount,
+                    speakers: action.queue.map((entry) => entry.id),
+                    speakerCount: action.queue.length,
+                    queue: action.queue,
                 };
         }
 

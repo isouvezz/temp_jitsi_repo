@@ -40,14 +40,29 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
 
             const result = next(action);
 
-            if (isTestModeEnabled(state)) {
-                logger.info(`Dominant speaker changed event for: ${action.participant.id}`);
-            }
 
             if (localParticipant && localParticipant.id !== action.participant.id) {
                 store.dispatch(selectParticipantInLargeVideo());
             }
 
+            return result;
+        }
+        case TRACK_ADDED: {
+            const result = next(action);
+            const { track } = action;
+            if (track.jitsiTrack.isAudioTrack()) {
+                const participantId = track.jitsiTrack.getParticipantId();                
+                speakerQueue.addSpeaker(participantId);
+                speakerQueue.subscribeToTrack(track.jitsiTrack);
+            }
+            return result;
+        }
+        case TRACK_REMOVED: {
+            const result = next(action);
+            const { track } = action;
+            if (track.jitsiTrack.isAudioTrack()) {
+                speakerQueue.unsubscribeFromTrack(track.jitsiTrack);
+            }
             return result;
         }
         case PIN_PARTICIPANT: {
@@ -59,9 +74,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
         }
         case PARTICIPANT_JOINED:
         case PARTICIPANT_LEFT:
-        case TOGGLE_DOCUMENT_EDITING:
-        case TRACK_ADDED:
-        case TRACK_REMOVED: {
+        case TOGGLE_DOCUMENT_EDITING: {
             const result = next(action);
 
             store.dispatch(selectParticipantInLargeVideo());

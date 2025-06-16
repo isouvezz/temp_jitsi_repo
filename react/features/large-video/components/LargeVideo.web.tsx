@@ -223,9 +223,17 @@ class LargeVideo extends Component<IProps> {
 
         if (_isHasSharingScreen && !_tileViewEnabled) {
             if (_isLocalScreenShare) {
-                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount - 1 : _speakerCount));
+                if (this.props._isDominantSpeaker && _speakerCount == 0) {
+                    this.props.dispatch(setLastN(0));
+                } else {
+                    this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount - 1 : _speakerCount));
+                }
             } else {
-                this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount : _speakerCount + 1));
+                if (this.props._isDominantSpeaker && _speakerCount == 0) {
+                    this.props.dispatch(setLastN(1));
+                } else {
+                    this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount : _speakerCount + 1));
+                }
             }
         } else {
             this.props.dispatch(setLastN(_configLastN));
