@@ -20,10 +20,10 @@ interface IProps extends AbstractButtonProps {
 class LastNButton extends AbstractButton<IProps> {
     override accessibilityLabel = "toolbar.accessibilityLabel.lastN";
     override icon = IconNoiseSuppressionOn;
-    override label = "toolbar.lastN";
+    override label = "toolbar.disableLastN";
     override tooltip = "toolbar.lastN";
     override toggledIcon = IconNoiseSuppressionOff;
-    override toggledLabel = "toolbar.disableLastN";
+    override toggledLabel = "toolbar.lastN";
 
     /**
      * 버튼 클릭 시 호출되는 함수입니다.
