@@ -169,6 +169,11 @@ interface IProps {
      * The speaker count.
      */
     _speakerCount: number;
+
+    /**
+     * Whether to force change lastN.
+     */
+    _forceChangeLastN: boolean;
 }
 
 /** .
@@ -221,22 +226,37 @@ class LargeVideo extends Component<IProps> {
             this.props.dispatch(setSeeWhatIsBeingShared(false));
         }
 
-        if (_isHasSharingScreen && !_tileViewEnabled) {
-            if (_isLocalScreenShare) {
-                if (this.props._isDominantSpeaker && _speakerCount == 0) {
-                    this.props.dispatch(setLastN(0));
-                } else {
-                    this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount - 1 : _speakerCount));
-                }
-            } else {
+        //강제 변환 코드
+        const forceChangeLastN = this.props._forceChangeLastN;
+
+        if (!forceChangeLastN) {
+            if (_isHasSharingScreen && !_tileViewEnabled) {
+                // if (_isLocalScreenShare) {
+                //     if (this.props._isDominantSpeaker && _speakerCount == 0) {
+                //         this.props.dispatch(setLastN(0));
+                //     } else {
+                //         this.props.dispatch(
+                //             setLastN(this.props._isDominantSpeaker ? _speakerCount - 1 : _speakerCount)
+                //         );
+                //     }
+                // } else {
+                //     if (this.props._isDominantSpeaker && _speakerCount == 0) {
+                //         this.props.dispatch(setLastN(1));
+                //     } else {
+                //         this.props.dispatch(
+                //             setLastN(this.props._isDominantSpeaker ? _speakerCount : _speakerCount + 1)
+                //         );
+                //     }
+                // }
+
                 if (this.props._isDominantSpeaker && _speakerCount == 0) {
                     this.props.dispatch(setLastN(1));
                 } else {
                     this.props.dispatch(setLastN(this.props._isDominantSpeaker ? _speakerCount : _speakerCount + 1));
                 }
+            } else {
+                this.props.dispatch(setLastN(_configLastN));
             }
-        } else {
-            this.props.dispatch(setLastN(_configLastN));
         }
 
         if (_isScreenSharing && _seeWhatIsBeingShared) {
@@ -429,6 +449,8 @@ function _mapStateToProps(state: IReduxState) {
     const isDominantSpeaker = localParticipant?.id === state["features/base/lastn"].speakerId;
     const isTileView = isLayoutTileView(state);
 
+    const forceChangeLastN = state["features/base/lastn"]?.forceChangeLastN ?? false;
+
     return {
         _backgroundAlpha: state["features/base/config"].backgroundAlpha,
         _customBackgroundColor: backgroundColor,
@@ -460,6 +482,7 @@ function _mapStateToProps(state: IReduxState) {
         _tileViewEnabled: isTileView,
         _speakers: speakers,
         _speakerCount: speakerCount,
+        _forceChangeLastN: forceChangeLastN,
     };
 }
 
