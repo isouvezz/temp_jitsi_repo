@@ -79,7 +79,7 @@ ReducerRegistry.register<ILargeVideoState>(
             case SPEAKER_QUEUE_UPDATED:
                 return {
                     ...state,
-                    speakers: action.queue.map((entry) => entry.id),
+                    speakers: action.queue.map((entry: SpeakerEntry) => entry.id),
                     speakerCount: action.queue.length,
                     queue: action.queue,
                 };
