@@ -48,11 +48,11 @@ class LastNButton extends AbstractButton<IProps> {
         if (this.props._isLastNUnlimited) {
             // lastN 제한이 없는 상태: 타일뷰 4개, lastN=2로 제한
             dispatch(setNumberOfVisibleTiles(4));
-            dispatch(setLastN(this.props._lastN || 4));
+            dispatch(setLastN(this.props._lastN || 4, false)); // forceChangeLastN 플래그를 true로 설정
         } else {
             // lastN 제한이 있는 상태: 타일뷰 50개, lastN 제한 해제
             dispatch(setNumberOfVisibleTiles(50));
-            dispatch(setLastN(-1));
+            dispatch(setLastN(-1, true)); // forceChangeLastN 플래그를 true로 설정
         }
 
         // 위 설정을 UI에 즉시 반영하기 위해 타일뷰 레이아웃 재계산

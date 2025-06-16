@@ -9,9 +9,10 @@ import { SET_LAST_N } from "./actionTypes";
  *     lastN: number
  * }}
  */
-export function setLastN(lastN: number) {
+export function setLastN(lastN: number, forceChangeLastN: boolean = false) {
     return {
         type: SET_LAST_N,
         lastN,
+        forceChangeLastN,
     };
 }
