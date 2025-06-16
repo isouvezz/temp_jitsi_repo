@@ -98,7 +98,7 @@ const Dialog = ({
     size,
     testId,
     title,
-    titleKey,
+    titleKey = "dialog.information",
 }: IDialogProps) => {
     const { classes } = useStyles();
     const { t } = useTranslation();

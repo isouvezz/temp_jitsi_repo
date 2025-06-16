@@ -31,7 +31,7 @@ export class App extends AbstractApp {
         return (
             <JitsiThemeProvider>
                 <OverlayContainer />
-                <LastNIndicator />
+                {/* <LastNIndicator /> */}
             </JitsiThemeProvider>
         );
     }
