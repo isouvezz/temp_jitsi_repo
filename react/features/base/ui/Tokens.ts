@@ -218,7 +218,7 @@ export const typography = {
     },
 
     heading5: {
-        fontSize: '1.25rem',
+        fontSize: '1.5rem',
         lineHeight: '1.75rem',
         fontWeight: font.weightSemiBold,
         letterSpacing: 0
