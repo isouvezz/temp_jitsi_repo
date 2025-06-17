@@ -11,7 +11,7 @@ class SpeakerQueue {
     private queue: SpeakerEntry[] = [];
     private timer: number | null = null;
     private readonly MAX_QUEUE_SIZE = 4;
-    private readonly EXPIRATION_TIME = 15000; // 15초
+    private readonly EXPIRATION_TIME = 5000; // 5초
     private readonly AUDIO_LEVEL_THRESHOLD = 0.1; // 오디오 레벨 임계값
     private dispatchCallback: ((action: any) => void) | null = null;
     private trackListeners: Map<string, Function> = new Map();
