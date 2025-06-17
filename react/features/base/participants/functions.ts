@@ -113,7 +113,7 @@ export function getActiveSpeakersToBeDisplayed(stateful: IStateful) {
     }
     const truncatedSpeakersList = Array.from(activeSpeakers).slice(0, availableSlotsForActiveSpeakers);
 
-    truncatedSpeakersList.sort((a: any, b: any) => a[1].localeCompare(b[1]));
+    // truncatedSpeakersList.sort((a: any, b: any) => a[1].localeCompare(b[1]));
 
     return new Map(truncatedSpeakersList);
 }

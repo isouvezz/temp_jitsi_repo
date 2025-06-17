@@ -171,7 +171,7 @@ ReducerRegistry.register<IParticipantsState>('features/base/participants',
         }
 
         // Keep the remote speaker list sorted alphabetically.
-        sortedSpeakersList.sort((a, b) => a[1].localeCompare(b[1]));
+        // sortedSpeakersList.sort((a, b) => a[1].localeCompare(b[1]));
 
         // Only one dominant speaker is allowed.
         if (dominantSpeaker) {
@@ -266,7 +266,7 @@ ReducerRegistry.register<IParticipantsState>('features/base/participants',
             const sortedRemoteVirtualScreenshareParticipants = [ ...state.sortedRemoteVirtualScreenshareParticipants ];
 
             sortedRemoteVirtualScreenshareParticipants.push([ id, name ]);
-            sortedRemoteVirtualScreenshareParticipants.sort((a, b) => a[1].localeCompare(b[1]));
+            // sortedRemoteVirtualScreenshareParticipants.sort((a, b) => a[1].localeCompare(b[1]));
 
             state.sortedRemoteVirtualScreenshareParticipants = new Map(sortedRemoteVirtualScreenshareParticipants);
         }
@@ -352,7 +352,7 @@ ReducerRegistry.register<IParticipantsState>('features/base/participants',
         const sortedRemoteParticipants = Array.from(state.sortedRemoteParticipants);
 
         sortedRemoteParticipants.push([ id, displayName ]);
-        sortedRemoteParticipants.sort((a, b) => a[1].localeCompare(b[1]));
+        // sortedRemoteParticipants.sort((a, b) => a[1].localeCompare(b[1]));
 
         // The sort order of participants is preserved since Map remembers the original insertion order of the keys.
         state.sortedRemoteParticipants = new Map(sortedRemoteParticipants);
@@ -361,7 +361,7 @@ ReducerRegistry.register<IParticipantsState>('features/base/participants',
             const sortedRemoteVirtualScreenshareParticipants = [ ...state.sortedRemoteVirtualScreenshareParticipants ];
 
             sortedRemoteVirtualScreenshareParticipants.push([ id, name ?? '' ]);
-            sortedRemoteVirtualScreenshareParticipants.sort((a, b) => a[1].localeCompare(b[1]));
+            // sortedRemoteVirtualScreenshareParticipants.sort((a, b) => a[1].localeCompare(b[1]));
 
             state.sortedRemoteVirtualScreenshareParticipants = new Map(sortedRemoteVirtualScreenshareParticipants);
         }
