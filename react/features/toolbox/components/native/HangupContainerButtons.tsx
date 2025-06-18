@@ -10,14 +10,8 @@ import HangupMenuButton from "./HangupMenuButton";
 const HangupContainerButtons = (props: AbstractButtonProps) => {
     const { conference } = useSelector((state: IReduxState) => state["features/base/conference"]);
     const endConferenceSupported = conference?.isEndConferenceSupported();
-
-    return endConferenceSupported ? (
-        // @ts-ignore
-        <HangupMenuButton {...props} />
-    ) : (
-        // @ts-ignore
-        <HangupMenuButton {...props} />
-    );
+    // @ts-ignore
+    return <HangupMenuButton {...props} />;
 };
 
 export default HangupContainerButtons;
