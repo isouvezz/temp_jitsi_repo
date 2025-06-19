@@ -908,10 +908,10 @@ class Thumbnail extends Component<IProps, IState> {
                 {...(_isMobile
                     ? {}
                     : {
-                          onMouseEnter: this._onMouseEnter,
-                          onMouseMove: this._onMouseMove,
-                          onMouseLeave: this._onMouseLeave,
-                      })}
+                        onMouseEnter: this._onMouseEnter,
+                        onMouseMove: this._onMouseMove,
+                        onMouseLeave: this._onMouseLeave,
+                    })}
                 role="button"
                 style={styles.thumbnail}
                 tabIndex={0}
@@ -1093,16 +1093,16 @@ class Thumbnail extends Component<IProps, IState> {
                 onFocus={this._onFocus}
                 {...(_isMobile
                     ? {
-                          onTouchEnd: this._onTouchEnd,
-                          onTouchMove: this._onTouchMove,
-                          onTouchStart: this._onTouchStart,
-                      }
+                        onTouchEnd: this._onTouchEnd,
+                        onTouchMove: this._onTouchMove,
+                        onTouchStart: this._onTouchStart,
+                    }
                     : {
-                          onClick: this._onClick,
-                          onMouseEnter: this._onMouseEnter,
-                          onMouseMove: this._onMouseMove,
-                          onMouseLeave: this._onMouseLeave,
-                      })}
+                        onClick: this._onClick,
+                        onMouseEnter: this._onMouseEnter,
+                        onMouseMove: this._onMouseMove,
+                        onMouseLeave: this._onMouseLeave,
+                    })}
                 ref={this.containerRef}
                 style={styles.thumbnail}
             >
@@ -1162,7 +1162,7 @@ class Thumbnail extends Component<IProps, IState> {
                         <PresenceLabel className="presence-label" participantID={id} />
                     </div>
                 )}
-                <ThumbnailAudioIndicator _audioTrack={_audioTrack} />
+                <ThumbnailAudioIndicator _audioTrack={_audioTrack} participantId={id} />
                 {this._renderGif()}
                 <div
                     className={clsx(
