@@ -222,29 +222,29 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             icon: IconImage,
         });
     }
-
-    if ((showSoundsSettings || showNotificationsSettings) && !_iAmVisitor) {
-        tabs.push({
-            name: SETTINGS_TABS.NOTIFICATIONS,
-            component: NotificationsTab,
-            labelKey: "settings.notifications",
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getNotificationsTabProps>) => {
-                return {
-                    ...newProps,
-                    enabledNotifications: tabState?.enabledNotifications || {},
-                    soundsIncomingMessage: tabState?.soundsIncomingMessage,
-                    soundsParticipantJoined: tabState?.soundsParticipantJoined,
-                    soundsParticipantKnocking: tabState?.soundsParticipantKnocking,
-                    soundsParticipantLeft: tabState?.soundsParticipantLeft,
-                    soundsReactions: tabState?.soundsReactions,
-                    soundsTalkWhileMuted: tabState?.soundsTalkWhileMuted,
-                };
-            },
-            props: getNotificationsTabProps(state, showSoundsSettings),
-            submit: submitNotificationsTab,
-            icon: IconBell,
-        });
-    }
+    //Notifications Tab Off
+    // if ((showSoundsSettings || showNotificationsSettings) && !_iAmVisitor) {
+    //     tabs.push({
+    //         name: SETTINGS_TABS.NOTIFICATIONS,
+    //         component: NotificationsTab,
+    //         labelKey: "settings.notifications",
+    //         propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getNotificationsTabProps>) => {
+    //             return {
+    //                 ...newProps,
+    //                 enabledNotifications: tabState?.enabledNotifications || {},
+    //                 soundsIncomingMessage: tabState?.soundsIncomingMessage,
+    //                 soundsParticipantJoined: tabState?.soundsParticipantJoined,
+    //                 soundsParticipantKnocking: tabState?.soundsParticipantKnocking,
+    //                 soundsParticipantLeft: tabState?.soundsParticipantLeft,
+    //                 soundsReactions: tabState?.soundsReactions,
+    //                 soundsTalkWhileMuted: tabState?.soundsTalkWhileMuted,
+    //             };
+    //         },
+    //         props: getNotificationsTabProps(state, showSoundsSettings),
+    //         submit: submitNotificationsTab,
+    //         icon: IconBell,
+    //     });
+    // }
 
     if (showModeratorSettings && !_iAmVisitor) {
         tabs.push({
@@ -289,24 +289,24 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             icon: IconCalendar,
         });
     }
+    //Shortcuts Tab Off
+    // !_iAmVisitor &&
+    //     tabs.push({
+    //         name: SETTINGS_TABS.SHORTCUTS,
+    //         component: ShortcutsTab,
+    //         labelKey: "settings.shortcuts",
+    //         props: getShortcutsTabProps(state, isDisplayedOnWelcomePage),
+    //         propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getShortcutsTabProps>) => {
+    //             // Updates tab props, keeping users selection
 
-    !_iAmVisitor &&
-        tabs.push({
-            name: SETTINGS_TABS.SHORTCUTS,
-            component: ShortcutsTab,
-            labelKey: "settings.shortcuts",
-            props: getShortcutsTabProps(state, isDisplayedOnWelcomePage),
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getShortcutsTabProps>) => {
-                // Updates tab props, keeping users selection
-
-                return {
-                    ...newProps,
-                    keyboardShortcutsEnabled: tabState?.keyboardShortcutsEnabled,
-                };
-            },
-            submit: submitShortcutsTab,
-            icon: IconShortcuts,
-        });
+    //             return {
+    //                 ...newProps,
+    //                 keyboardShortcutsEnabled: tabState?.keyboardShortcutsEnabled,
+    //             };
+    //         },
+    //         submit: submitShortcutsTab,
+    //         icon: IconShortcuts,
+    //     });
 
     if (showMoreTab && !_iAmVisitor) {
         tabs.push({
