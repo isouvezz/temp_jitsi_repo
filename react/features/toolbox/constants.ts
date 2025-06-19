@@ -175,7 +175,7 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     // "shortcuts",
     // "stats",
     "tileview",
-    "toggle-camera",
+    // "toggle-camera",
     "videoquality",
     "whiteboard",
     "lastn",

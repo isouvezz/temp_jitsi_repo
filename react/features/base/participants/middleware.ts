@@ -890,24 +890,20 @@ function _raiseHandUpdated(
         const participantName = getParticipantDisplayName(state, participantId);
         const { raisedHandsQueue } = state["features/base/participants"];
 
-        if (raisedHandsQueue.length > 1) {
-            const raisedHands = raisedHandsQueue.length - 1;
-
-            notificationTitle = i18n.t("notify.raisedHands", {
-                participantName,
-                raisedHands,
-            });
-        } else {
-            notificationTitle = participantName;
-        }
         dispatch(
             showNotification(
                 {
                     titleKey: "notify.information",
-                    descriptionKey: "notify.raisedHand",
-                    descriptionArguments: {
-                        name: participantName,
-                    },
+                    descriptionKey: raisedHandsQueue.length > 1 ? "notify.raisedHands" : "notify.raisedHand",
+                    descriptionArguments:
+                        raisedHandsQueue.length > 1
+                            ? {
+                                  participantName,
+                                  raisedHands: raisedHandsQueue.length - 1,
+                              }
+                            : {
+                                  name: participantName,
+                              },
                     concatText: true,
                     uid: RAISE_HAND_NOTIFICATION_ID,
                     ...action,
