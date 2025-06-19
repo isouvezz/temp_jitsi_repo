@@ -149,7 +149,7 @@ export default function Toolbox({ toolbarButtons }: IProps) {
     useEffect(() => {
         // On mobile web we want to keep both toolbox and hang up menu visible
         // because they depend on each other.
-        if (endConferenceSupported && isMobile) {
+        if (isMobile) {
             hangupMenuVisible && dispatch(setToolboxVisible(true));
         } else if (hangupMenuVisible && !toolbarVisible) {
             onSetHangupVisible(false);
