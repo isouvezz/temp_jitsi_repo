@@ -811,6 +811,7 @@
         "passwordSetRemotely": "다른 참가자가 $t(lockRoomPasswordUppercase)를 설정했습니다.",
         "raiseHandAction": "손 들기",
         "raisedHand": "{{name}}님이 말하고 싶어합니다.",
+        "information": "안내",
         "raisedHands": "{{participantName}}님과 {{raisedHands}}명이 더",
         "reactionSounds": "소리 비활성화",
         "reactionSoundsForAll": "모든 사람의 소리 비활성화",

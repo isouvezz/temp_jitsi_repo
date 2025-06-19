@@ -903,9 +903,11 @@ function _raiseHandUpdated(
         dispatch(
             showNotification(
                 {
-                    titleKey: "notify.somebody",
-                    title: notificationTitle,
+                    titleKey: "notify.information",
                     descriptionKey: "notify.raisedHand",
+                    descriptionArguments: {
+                        name: participantName,
+                    },
                     concatText: true,
                     uid: RAISE_HAND_NOTIFICATION_ID,
                     ...action,

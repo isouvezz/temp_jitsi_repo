@@ -1,8 +1,9 @@
-import { IReduxState } from '../app/types';
-import { IStateful } from '../base/app/types';
-import { TRANSLATION_LANGUAGES, TRANSLATION_LANGUAGES_HEAD } from '../base/i18n/i18next';
-import { toState } from '../base/redux/functions';
-import { canAddTranscriber, isTranscribing } from '../transcribing/functions';
+import { re } from "react-emoji-render/data/aliases";
+import { IReduxState } from "../app/types";
+import { IStateful } from "../base/app/types";
+import { TRANSLATION_LANGUAGES, TRANSLATION_LANGUAGES_HEAD } from "../base/i18n/i18next";
+import { toState } from "../base/redux/functions";
+import { canAddTranscriber, isTranscribing } from "../transcribing/functions";
 
 /**
  * Checks whether the participant can start the subtitles.
@@ -25,26 +26,26 @@ export function canStartSubtitles(state: IReduxState) {
  */
 export function getAvailableSubtitlesLanguages(stateful: IStateful, selectedLanguage?: string | null) {
     const state = toState(stateful);
-    const { transcription } = state['features/base/config'];
+    const { transcription } = state["features/base/config"];
 
     const translationLanguagesHead = transcription?.translationLanguagesHead ?? TRANSLATION_LANGUAGES_HEAD;
-    const translationLanguages
-        = (transcription?.translationLanguages ?? TRANSLATION_LANGUAGES)
-            .filter((lang: string) => !translationLanguagesHead?.includes(lang) && lang !== selectedLanguage);
+    const translationLanguages = (transcription?.translationLanguages ?? TRANSLATION_LANGUAGES).filter(
+        (lang: string) => !translationLanguagesHead?.includes(lang) && lang !== selectedLanguage
+    );
     const isSelectedLanguageNotIncluded = Boolean(
-        selectedLanguage
-        && !translationLanguages.includes(selectedLanguage)
-        && !translationLanguagesHead.includes(selectedLanguage));
+        selectedLanguage &&
+            !translationLanguages.includes(selectedLanguage) &&
+            !translationLanguagesHead.includes(selectedLanguage)
+    );
 
     return [
         ...translationLanguagesHead,
 
         // selectedLanguage is redundant but otherwise TS complains about null elements in the array.
-        ...isSelectedLanguageNotIncluded && selectedLanguage ? [ selectedLanguage ] : [],
-        ...translationLanguages
+        ...(isSelectedLanguageNotIncluded && selectedLanguage ? [selectedLanguage] : []),
+        ...translationLanguages,
     ];
 }
-
 
 /**
  * Determines if closed captions are enabled.
@@ -53,9 +54,10 @@ export function getAvailableSubtitlesLanguages(stateful: IStateful, selectedLang
  * @returns {boolean} A boolean indicating whether closed captions are enabled.
  */
 export function areClosedCaptionsEnabled(state: IReduxState) {
-    const { transcription } = state['features/base/config'];
-
-    return !transcription?.disableClosedCaptions;
+    const { transcription } = state["features/base/config"];
+    //CC 자막 활성/비활성화시 필요
+    // return  !transcription?.disableClosedCaptions;
+    return false;
 }
 
 /**
@@ -65,7 +67,7 @@ export function areClosedCaptionsEnabled(state: IReduxState) {
  * @returns {boolean} - True if the subtitles tab should be enabled.
  */
 export function isCCTabEnabled(state: IReduxState) {
-    const { showSubtitlesOnStage = false } = state['features/base/settings'];
+    const { showSubtitlesOnStage = false } = state["features/base/settings"];
     //CC 자막 활성화시 필요
     // return areClosedCaptionsEnabled(state) && !showSubtitlesOnStage;
 

@@ -825,6 +825,7 @@
         "passwordSetRemotely": "$t(lockRoomPasswordUppercase) set by another participant",
         "raiseHandAction": "Raise hand",
         "raisedHand": "Would like to participate.",
+        "information": "Information",
         "raisedHands": "{{participantName}} and {{raisedHands}} more people",
         "reactionSounds": "Disable sounds",
         "reactionSoundsForAll": "Disable sounds for all",
