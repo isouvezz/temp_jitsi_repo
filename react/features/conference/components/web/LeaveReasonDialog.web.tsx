@@ -59,7 +59,9 @@ const LeaveReasonDialog = ({ onClose, title }: IProps) => {
             hideCloseButton={true}
             disableEnter={true}
         >
-            <div className={classes.dialog}>{title ? <div className={classes.text}>{t(title)}</div> : null}</div>
+            <div className={classes.dialog} style={{ fontSize: "1.125rem", whiteSpace: "pre-line" }}>
+                {title ? <div className={classes.text} style={{ fontSize: "1.125rem", whiteSpace: "pre-line" }}>{t(title)}</div> : null}
+            </div>
         </Dialog>
     );
 };
