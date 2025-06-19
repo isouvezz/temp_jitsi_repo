@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { makeStyles } from 'tss-react/mui';
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { makeStyles } from "tss-react/mui";
 
-import Dialog from '../../../base/ui/components/web/Dialog';
+import Dialog from "../../../base/ui/components/web/Dialog";
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         dialog: {
-            marginBottom: theme.spacing(1)
+            marginBottom: theme.spacing(1),
         },
 
         text: {
-            fontSize: '20px'
-        }
+            fontSize: "20px",
+        },
     };
 });
 
@@ -20,7 +20,6 @@ const useStyles = makeStyles()(theme => {
  * The type of the React {@code Component} props of {@link LeaveReasonDialog}.
  */
 interface IProps {
-
     /**
      * Callback invoked when {@code LeaveReasonDialog} is unmounted.
      */
@@ -42,19 +41,25 @@ const LeaveReasonDialog = ({ onClose, title }: IProps) => {
     const { classes } = useStyles();
     const { t } = useTranslation();
 
-    useEffect(() => () => {
-        onClose?.();
-    }, []); 
+    useEffect(
+        () => () => {
+            onClose?.();
+        },
+        []
+    );
 
     return (
         <Dialog
-            ok = {{ hidden: true }}
-            cancel = {{ hidden: true }}
-            size = 'medium'
-            testId = 'dialog.leaveReason'>
-            <div className = { classes.dialog }>
-                {title ? <div className = { classes.text }>{t(title)}</div> : null}
-            </div>
+            ok={{ hidden: true }}
+            cancel={{ hidden: true }}
+            size="medium"
+            testId="dialog.leaveReason"
+            disableBackdropClose={true}
+            disableEscape={true}
+            hideCloseButton={true}
+            disableEnter={true}
+        >
+            <div className={classes.dialog}>{title ? <div className={classes.text}>{t(title)}</div> : null}</div>
         </Dialog>
     );
 };
