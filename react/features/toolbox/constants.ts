@@ -4,13 +4,13 @@ import { NativeToolbarButton, ToolbarButton } from "./types";
  * Dummy toolbar threschold value for 9 buttons. It is used as a placeholder in THRESHOLDS that would work only when
  * this value is overiden.
  */
-export const DUMMY_9_BUTTONS_THRESHOLD_VALUE = Symbol("9_BUTTONS_THRESHOLD_VALUE");
+export const DUMMY_10_BUTTONS_THRESHOLD_VALUE = Symbol("10_BUTTONS_THRESHOLD_VALUE");
 
 /**
  * Dummy toolbar threschold value for 10 buttons. It is used as a placeholder in THRESHOLDS that would work only when
  * this value is overiden.
  */
-export const DUMMY_10_BUTTONS_THRESHOLD_VALUE = Symbol("10_BUTTONS_THRESHOLD_VALUE");
+export const DUMMY_9_BUTTONS_THRESHOLD_VALUE = Symbol("9_BUTTONS_THRESHOLD_VALUE");
 
 /**
  * Thresholds for displaying toolbox buttons.
@@ -145,10 +145,10 @@ export const SPINNER_COLOR = "#929292";
 export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     "camera",
     "chat",
-    "closedcaptions",
+    // "closedcaptions",
     "desktop",
     "download",
-    "embedmeeting",
+    // "embedmeeting",
     "etherpad",
     "feedback",
     "filmstrip",
@@ -156,8 +156,8 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     "hangup",
     "help",
     "highlight",
-    "invite",
-    "linktosalesforce",
+    // "invite",
+    // "linktosalesforce",
     "livestreaming",
     "microphone",
     "mute-everyone",
@@ -170,10 +170,10 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     "select-background",
     "settings",
     "shareaudio",
-    "noisesuppression",
+    // "noisesuppression",
     "sharedvideo",
     "shortcuts",
-    "stats",
+    // "stats",
     "tileview",
     "toggle-camera",
     "videoquality",

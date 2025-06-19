@@ -66,6 +66,8 @@ export function areClosedCaptionsEnabled(state: IReduxState) {
  */
 export function isCCTabEnabled(state: IReduxState) {
     const { showSubtitlesOnStage = false } = state['features/base/settings'];
+    //CC 자막 활성화시 필요
+    // return areClosedCaptionsEnabled(state) && !showSubtitlesOnStage;
 
-    return areClosedCaptionsEnabled(state) && !showSubtitlesOnStage;
+    return false;
 }
