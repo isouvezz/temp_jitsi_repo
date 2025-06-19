@@ -48,9 +48,7 @@ class LeaveConferenceDialog extends React.Component<IProps> {
                 onSubmit={() => dispatch(endConference())}
                 titleKey="dialog.information"
             >
-                <div style={{ fontSize: "1.125rem", whiteSpace: "pre-line" }}>
-                    {t("dialog.leaveConferenceHostConfirm")}
-                </div>
+                {t("dialog.leaveConferenceHostConfirm")}
             </Dialog>
         );
     }

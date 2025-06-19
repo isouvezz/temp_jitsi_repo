@@ -143,7 +143,7 @@ const Dialog = ({
                     />
                 )}
             </div>
-            <div className={classes.content} data-autofocus-inside="true">
+            <div className={classes.content} style={{ fontSize: "1.125rem", whiteSpace: "pre-line" }} data-autofocus-inside="true">
                 {children}
             </div>
             <div className={classes.footer} data-autofocus-inside="true">
