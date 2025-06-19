@@ -135,6 +135,7 @@
         },
         "title": "채팅",
         "titleWithPolls": "채팅",
+        "titleWithPollsAndCC": "채팅, 투표",
         "you": "당신"
     },
     "chromeExtensionBanner": {
@@ -1185,6 +1186,7 @@
         "fearful": "두려움",
         "happy": "행복",
         "hours": "{{count}}시간",
+        "labelTooltip": "참가자 수: {{count}}",
         "minutes": "{{count}}분",
         "name": "이름",
         "neutral": "중립적",
