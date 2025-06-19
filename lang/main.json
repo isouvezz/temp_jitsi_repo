@@ -169,7 +169,7 @@
         "FETCH_SESSION_ID": "Obtaining session-id…",
         "GET_SESSION_ID_ERROR": "Get session-id error: {{code}}",
         "GOT_SESSION_ID": "Obtaining session-id… Done",
-        "LOW_BANDWIDTH": "Video for {{displayName}} has been turned off to save bandwidth"
+        "LOW_BANDWIDTH": "{{displayName}}'s video has been temporarily turned off. Automatically adjusting for better connection."
     },
     "connectionindicator": {
         "address": "Address:",

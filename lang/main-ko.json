@@ -161,7 +161,7 @@
         "FETCH_SESSION_ID": "세션 ID 가져오는 중…",
         "GET_SESSION_ID_ERROR": "세션 ID 가져오기 오류 : {{code}}",
         "GOT_SESSION_ID": "세션 ID를 가져오는중… 완료",
-        "LOW_BANDWIDTH": "대역폭을 절약하기 위해 {{displayName}}의 동영상이 중지되었습니다."
+        "LOW_BANDWIDTH": "{{displayName}}님의 영상이 잠시 꺼졌습니다. 더 나은 연결을 위해 자동으로 조정 중이에요."
     },
     "connectionindicator": {
         "address": "주소:",
