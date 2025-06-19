@@ -14,6 +14,7 @@ import {
 } from "../../../base/participants/functions";
 import { IStateful } from "../../../base/app/types";
 import { openDialog } from "../../../base/dialog/actions";
+import { openLeaveReasonDialog } from "../../../conference/actions.web";
 
 import { HangupContextMenuItem } from "./HangupContextMenuItem";
 import LeaveConferenceDialog from "./LeaveConferenceDialog";
@@ -58,6 +59,7 @@ export const LeaveConferenceButton = (props: IProps) => {
         } else {
             sendAnalytics(createToolbarEvent("hangup"));
             dispatch(leaveConference());
+            dispatch(openLeaveReasonDialog("dialog.sessTerminatedReason"));
         }
     }, [dispatch, isModerator, moderatorCount]);
 
