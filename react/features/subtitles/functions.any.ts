@@ -1,4 +1,3 @@
-import { re } from "react-emoji-render/data/aliases";
 import { IReduxState } from "../app/types";
 import { IStateful } from "../base/app/types";
 import { TRANSLATION_LANGUAGES, TRANSLATION_LANGUAGES_HEAD } from "../base/i18n/i18next";
