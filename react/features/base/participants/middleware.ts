@@ -913,7 +913,8 @@ function _raiseHandUpdated(
                 NOTIFICATION_TIMEOUT_TYPE.MEDIUM
             )
         );
-        dispatch(playSound(RAISE_HAND_SOUND_ID));
+        //손흔들기 Sound Off
+        // dispatch(playSound(RAISE_HAND_SOUND_ID));
     }
 }
 

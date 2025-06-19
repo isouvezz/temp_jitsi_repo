@@ -143,13 +143,14 @@ MiddlewareRegistry.register((store: IStore) => (next: Function) => (action: AnyA
                 && displayReactionSoundsNotification) {
                 dispatch(displayReactionSoundsNotification());
             }
-            if (soundsReactions) {
-                const reactionSoundsThresholds = getReactionsSoundsThresholds(reactions);
+            //Reaction Sound Off
+            // if (soundsReactions) {
+            //     const reactionSoundsThresholds = getReactionsSoundsThresholds(reactions);
 
-                reactionSoundsThresholds.forEach(reaction =>
-                    dispatch(playSound(`${REACTIONS[reaction.reaction].soundId}${reaction.threshold}`))
-                );
-            }
+            //     reactionSoundsThresholds.forEach(reaction =>
+            //         dispatch(playSound(`${REACTIONS[reaction.reaction].soundId}${reaction.threshold}`))
+            //     );
+            // }
             dispatch(setReactionQueue([ ...queue, ...getReactionsWithId(reactions) ]));
         });
         break;
