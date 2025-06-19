@@ -1165,6 +1165,15 @@ export default {
 
     _createRoom(localTracks) {
         room = APP.connection.initJitsiConference(APP.conference.roomName, this._getConferenceOptions());
+        //추후 필요시 활성화
+        // Override getBreakoutRooms to always return false
+        room.getBreakoutRooms = () => ({
+            isSupported: () => false,
+            isBreakoutRoom: () => false,
+            createBreakoutRoom: () => {},
+            removeBreakoutRoom: () => {},
+            sendParticipantToRoom: () => {},
+        });
 
         // Filter out the tracks that are muted (except on Safari).
         let tracks = localTracks;
