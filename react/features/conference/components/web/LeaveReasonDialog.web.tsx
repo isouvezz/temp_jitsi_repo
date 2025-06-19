@@ -44,12 +44,12 @@ const LeaveReasonDialog = ({ onClose, title }: IProps) => {
 
     useEffect(() => () => {
         onClose?.();
-    }, []);
+    }, []); 
 
     return (
         <Dialog
+            ok = {{ hidden: true }}
             cancel = {{ hidden: true }}
-            onSubmit = { onClose }
             size = 'medium'
             testId = 'dialog.leaveReason'>
             <div className = { classes.dialog }>
