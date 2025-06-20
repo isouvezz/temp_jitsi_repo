@@ -55,6 +55,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
                 speakerQueue.addSpeaker(participantId);
                 speakerQueue.subscribeToTrack(track.jitsiTrack);
             }
+            store.dispatch(selectParticipantInLargeVideo());
             return result;
         }
         case TRACK_REMOVED: {
@@ -63,6 +64,7 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             if (track.jitsiTrack.isAudioTrack()) {
                 speakerQueue.unsubscribeFromTrack(track.jitsiTrack);
             }
+            store.dispatch(selectParticipantInLargeVideo());
             return result;
         }
         case PIN_PARTICIPANT: {
