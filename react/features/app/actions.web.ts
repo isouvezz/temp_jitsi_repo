@@ -12,6 +12,7 @@ import { NOTIFICATION_TIMEOUT_TYPE } from "../notifications/constants";
 import { isWelcomePageEnabled } from "../welcome/functions";
 import { parseAndDecryptURLParams } from "../base/util/parseURLParams";
 import { setAuthToken, setUserId } from "../base/auth/actions";
+import { getRoomNameFromPathWithCourseInfo, getRoomName } from "../base/config/getRoomName";
 
 import {
     maybeRedirectToTokenAuthUrl,
@@ -92,7 +93,14 @@ export function appNavigate(uri?: string) {
 
         dispatch(setLocationURL(locationURL));
         dispatch(setConfig(config));
-        dispatch(setRoom(room));
+
+        // 코스 정보를 포함한 방명을 가져와서 설정
+        const roomWithCourseInfo = await getRoomNameFromPathWithCourseInfo();
+        if (roomWithCourseInfo) {
+            dispatch(setRoom(roomWithCourseInfo));
+        } else {
+            dispatch(setRoom(room));
+        }
     };
 }
 

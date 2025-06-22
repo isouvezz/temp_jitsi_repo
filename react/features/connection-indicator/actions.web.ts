@@ -1,6 +1,6 @@
 import { IStore } from '../app/types';
 import getRoomName from '../base/config/getRoomName';
-import { downloadJSON } from '../base/util/downloadJSON';
+import { downloadJSON } from '../base/util/downloadJSON.web';
 
 
 /**
