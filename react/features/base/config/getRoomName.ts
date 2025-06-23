@@ -1,8 +1,8 @@
-import { getBackendSafeRoomName } from '../util/uri';
-import { doGetJSON } from '../util/httpUtils';
-import logger from './logger';
+import { getBackendSafeRoomName } from "../util/uri";
+import { doGetJSON } from "../util/httpUtils";
+import logger from "./logger";
 
-const API_BASE_URL = 'https://api.glob-dev.kong.yk8s.me/api';
+const API_BASE_URL = "https://api.glob-dev.kong.yk8s.me/api";
 
 // 코스 정보를 캐시하기 위한 Map
 const courseCache = new Map<string, string>();
@@ -31,11 +31,11 @@ async function getCourseTitle(courseId: string): Promise<string | null> {
             logger.info(`Successfully fetched course: ${response.title}`);
             return response.title;
         } else {
-            logger.warn('Course response is invalid or missing title');
+            logger.warn("Course response is invalid or missing title");
             return null;
         }
     } catch (error) {
-        logger.error('Failed to fetch course data:', error);
+        logger.error("Failed to fetch course data:", error);
         return null;
     }
 }
@@ -49,7 +49,7 @@ export default function getRoomName(): string | undefined {
     const path = window.location.pathname;
 
     // The last non-directory component of the path (name) is the room.
-    const roomName = path.substring(path.lastIndexOf('/') + 1) || undefined;
+    const roomName = path.substring(path.lastIndexOf("/") + 1) || undefined;
 
     return getBackendSafeRoomName(roomName);
 }
@@ -63,14 +63,20 @@ export async function getRoomNameFromPathWithCourseInfo(): Promise<string | unde
     const path = window.location.pathname;
 
     // The last non-directory component of the path (name) is the room.
-    const roomName = path.substring(path.lastIndexOf('/') + 1) || undefined;
+    const roomName = path.substring(path.lastIndexOf("/") + 1) || undefined;
 
     if (!roomName) {
         return undefined;
     }
 
+    // roomName에서 _rCpa8S 같은 난수 부분을 제거하여 courseId 추출
+    // 예: "kdt-startup-554th_rCpa8S" -> "kdt-startup-554th"
+    const courseId = roomName.replace(/_[a-zA-Z0-9]+$/, "");
+
+    logger.info(`Original roomName: ${roomName}, Extracted courseId: ${courseId}`);
+
     // 코스 제목을 가져오기 시도
-    const courseTitle = await getCourseTitle(roomName);
+    const courseTitle = await getCourseTitle(courseId);
 
     if (courseTitle) {
         logger.info(`Using course title as room name: ${courseTitle}`);
