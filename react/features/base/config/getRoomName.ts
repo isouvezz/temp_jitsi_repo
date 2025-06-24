@@ -80,7 +80,7 @@ export async function getRoomNameFromPathWithCourseInfo(): Promise<string | unde
 
     if (courseTitle) {
         logger.info(`Using course title as room name: ${courseTitle}`);
-        return getBackendSafeRoomName(courseTitle);
+        return courseTitle;
     }
 
     // 코스 제목을 가져올 수 없는 경우 원래 방명 사용

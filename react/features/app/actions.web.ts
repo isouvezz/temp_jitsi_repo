@@ -1,6 +1,7 @@
 // @ts-expect-error
 import { API_ID } from "../../../modules/API";
 import { setRoom } from "../base/conference/actions";
+import { setCourseInfo } from "../base/conference/actions.any";
 import { configWillLoad, setConfig } from "../base/config/actions";
 import { setLocationURL } from "../base/connection/actions.web";
 import { loadConfig } from "../base/lib-jitsi-meet/functions.web";
@@ -12,7 +13,7 @@ import { NOTIFICATION_TIMEOUT_TYPE } from "../notifications/constants";
 import { isWelcomePageEnabled } from "../welcome/functions";
 import { parseAndDecryptURLParams } from "../base/util/parseURLParams";
 import { setAuthToken, setUserId } from "../base/auth/actions";
-import { getRoomNameFromPathWithCourseInfo, getRoomName } from "../base/config/getRoomName";
+import { getRoomNameFromPathWithCourseInfo } from "../base/config/getRoomName";
 
 import {
     maybeRedirectToTokenAuthUrl,
@@ -95,11 +96,10 @@ export function appNavigate(uri?: string) {
         dispatch(setConfig(config));
 
         // 코스 정보를 포함한 방명을 가져와서 설정
+        dispatch(setRoom(room));
         const roomWithCourseInfo = await getRoomNameFromPathWithCourseInfo();
         if (roomWithCourseInfo) {
-            dispatch(setRoom(roomWithCourseInfo));
-        } else {
-            dispatch(setRoom(room));
+            dispatch(setCourseInfo(roomWithCourseInfo));
         }
     };
 }

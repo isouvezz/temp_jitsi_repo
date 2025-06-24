@@ -108,7 +108,7 @@ function _updateScreenshareParticipants(store: IStore): void {
     const { sortedRemoteVirtualScreenshareParticipants, localScreenShare } = state["features/base/participants"];
     const previousScreenshareSourceNames = [...sortedRemoteVirtualScreenshareParticipants.keys()];
 
-    let newLocalSceenshareSourceName;
+    let newLocalSceenshareSourceName: string | undefined;
 
     const currentScreenshareSourceNames = tracks.reduce((acc: string[], track) => {
         if (track.videoType === VIDEO_TYPE.DESKTOP && !track.jitsiTrack.isMuted()) {

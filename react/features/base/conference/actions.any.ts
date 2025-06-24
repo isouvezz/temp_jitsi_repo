@@ -62,6 +62,7 @@ import {
     SET_START_MUTED_POLICY,
     SET_START_REACTIONS_MUTED,
     UPDATE_CONFERENCE_METADATA,
+    SET_COURSE_INFO,
 } from "./actionTypes";
 import { setupVisitorStartupMedia } from "./actions";
 import { AVATAR_URL_COMMAND, EMAIL_COMMAND, JITSI_CONFERENCE_URL_KEY } from "./constants";
@@ -1029,6 +1030,22 @@ export function setRoom(room?: string) {
     return {
         type: SET_ROOM,
         room,
+    };
+}
+
+/**
+ * Sets the course information.
+ *
+ * @param {(string|undefined)} courseInfo - The course information to be stored.
+ * @returns {{
+ *     type: SET_COURSE_INFO,
+ *     courseInfo: string
+ * }}
+ */
+export function setCourseInfo(courseInfo?: string) {
+    return {
+        type: SET_COURSE_INFO,
+        courseInfo,
     };
 }
 
