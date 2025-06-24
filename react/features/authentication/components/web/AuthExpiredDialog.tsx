@@ -7,7 +7,7 @@ import { translate } from "../../../base/i18n/functions";
 import Dialog from "../../../base/ui/components/web/Dialog";
 
 /**
- * The type of the React {@code Component} props of {@link WaitForOwnerDialog}.
+ * The type of the React {@code Component} props of {@link AuthExpiredDialog}.
  */
 interface IProps extends WithTranslation {
     /**
@@ -21,7 +21,7 @@ interface IProps extends WithTranslation {
  *
  * @returns {React$Element<any>}
  */
-class WaitForOwnerDialog extends React.Component<IProps> {
+class AuthExpiredDialog extends React.Component<IProps> {
     /**
      * Called when the OK button is clicked.
      *
@@ -39,7 +39,9 @@ class WaitForOwnerDialog extends React.Component<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
+        const { t } = this.props;
+
         return (
             <Dialog
                 ok={{
@@ -56,4 +58,4 @@ class WaitForOwnerDialog extends React.Component<IProps> {
     }
 }
 
-export default translate(connect()(WaitForOwnerDialog));
+export default translate(connect()(AuthExpiredDialog)); 
