@@ -286,6 +286,10 @@ function _handleLogin({ dispatch, getState }: IStore) {
         }
 
         return dispatch(openTokenAuthUrl(tokenAuthServiceUrl));
+    }).catch((error) => {
+        logger.error("Failed to get token auth URL:", error);
+        // JWT 토큰 에러가 발생했을 때 AuthExpiredDialog를 띄움
+        dispatch(openDialog(AuthExpiredDialog));
     });
 }
 
