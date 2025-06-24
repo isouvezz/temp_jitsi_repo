@@ -50,7 +50,6 @@ import {
     isPrejoinPageVisible,
     shouldAutoKnock
 } from '../prejoin/functions';
-import AuthExpiredDialog from '../authentication/components/web/AuthExpiredDialog';
 
 import {
     KNOCKING_PARTICIPANT_ARRIVED_OR_UPDATED,
@@ -294,7 +293,7 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
 
         const result = next(action);
 
-        dispatch(openDialog(AuthExpiredDialog));
+        dispatch(openLobbyScreen());
 
         // if there was an error about display name and pre-join is not enabled
         if (shouldAutoKnock(state)

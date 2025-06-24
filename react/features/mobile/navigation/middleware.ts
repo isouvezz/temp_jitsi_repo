@@ -5,12 +5,14 @@ import { IStore } from '../../app/types';
 import { CONFERENCE_FAILED } from '../../base/conference/actionTypes';
 import { JitsiConferenceErrors } from '../../base/lib-jitsi-meet';
 import MiddlewareRegistry from '../../base/redux/MiddlewareRegistry';
+import { openDialog } from '../../base/dialog/actions';
+import AuthExpiredDialog from '../../authentication/components/web/AuthExpiredDialog';
 
 MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
 
-    case CONFERENCE_FAILED:
-        return _conferenceFailed(store, next, action);
+        case CONFERENCE_FAILED:
+            return _conferenceFailed(store, next, action);
     }
 
     return next(action);
@@ -31,7 +33,8 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
     // We need to cover the case where knocking participant
     // is rejected from entering the conference
     if (error.name === JitsiConferenceErrors.CONFERENCE_ACCESS_DENIED) {
-        dispatch(appNavigate(undefined));
+        dispatch(openDialog(AuthExpiredDialog));
+        // dispatch(appNavigate(undefined));
     }
 
     return next(action);
