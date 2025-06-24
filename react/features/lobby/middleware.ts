@@ -50,7 +50,7 @@ import {
     isPrejoinPageVisible,
     shouldAutoKnock
 } from '../prejoin/functions';
-import { AuthExpiredDialog } from '../authentication/components';
+import AuthExpiredDialog from '../authentication/components/web/AuthExpiredDialog';
 
 import {
     KNOCKING_PARTICIPANT_ARRIVED_OR_UPDATED,
@@ -284,12 +284,6 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
     const { lobbyError, membersOnly } = state['features/base/conference'];
     const nonFirstFailure = Boolean(membersOnly);
 
-    // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
-    if (error.name === JitsiConferenceErrors.AUTHENTICATION_REQUIRED) {
-        dispatch(openDialog(AuthExpiredDialog));
-        return next(action);
-    }
-
     if (error.name === JitsiConferenceErrors.MEMBERS_ONLY_ERROR) {
         if (typeof error.recoverable === 'undefined') {
             error.recoverable = true;
@@ -300,7 +294,7 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
 
         const result = next(action);
 
-        dispatch(openLobbyScreen());
+        dispatch(openDialog(AuthExpiredDialog));
 
         // if there was an error about display name and pre-join is not enabled
         if (shouldAutoKnock(state)

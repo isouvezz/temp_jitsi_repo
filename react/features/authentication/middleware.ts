@@ -95,11 +95,6 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
                 recoverable = error.recoverable;
             }
 
-            // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
-            if (error.name === JitsiConferenceErrors.AUTHENTICATION_REQUIRED) {
-                store.dispatch(openDialog(AuthExpiredDialog));
-                return next(action);
-            }
 
             if (recoverable) {
                 store.dispatch(waitForOwner());
@@ -141,11 +136,6 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const state = getState();
             const { jwt } = state["features/base/jwt"];
 
-            // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
-            if (error && error.name === JitsiConnectionErrors.AUTHENTICATION_REQUIRED) {
-                store.dispatch(openDialog(AuthExpiredDialog));
-                return next(action);
-            }
 
             if (
                 error &&
