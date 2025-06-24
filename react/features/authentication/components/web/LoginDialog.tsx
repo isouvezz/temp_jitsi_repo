@@ -39,7 +39,7 @@ class LoginDialog extends React.Component<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             <Dialog
                 ok={{
