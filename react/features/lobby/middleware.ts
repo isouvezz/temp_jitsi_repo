@@ -10,6 +10,7 @@ import {
     ENDPOINT_MESSAGE_RECEIVED
 } from '../base/conference/actionTypes';
 import { conferenceWillJoin } from '../base/conference/actions';
+import { openDialog } from '../base/dialog/actions';
 import {
     JitsiConferenceErrors,
     JitsiConferenceEvents
@@ -49,6 +50,7 @@ import {
     isPrejoinPageVisible,
     shouldAutoKnock
 } from '../prejoin/functions';
+import { AuthExpiredDialog } from '../authentication/components';
 
 import {
     KNOCKING_PARTICIPANT_ARRIVED_OR_UPDATED,
@@ -75,48 +77,48 @@ import { IKnockingParticipant } from './types';
 
 MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
-    case APP_WILL_MOUNT:
-        store.dispatch(registerSound(KNOCKING_PARTICIPANT_SOUND_ID, KNOCKING_PARTICIPANT_FILE));
-        break;
-    case APP_WILL_UNMOUNT:
-        store.dispatch(unregisterSound(KNOCKING_PARTICIPANT_SOUND_ID));
-        break;
-    case CONFERENCE_FAILED:
-        return _conferenceFailed(store, next, action);
-    case CONFERENCE_JOINED:
-        return _conferenceJoined(store, next, action);
-    case ENDPOINT_MESSAGE_RECEIVED: {
-        const { participant, data } = action;
+        case APP_WILL_MOUNT:
+            store.dispatch(registerSound(KNOCKING_PARTICIPANT_SOUND_ID, KNOCKING_PARTICIPANT_FILE));
+            break;
+        case APP_WILL_UNMOUNT:
+            store.dispatch(unregisterSound(KNOCKING_PARTICIPANT_SOUND_ID));
+            break;
+        case CONFERENCE_FAILED:
+            return _conferenceFailed(store, next, action);
+        case CONFERENCE_JOINED:
+            return _conferenceJoined(store, next, action);
+        case ENDPOINT_MESSAGE_RECEIVED: {
+            const { participant, data } = action;
 
-        _maybeSendLobbyNotification(participant, data, store);
+            _maybeSendLobbyNotification(participant, data, store);
 
-        break;
-    }
-    case KNOCKING_PARTICIPANT_ARRIVED_OR_UPDATED: {
-        // We need the full update result to be in the store already
-        const result = next(action);
-
-        _findLoadableAvatarForKnockingParticipant(store, action.participant);
-        _handleLobbyNotification(store);
-
-        return result;
-    }
-    case KNOCKING_PARTICIPANT_LEFT: {
-        // We need the full update result to be in the store already
-        const result = next(action);
-
-        _handleLobbyNotification(store);
-
-        return result;
-    }
-    case PREJOIN_JOINING_IN_PROGRESS: {
-        if (action.value) {
-            // let's hide the notification (the case with denied access and retrying) when prejoin is enabled
-            store.dispatch(hideNotification(LOBBY_NOTIFICATION_ID));
+            break;
         }
+        case KNOCKING_PARTICIPANT_ARRIVED_OR_UPDATED: {
+            // We need the full update result to be in the store already
+            const result = next(action);
 
-        break;
-    }
+            _findLoadableAvatarForKnockingParticipant(store, action.participant);
+            _handleLobbyNotification(store);
+
+            return result;
+        }
+        case KNOCKING_PARTICIPANT_LEFT: {
+            // We need the full update result to be in the store already
+            const result = next(action);
+
+            _handleLobbyNotification(store);
+
+            return result;
+        }
+        case PREJOIN_JOINING_IN_PROGRESS: {
+            if (action.value) {
+                // let's hide the notification (the case with denied access and retrying) when prejoin is enabled
+                store.dispatch(hideNotification(LOBBY_NOTIFICATION_ID));
+            }
+
+            break;
+        }
     }
 
     return next(action);
@@ -221,16 +223,16 @@ function _handleLobbyNotification(store: IStore) {
         descriptionKey = 'notify.participantWantsToJoin';
         notificationTitle = firstParticipant.name;
         icon = NOTIFICATION_ICON.PARTICIPANT;
-        customActionNameKey = [ 'participantsPane.actions.admit', 'participantsPane.actions.reject' ];
-        customActionType = [ BUTTON_TYPES.PRIMARY, BUTTON_TYPES.DESTRUCTIVE ];
-        customActionHandler = [ () => batch(() => {
+        customActionNameKey = ['participantsPane.actions.admit', 'participantsPane.actions.reject'];
+        customActionType = [BUTTON_TYPES.PRIMARY, BUTTON_TYPES.DESTRUCTIVE];
+        customActionHandler = [() => batch(() => {
             dispatch(hideNotification(LOBBY_NOTIFICATION_ID));
             dispatch(approveKnockingParticipant(firstParticipant.id));
         }),
         () => batch(() => {
             dispatch(hideNotification(LOBBY_NOTIFICATION_ID));
             dispatch(rejectKnockingParticipant(firstParticipant.id));
-        }) ];
+        })];
 
         // This checks if lobby chat button is available
         // and, if so, it adds it to the customActionNameKey array
@@ -248,12 +250,12 @@ function _handleLobbyNotification(store: IStore) {
             waitingParticipants: knockingParticipants.length
         });
         icon = NOTIFICATION_ICON.PARTICIPANTS;
-        customActionNameKey = [ 'notify.viewLobby' ];
-        customActionType = [ BUTTON_TYPES.PRIMARY ];
-        customActionHandler = [ () => batch(() => {
+        customActionNameKey = ['notify.viewLobby'];
+        customActionType = [BUTTON_TYPES.PRIMARY];
+        customActionHandler = [() => batch(() => {
             dispatch(hideNotification(LOBBY_NOTIFICATION_ID));
             dispatch(openParticipantsPane());
-        }) ];
+        })];
     }
 
     dispatch(showNotification({
@@ -282,13 +284,19 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
     const { lobbyError, membersOnly } = state['features/base/conference'];
     const nonFirstFailure = Boolean(membersOnly);
 
+    // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
+    if (error.name === JitsiConferenceErrors.AUTHENTICATION_REQUIRED) {
+        dispatch(openDialog(AuthExpiredDialog));
+        return next(action);
+    }
+
     if (error.name === JitsiConferenceErrors.MEMBERS_ONLY_ERROR) {
         if (typeof error.recoverable === 'undefined') {
             error.recoverable = true;
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [ _lobbyJid, lobbyWaitingForHost ] = error.params;
+        const [_lobbyJid, lobbyWaitingForHost] = error.params;
 
         const result = next(action);
 
@@ -296,8 +304,8 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
 
         // if there was an error about display name and pre-join is not enabled
         if (shouldAutoKnock(state)
-                || (lobbyError && !isPrejoinEnabledInConfig(state))
-                || lobbyWaitingForHost) {
+            || (lobbyError && !isPrejoinEnabledInConfig(state))
+            || lobbyWaitingForHost) {
             dispatch(startKnocking());
         }
 
@@ -310,7 +318,7 @@ function _conferenceFailed({ dispatch, getState }: IStore, next: Function, actio
 
         return result;
     } else if (error.name === JitsiConferenceErrors.DISPLAY_NAME_REQUIRED) {
-        const [ isLobbyEnabled ] = error.params;
+        const [isLobbyEnabled] = error.params;
 
         const result = next(action);
 
@@ -416,15 +424,15 @@ function _maybeSendLobbyNotification(origin: any, message: any, { dispatch, getS
     };
 
     switch (message.event) {
-    case 'LOBBY-ENABLED':
-        notificationProps.descriptionKey = `lobby.notificationLobby${message.value ? 'En' : 'Dis'}abled`;
-        break;
-    case 'LOBBY-ACCESS-GRANTED':
-        notificationProps.descriptionKey = 'lobby.notificationLobbyAccessGranted';
-        break;
-    case 'LOBBY-ACCESS-DENIED':
-        notificationProps.descriptionKey = 'lobby.notificationLobbyAccessDenied';
-        break;
+        case 'LOBBY-ENABLED':
+            notificationProps.descriptionKey = `lobby.notificationLobby${message.value ? 'En' : 'Dis'}abled`;
+            break;
+        case 'LOBBY-ACCESS-GRANTED':
+            notificationProps.descriptionKey = 'lobby.notificationLobbyAccessGranted';
+            break;
+        case 'LOBBY-ACCESS-DENIED':
+            notificationProps.descriptionKey = 'lobby.notificationLobbyAccessDenied';
+            break;
     }
 
     dispatch(

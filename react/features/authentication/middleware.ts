@@ -4,7 +4,7 @@ import { CONFERENCE_FAILED, CONFERENCE_JOINED, CONFERENCE_LEFT } from "../base/c
 import { isRoomValid } from "../base/conference/functions";
 import { CONNECTION_ESTABLISHED, CONNECTION_FAILED } from "../base/connection/actionTypes";
 import { connect } from "../base/connection/actions.web";
-import { hideDialog } from "../base/dialog/actions";
+import { hideDialog, openDialog } from "../base/dialog/actions";
 import { isDialogOpen } from "../base/dialog/functions";
 import { JitsiConferenceErrors, JitsiConnectionErrors } from "../base/lib-jitsi-meet";
 import { MEDIA_TYPE } from "../base/media/constants";
@@ -25,7 +25,7 @@ import {
     stopWaitForOwner,
     waitForOwner,
 } from "./actions";
-import { LoginDialog, WaitForOwnerDialog } from "./components";
+import { LoginDialog, WaitForOwnerDialog, AuthExpiredDialog } from "./components";
 import { getTokenAuthUrl, isTokenAuthEnabled } from "./functions";
 import logger from "./logger";
 
@@ -94,6 +94,13 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
                 }
                 recoverable = error.recoverable;
             }
+
+            // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
+            if (error.name === JitsiConferenceErrors.AUTHENTICATION_REQUIRED) {
+                store.dispatch(openDialog(AuthExpiredDialog));
+                return next(action);
+            }
+
             if (recoverable) {
                 store.dispatch(waitForOwner());
             } else {
@@ -133,6 +140,12 @@ MiddlewareRegistry.register((store) => (next) => (action) => {
             const { getState } = store;
             const state = getState();
             const { jwt } = state["features/base/jwt"];
+
+            // 토큰 인증 에러가 발생한 경우 인증 만료 다이얼로그를 먼저 표시
+            if (error && error.name === JitsiConnectionErrors.AUTHENTICATION_REQUIRED) {
+                store.dispatch(openDialog(AuthExpiredDialog));
+                return next(action);
+            }
 
             if (
                 error &&
