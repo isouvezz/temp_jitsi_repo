@@ -188,7 +188,8 @@ class RemoteVideoMenu extends PureComponent<IProps> {
                 {/* @ts-ignore */}
                 <Divider style = { styles.divider as ViewStyle } />
                 { !_disableKick && <KickButton { ...buttonProps } /> }
-                { !_disableGrantModerator && !_isBreakoutRoom && <GrantModeratorButton { ...buttonProps } /> }
+                {/* 권한 부여 버튼 비활성화 */}
+                {/* { !_disableGrantModerator && !_isBreakoutRoom && <GrantModeratorButton { ...buttonProps } /> } */}
                 <PinButton { ...buttonProps } />
                 { _showDemote && <DemoteToVisitorButton { ...buttonProps } /> }
                 { !_disablePrivateChat && <PrivateMessageButton { ...buttonProps } /> }
