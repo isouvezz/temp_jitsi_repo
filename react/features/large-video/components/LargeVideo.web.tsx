@@ -292,8 +292,8 @@ class LargeVideo extends Component<IProps> {
                 <SharedVideo />
                 {_whiteboardEnabled && <Whiteboard />}
                 <div id="etherpad" />
-
-                <Watermarks />
+                {/* 워터마크 제거 */}
+                {/* <Watermarks /> */}
 
                 <div id="dominantSpeaker" onTouchEnd={this._onDoubleTap}>
                     <div className="dynamic-shadow" />
