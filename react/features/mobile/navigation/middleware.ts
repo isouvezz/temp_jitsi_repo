@@ -33,8 +33,7 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
     // We need to cover the case where knocking participant
     // is rejected from entering the conference
     if (error.name === JitsiConferenceErrors.CONFERENCE_ACCESS_DENIED) {
-        dispatch(openDialog(AuthExpiredDialog));
-        // dispatch(appNavigate(undefined));
+        dispatch(appNavigate(undefined));
     }
 
     return next(action);

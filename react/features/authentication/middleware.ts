@@ -262,7 +262,8 @@ function _handleLogin({ dispatch, getState }: IStore) {
     }
 
     if (!isTokenAuthEnabled(config)) {
-        dispatch(openLoginDialog());
+        window.location.href = 'https://bootcamp.glob-dev.kong.yk8s.me/404';
+        // dispatch(openLoginDialog());
 
         return;
     }
