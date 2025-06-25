@@ -1,14 +1,14 @@
 // @ts-expect-error
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 
-import { IReduxState } from '../../app/types';
-import { isVpaasMeeting } from '../../jaas/functions';
-import { getLocalParticipant } from '../participants/functions';
-import { IParticipantFeatures, ParticipantFeaturesKey } from '../participants/types';
-import { parseURLParams } from '../util/parseURLParams';
+import { IReduxState } from "../../app/types";
+import { isVpaasMeeting } from "../../jaas/functions";
+import { getLocalParticipant } from "../participants/functions";
+import { IParticipantFeatures, ParticipantFeaturesKey } from "../participants/types";
+import { parseURLParams } from "../util/parseURLParams";
 
-import { JWT_VALIDATION_ERRORS, MEET_FEATURES } from './constants';
-import logger from './logger';
+import { JWT_VALIDATION_ERRORS, MEET_FEATURES } from "./constants";
+import logger from "./logger";
 
 /**
  * Retrieves the JSON Web Token (JWT), if any, defined by a specific
@@ -21,11 +21,11 @@ import logger from './logger';
  */
 export function parseJWTFromURLParams(url: URL | typeof window.location = window.location) {
     // @ts-ignore
-    const jwt = parseURLParams(url, false, 'hash').jwt;
+    const jwt = parseURLParams(url, false, "hash").jwt;
 
     // TODO: eventually remove the search param and only pull from the hash
     // @ts-ignore
-    return jwt ? jwt : parseURLParams(url, true, 'search').jwt;
+    return jwt ? jwt : parseURLParams(url, true, "search").jwt;
 }
 
 /**
@@ -35,9 +35,21 @@ export function parseJWTFromURLParams(url: URL | typeof window.location = window
  * @returns {string}
  */
 export function getJwtName(state: IReduxState) {
-    const { user } = state['features/base/jwt'];
+    const { user } = state["features/base/jwt"];
 
     return user?.name;
+}
+
+/**
+ * Returns the extra data from the jwt.
+ *
+ * @param {IReduxState} state - The app state.
+ * @returns {Object|undefined}
+ */
+export function getJwtExtra(state: IReduxState) {
+    const { extra } = state["features/base/jwt"];
+
+    return extra;
 }
 
 /**
@@ -48,14 +60,10 @@ export function getJwtName(state: IReduxState) {
  * @param {boolean} ifNotInFeatures - Default value if features prop exists but does not have the {@code feature}.
  * @returns {boolean}
  */
-export function isJwtFeatureEnabled(
-        state: IReduxState,
-        feature: ParticipantFeaturesKey,
-        ifNotInFeatures: boolean
-) {
+export function isJwtFeatureEnabled(state: IReduxState, feature: ParticipantFeaturesKey, ifNotInFeatures: boolean) {
     let { features } = getLocalParticipant(state) || {};
 
-    if (typeof features === 'undefined' && isVpaasMeeting(state)) {
+    if (typeof features === "undefined" && isVpaasMeeting(state)) {
         // for vpaas the backend is always initialized with empty features if those are missing
         features = {};
     }
@@ -63,7 +71,7 @@ export function isJwtFeatureEnabled(
     return isJwtFeatureEnabledStateless({
         localParticipantFeatures: features,
         feature,
-        ifNotInFeatures
+        ifNotInFeatures,
     });
 }
 
@@ -86,13 +94,13 @@ interface IIsJwtFeatureEnabledStatelessParams {
 export function isJwtFeatureEnabledStateless({
     localParticipantFeatures: features,
     feature,
-    ifNotInFeatures
+    ifNotInFeatures,
 }: IIsJwtFeatureEnabledStatelessParams) {
-    if (typeof features?.[feature] === 'undefined') {
+    if (typeof features?.[feature] === "undefined") {
         return ifNotInFeatures;
     }
 
-    return String(features[feature]) === 'true';
+    return String(features[feature]) === "true";
 }
 
 /**
@@ -103,7 +111,7 @@ export function isJwtFeatureEnabledStateless({
  * @returns {boolean} - Whether the timestamp is indeed a valid UNIX timestamp or not.
  */
 function isValidUnixTimestamp(timestamp: number | string) {
-    return typeof timestamp === 'number' && timestamp * 1000 === new Date(timestamp * 1000).getTime();
+    return typeof timestamp === "number" && timestamp * 1000 === new Date(timestamp * 1000).getTime();
 }
 
 /**
@@ -132,17 +140,10 @@ export function validateJwt(jwt: string) {
             return errors;
         }
 
-        const {
-            aud,
-            context,
-            exp,
-            iss,
-            nbf,
-            sub
-        } = payload;
+        const { aud, context, exp, iss, nbf, sub } = payload;
 
         // JaaS only
-        if (sub?.startsWith('vpaas-magic-cookie')) {
+        if (sub?.startsWith("vpaas-magic-cookie")) {
             const { kid } = header;
 
             // if Key ID is missing, we return the error immediately without further validations.
@@ -152,15 +153,15 @@ export function validateJwt(jwt: string) {
                 return errors;
             }
 
-            if (kid.substring(0, kid.indexOf('/')) !== sub) {
+            if (kid.substring(0, kid.indexOf("/")) !== sub) {
                 errors.push({ key: JWT_VALIDATION_ERRORS.KID_MISMATCH });
             }
 
-            if (aud !== 'jitsi') {
+            if (aud !== "jitsi") {
                 errors.push({ key: JWT_VALIDATION_ERRORS.AUD_INVALID });
             }
 
-            if (iss !== 'chat') {
+            if (iss !== "chat") {
                 errors.push({ key: JWT_VALIDATION_ERRORS.ISS_INVALID });
             }
 
@@ -169,7 +170,8 @@ export function validateJwt(jwt: string) {
             }
         }
 
-        if (nbf) { // nbf value is optional
+        if (nbf) {
+            // nbf value is optional
             if (!isValidUnixTimestamp(nbf)) {
                 errors.push({ key: JWT_VALIDATION_ERRORS.NBF_INVALID });
             } else if (currentTimestamp < nbf * 1000) {
@@ -189,32 +191,32 @@ export function validateJwt(jwt: string) {
             const { features } = context;
             const meetFeatures = Object.values(MEET_FEATURES);
 
-            (Object.keys(features) as ParticipantFeaturesKey[]).forEach(feature => {
+            (Object.keys(features) as ParticipantFeaturesKey[]).forEach((feature) => {
                 if (meetFeatures.includes(feature)) {
                     const featureValue = features[feature];
 
                     // cannot use truthy or falsy because we need the exact value and type check.
                     if (
-                        featureValue !== true
-                        && featureValue !== false
-                        && featureValue !== 'true'
-                        && featureValue !== 'false'
+                        featureValue !== true &&
+                        featureValue !== false &&
+                        featureValue !== "true" &&
+                        featureValue !== "false"
                     ) {
                         errors.push({
                             key: JWT_VALIDATION_ERRORS.FEATURE_VALUE_INVALID,
-                            args: { feature }
+                            args: { feature },
                         });
                     }
                 } else {
                     errors.push({
                         key: JWT_VALIDATION_ERRORS.FEATURE_INVALID,
-                        args: { feature }
+                        args: { feature },
                     });
                 }
             });
         }
     } catch (e: any) {
-        logger.error(`Unspecified JWT error${e?.message ? `: ${e.message}` : ''}`);
+        logger.error(`Unspecified JWT error${e?.message ? `: ${e.message}` : ""}`);
     }
 
     return errors;
@@ -238,4 +240,73 @@ export function getJwtExpirationDate(jwt: string | undefined) {
 
         return new Date(exp * 1000);
     }
+}
+
+/**
+ * Checks if the current time is within the course time range.
+ *
+ * @param {IReduxState} state - The app state.
+ * @returns {boolean} True if current time is within course time, false otherwise.
+ */
+export function isWithinCourseTime(state: IReduxState): boolean {
+    const extra = getJwtExtra(state);
+
+    if (!extra?.start_date && !extra?.end_date) {
+        // 시간 정보가 없으면 항상 허용
+        return true;
+    }
+
+    const now = new Date();
+    const currentTime = now.toTimeString().split(" ")[0]; // HH:MM:SS format
+
+    // 시작 시간 체크
+    if (extra.start_date && currentTime < extra.start_date) {
+        return false;
+    }
+
+    // 종료 시간 체크
+    if (extra.end_date && currentTime > extra.end_date) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Gets the course time status message.
+ *
+ * @param {IReduxState} state - The app state.
+ * @returns {string|undefined} Status message if outside course time, undefined if within course time.
+ */
+export function getCourseTimeStatus(state: IReduxState): string | undefined {
+    const extra = getJwtExtra(state);
+
+    if (!extra?.start_date && !extra?.end_date) {
+        return undefined;
+    }
+
+    const now = new Date();
+    const currentTime = now.toTimeString().split(" ")[0]; // HH:MM:SS format
+
+    if (extra.start_date && currentTime < extra.start_date) {
+        return "강의가 시작하기 전입니다. 확인 후 다시 접속해주세요.";
+    }
+
+    if (extra.end_date && currentTime > extra.end_date) {
+        return "강의가 종료되었습니다. 확인 후 다시 접속해주세요.";
+    }
+
+    return undefined;
+}
+
+/**
+ * Gets the course ID from JWT.
+ *
+ * @param {IReduxState} state - The app state.
+ * @returns {string|undefined} Course ID from JWT.
+ */
+export function getCourseId(state: IReduxState): string | undefined {
+    const extra = getJwtExtra(state);
+
+    return extra?.course_id;
 }

@@ -1,11 +1,18 @@
-import ReducerRegistry from '../redux/ReducerRegistry';
-import { equals } from '../redux/functions';
+import ReducerRegistry from "../redux/ReducerRegistry";
+import { equals } from "../redux/functions";
 
-import { SET_JWT } from './actionTypes';
+import { SET_JWT } from "./actionTypes";
 
 export interface IJwtState {
     callee?: {
         name: string;
+    };
+    extra?: {
+        title?: string;
+        start_date?: string;
+        end_date?: string;
+        course_id?: string;
+        [key: string]: any;
     };
     group?: string;
     jwt?: string;
@@ -26,20 +33,18 @@ export interface IJwtState {
  * @returns {Object} The next redux state which is the result of reducing the
  * specified {@code action}.
  */
-ReducerRegistry.register<IJwtState>(
-    'features/base/jwt',
-    (state = {}, action): IJwtState => {
-        switch (action.type) {
+ReducerRegistry.register<IJwtState>("features/base/jwt", (state = {}, action): IJwtState => {
+    switch (action.type) {
         case SET_JWT: {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { type, ...payload } = action;
             const nextState = {
-                ...payload
+                ...payload,
             };
 
             return equals(state, nextState) ? state : nextState;
         }
-        }
+    }
 
-        return state;
-    });
+    return state;
+});

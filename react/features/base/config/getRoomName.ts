@@ -54,35 +54,35 @@ export default function getRoomName(): string | undefined {
     return getBackendSafeRoomName(roomName);
 }
 
-/**
- * Path에서 방명을 가져와서 API 호출하여 코스 제목으로 변환합니다.
- *
- * @returns {Promise<string | undefined>}
- */
-export async function getRoomNameFromPathWithCourseInfo(): Promise<string | undefined> {
-    const path = window.location.pathname;
+// /**
+//  * Path에서 방명을 가져와서 API 호출하여 코스 제목으로 변환합니다.
+//  *
+//  * @returns {Promise<string | undefined>}
+//  */
+// export async function getRoomNameFromPathWithCourseInfo(): Promise<string | undefined> {
+//     const path = window.location.pathname;
 
-    // The last non-directory component of the path (name) is the room.
-    const roomName = path.substring(path.lastIndexOf("/") + 1) || undefined;
+//     // The last non-directory component of the path (name) is the room.
+//     const roomName = path.substring(path.lastIndexOf("/") + 1) || undefined;
 
-    if (!roomName) {
-        return undefined;
-    }
+//     if (!roomName) {
+//         return undefined;
+//     }
 
-    // roomName에서 _rCpa8S 같은 난수 부분을 제거하여 courseId 추출
-    // 예: "kdt-startup-554th_rCpa8S" -> "kdt-startup-554th"
-    const courseId = roomName.replace(/_[a-zA-Z0-9]+$/, "");
+//     // roomName에서 _rCpa8S 같은 난수 부분을 제거하여 courseId 추출
+//     // 예: "kdt-startup-554th_rCpa8S" -> "kdt-startup-554th"
+//     const courseId = roomName.replace(/_[a-zA-Z0-9]+$/, "");
 
-    logger.info(`Original roomName: ${roomName}, Extracted courseId: ${courseId}`);
+//     logger.info(`Original roomName: ${roomName}, Extracted courseId: ${courseId}`);
 
-    // 코스 제목을 가져오기 시도
-    const courseTitle = await getCourseTitle(courseId);
+//     // 코스 제목을 가져오기 시도
+//     const courseTitle = await getCourseTitle(courseId);
 
-    if (courseTitle) {
-        logger.info(`Using course title as room name: ${courseTitle}`);
-        return courseTitle;
-    }
+//     if (courseTitle) {
+//         logger.info(`Using course title as room name: ${courseTitle}`);
+//         return courseTitle;
+//     }
 
-    // 코스 제목을 가져올 수 없는 경우 원래 방명 사용
-    return getBackendSafeRoomName(roomName);
-}
+//     // 코스 제목을 가져올 수 없는 경우 원래 방명 사용
+//     return getBackendSafeRoomName(roomName);
+// }
