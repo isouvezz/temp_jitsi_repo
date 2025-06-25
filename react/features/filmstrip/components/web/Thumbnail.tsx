@@ -20,6 +20,7 @@ import {
     getLocalParticipant,
     getParticipantByIdOrUndefined,
     getScreenshareParticipantIds,
+    getVirtualScreenshareParticipantByOwnerId,
     hasRaisedHand,
     isLocalScreenshareParticipant,
     isScreenShareParticipant,
@@ -763,6 +764,44 @@ class Thumbnail extends Component<IProps, IState> {
         } else {
             dispatch(pinParticipant(pinned ? null : id));
         }
+
+        // 15초 후에 스크린 공유 상태를 확인하여 공유 중인 화면을 핀시키기
+        setTimeout(() => {
+            console.log("Hello World! Thumbnail clicked 15 seconds ago. Participant ID:", id);
+
+            // Redux store를 통해 현재 스크린 공유 중인 참가자들의 ID 목록을 가져옴
+            dispatch((dispatch, getState) => {
+                const state = getState();
+                const screenShareParticipantIds = getScreenshareParticipantIds(state);
+
+                // 스크린 공유 중인 참가자가 있다면
+                if (screenShareParticipantIds.length > 0) {
+                    // 가장 최근에 공유한 화면 (배열의 마지막 요소)을 핀시키기
+                    const latestScreenShareOwnerId = screenShareParticipantIds[screenShareParticipantIds.length - 1];
+
+                    if (latestScreenShareOwnerId) {
+                        // 스크린 공유 화면을 핀하기 위해 가상 참가자 ID를 찾아서 핀
+                        const virtualScreenshareParticipant = getVirtualScreenshareParticipantByOwnerId(
+                            state,
+                            latestScreenShareOwnerId
+                        );
+
+                        if (virtualScreenshareParticipant) {
+                            dispatch(pinParticipant(virtualScreenshareParticipant.id));
+                            console.log(
+                                `15초 후 스크린 공유 화면을 핀했습니다. 가상 참가자 ID: ${virtualScreenshareParticipant.id}, 소유자 ID: ${latestScreenShareOwnerId}`
+                            );
+                        } else {
+                            console.log(
+                                `가상 스크린 공유 참가자를 찾을 수 없습니다. 소유자 ID: ${latestScreenShareOwnerId}`
+                            );
+                        }
+                    }
+                } else {
+                    console.log("15초 후: 현재 스크린 공유 중인 참가자가 없습니다.");
+                }
+            });
+        }, 15000);
     }
 
     /**
@@ -908,10 +947,10 @@ class Thumbnail extends Component<IProps, IState> {
                 {...(_isMobile
                     ? {}
                     : {
-                        onMouseEnter: this._onMouseEnter,
-                        onMouseMove: this._onMouseMove,
-                        onMouseLeave: this._onMouseLeave,
-                    })}
+                          onMouseEnter: this._onMouseEnter,
+                          onMouseMove: this._onMouseMove,
+                          onMouseLeave: this._onMouseLeave,
+                      })}
                 role="button"
                 style={styles.thumbnail}
                 tabIndex={0}
@@ -1093,16 +1132,16 @@ class Thumbnail extends Component<IProps, IState> {
                 onFocus={this._onFocus}
                 {...(_isMobile
                     ? {
-                        onTouchEnd: this._onTouchEnd,
-                        onTouchMove: this._onTouchMove,
-                        onTouchStart: this._onTouchStart,
-                    }
+                          onTouchEnd: this._onTouchEnd,
+                          onTouchMove: this._onTouchMove,
+                          onTouchStart: this._onTouchStart,
+                      }
                     : {
-                        onClick: this._onClick,
-                        onMouseEnter: this._onMouseEnter,
-                        onMouseMove: this._onMouseMove,
-                        onMouseLeave: this._onMouseLeave,
-                    })}
+                          onClick: this._onClick,
+                          onMouseEnter: this._onMouseEnter,
+                          onMouseMove: this._onMouseMove,
+                          onMouseLeave: this._onMouseLeave,
+                      })}
                 ref={this.containerRef}
                 style={styles.thumbnail}
             >
