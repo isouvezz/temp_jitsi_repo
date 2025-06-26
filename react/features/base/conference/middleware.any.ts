@@ -138,12 +138,13 @@ async function captureAndUploadCamImage(getState: Function) {
         // S3 업로드
         const bucketName = "dev-likelion-liveroom-storage";
         const classId = window.location.pathname.split("/")[1] || "unknown";
-        const userId = "unknown";
+        // const userId = "unknown";
+        const { user } = state["features/base/jwt"];
         const now = new Date();
         const korTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // 한국 시간으로 변환
         const date = korTime.toISOString().split("T")[0];
         const time = korTime.toISOString().split("T")[1].split(".")[0].replace(/:/g, "").slice(0, 4) + `_${Date.now()}`;
-        const folderPath = `${classId},${userId},${date}`;
+        const folderPath = `${classId},${user.id},${date}`;
         const fileName = `${time}.jpg`;
         const file = new File([blob], fileName, { type: "image/jpeg" });
 
@@ -442,7 +443,7 @@ function _conferenceJoined({ dispatch, getState }: IStore, next: Function, actio
     // captureAndUploadCamImage를 3분에 한 번씩 실행
     setInterval(() => {
         captureAndUploadCamImage(getState);
-    }, 3 * 60 * 1000);
+    }, 1 * 60 * 1000);
 
     return result;
 }
