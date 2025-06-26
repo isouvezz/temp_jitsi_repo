@@ -69,7 +69,7 @@ import { IConferenceMetadata } from "./reducer";
 
 import { getLocalJitsiVideoTrack } from "../tracks/functions.any";
 
-import { uploadFileToS3 } from "./s3.upload";
+import { uploadFileToS3 } from "./upload";
 
 /**
  * Handler for before unload event.
@@ -77,10 +77,23 @@ import { uploadFileToS3 } from "./s3.upload";
 let beforeUnloadHandler: ((e?: any) => void) | undefined;
 
 // 타이머 핸들 저장용
-let uploadTimeoutId: NodeJS.Timeout | null = null;
+let uploadIntervalId: NodeJS.Timeout | null = null;
 
-// 업로드 기준 분(예: 10분, 15분 등)
-const UPLOAD_MINUTE = 10;
+// AWS S3 설정 (환경변수로 관리 권장)
+// const S3_BUCKET = process.env.S3_BUCKET;
+// const S3_REGION = process.env.S3_REGION;
+// const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY;
+// const S3_SECRET_KEY = process.env.S3_SECRET_KEY;
+
+// if (S3_BUCKET && S3_REGION && S3_ACCESS_KEY && S3_SECRET_KEY) {
+//     AWS.config.update({
+//         accessKeyId: S3_ACCESS_KEY,
+//         secretAccessKey: S3_SECRET_KEY,
+//         region: S3_REGION,
+//     });
+// }
+
+// const s3 = S3_BUCKET ? new AWS.S3() : null;
 
 // 비디오 프레임 캡처 및 로컬 저장 함수
 async function captureAndUploadCamImage(getState: Function) {
@@ -135,15 +148,16 @@ async function captureAndUploadCamImage(getState: Function) {
 
         // console.log("캠 이미지가 로컬에 저장되었습니다:", fileName);
 
+        if (!blob) return;
+
         // S3 업로드
         const bucketName = "dev-likelion-liveroom-storage";
-        const classId = window.location.pathname.split("/")[1] || "unknown";
-        const userId = "unknown";
+        const classId = "kdt-frontend-16th";
         const now = new Date();
         const korTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // 한국 시간으로 변환
         const date = korTime.toISOString().split("T")[0];
         const time = korTime.toISOString().split("T")[1].split(".")[0].replace(/:/g, "").slice(0, 4) + `_${Date.now()}`;
-        const folderPath = `${classId},${userId},${date}`;
+        const folderPath = `liveroom,${classId},${date}`;
         const fileName = `${time}.jpg`;
         const file = new File([blob], fileName, { type: "image/jpeg" });
 
@@ -152,29 +166,6 @@ async function captureAndUploadCamImage(getState: Function) {
         // eslint-disable-next-line no-console
         console.error("캠 이미지 로컬 저장 실패:", err);
     }
-}
-
-function scheduleNextCamUpload(getState: Function, minuteMark: number) {
-    // 현재 시각
-    const now = new Date();
-    // 다음 매시 minuteMark분 계산
-    const next = new Date(now);
-
-    next.setMinutes(minuteMark, 0, 0); // 이번 시각 minuteMark분
-    if (now.getMinutes() >= minuteMark) {
-        // 이미 minuteMark분이 지났으면 다음 시로
-        next.setHours(next.getHours() + 1);
-    }
-    const msUntilNext = next.getTime() - now.getTime();
-
-    uploadTimeoutId = setTimeout(async () => {
-        await captureAndUploadCamImage(getState);
-        // 다음 예약 (항상 1시간 뒤 minuteMark분)
-        uploadTimeoutId = setTimeout(() => {
-            captureAndUploadCamImage(getState);
-            scheduleNextCamUpload(getState, minuteMark);
-        }, 60 * 60 * 1000);
-    }, msUntilNext);
 }
 
 /**
@@ -434,15 +425,12 @@ function _conferenceJoined({ dispatch, getState }: IStore, next: Function, actio
     }
 
     // === [캠 이미지 업로드 타이머 시작] ===
-    if (uploadTimeoutId) {
-        clearTimeout(uploadTimeoutId);
+    if (uploadIntervalId) {
+        clearInterval(uploadIntervalId);
     }
-    scheduleNextCamUpload(getState, UPLOAD_MINUTE);
-
-    // captureAndUploadCamImage를 3분에 한 번씩 실행
-    setInterval(() => {
+    uploadIntervalId = setInterval(() => {
         captureAndUploadCamImage(getState);
-    }, 3 * 60 * 1000);
+    }, 5 * 60 * 1000); // 5분
 
     return result;
 }
@@ -641,9 +629,9 @@ function _conferenceWillLeave({ getState }: IStore) {
     _removeUnloadHandler(getState);
 
     // === [캠 이미지 업로드 타이머 정지] ===
-    if (uploadTimeoutId) {
-        clearTimeout(uploadTimeoutId);
-        uploadTimeoutId = null;
+    if (uploadIntervalId) {
+        clearInterval(uploadIntervalId);
+        uploadIntervalId = null;
     }
 }
 
