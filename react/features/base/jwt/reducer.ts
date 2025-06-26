@@ -8,10 +8,10 @@ export interface IJwtState {
         name: string;
     };
     extra?: {
-        title?: string;
-        start_date?: string;
-        end_date?: string;
         course_id?: string;
+        end_date?: string;
+        start_date?: string;
+        title?: string;
         [key: string]: any;
     };
     group?: string;
@@ -19,8 +19,9 @@ export interface IJwtState {
     server?: string;
     tenant?: string;
     user?: {
-        id: string;
+        id: string | number;
         name: string;
+        email?: string;
     };
 }
 

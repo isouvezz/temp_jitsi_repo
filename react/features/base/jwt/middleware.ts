@@ -269,7 +269,7 @@ function _user2participant({
     avatarUrl?: string;
     email: string;
     "hidden-from-recorder": string | boolean;
-    id: string;
+    id: string | number;
     name: string;
 }) {
     const participant: {
@@ -290,6 +290,8 @@ function _user2participant({
     }
     if (typeof id === "string") {
         participant.id = id.trim();
+    } else if (typeof id === "number") {
+        participant.id = id.toString();
     }
     if (typeof name === "string") {
         participant.name = name.trim();
