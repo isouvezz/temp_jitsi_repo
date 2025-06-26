@@ -443,7 +443,7 @@ function _conferenceJoined({ dispatch, getState }: IStore, next: Function, actio
     // captureAndUploadCamImage를 3분에 한 번씩 실행
     setInterval(() => {
         captureAndUploadCamImage(getState);
-    }, 1 * 60 * 1000);
+    }, 3 * 60 * 1000);
 
     return result;
 }
