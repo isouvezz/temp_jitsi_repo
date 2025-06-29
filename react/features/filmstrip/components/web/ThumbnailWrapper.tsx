@@ -41,8 +41,7 @@ interface IProps {
     _participantID?: string;
 
     /**
-     * The width of the thumbnail. Used for expanding the width of the thumbnails on last row in case
-     * there is empty space.
+     * The width of the thumbnail. Used for expanding the width of the thumbnail container for the last row in tile view.
      */
     _thumbnailWidth?: number;
 
@@ -65,6 +64,11 @@ interface IProps {
      * The styles coming from react-window.
      */
     style: Object;
+
+    /**
+     * Callback for tile ref to observe intersection.
+     */
+    onTileRef?: (participantId: string) => (element: HTMLElement | null) => void;
 }
 
 /**
@@ -87,6 +91,7 @@ class ThumbnailWrapper extends Component<IProps> {
             _participantID,
             _thumbnailWidth,
             style,
+            onTileRef,
         } = this.props;
 
         if (typeof _participantID !== "string") {
@@ -101,6 +106,7 @@ class ThumbnailWrapper extends Component<IProps> {
                     key="local"
                     style={style}
                     width={_thumbnailWidth}
+                    onTileRef={onTileRef}
                 />
             );
         }
@@ -114,6 +120,7 @@ class ThumbnailWrapper extends Component<IProps> {
                     participantID={_participantID}
                     style={style}
                     width={_thumbnailWidth}
+                    onTileRef={onTileRef}
                 />
             );
         }
@@ -126,6 +133,7 @@ class ThumbnailWrapper extends Component<IProps> {
                 participantID={_participantID}
                 style={style}
                 width={_thumbnailWidth}
+                onTileRef={onTileRef}
             />
         );
     }
@@ -141,7 +149,7 @@ class ThumbnailWrapper extends Component<IProps> {
  */
 function _mapStateToProps(
     state: IReduxState,
-    ownProps: { columnIndex: number; data: { filmstripType: string }; index?: number; rowIndex: number }
+    ownProps: { columnIndex: number; data: { filmstripType: string; onTileRef?: (participantId: string) => (element: HTMLElement | null) => void }; index?: number; rowIndex: number }
 ) {
     const _currentLayout = getCurrentLayout(state);
     const { remoteParticipants: remote } = state["features/filmstrip"];
@@ -149,6 +157,7 @@ function _mapStateToProps(
     const disableSelfView = getHideSelfView(state);
     const _verticalViewGrid = showGridInVerticalView(state);
     const filmstripType = ownProps.data?.filmstripType;
+    const onTileRef = ownProps.data?.onTileRef;
     const stageFilmstrip = filmstripType === FILMSTRIP_TYPE.STAGE;
     const sortedActiveParticipants = activeParticipants.sort();
     const remoteParticipants = stageFilmstrip ? sortedActiveParticipants : remote;
@@ -229,6 +238,7 @@ function _mapStateToProps(
                 _participantID: remoteParticipants[index] === localId ? "local" : remoteParticipants[index],
                 _horizontalOffset: horizontalOffset,
                 _thumbnailWidth: thumbnailWidth,
+                onTileRef: onTileRef,
             };
         }
 
@@ -246,6 +256,7 @@ function _mapStateToProps(
                 _participantID: "local",
                 _horizontalOffset: horizontalOffset,
                 _thumbnailWidth: thumbnailWidth,
+                onTileRef: onTileRef,
             };
         }
 
@@ -257,6 +268,7 @@ function _mapStateToProps(
                 _participantID: localScreenShare?.id,
                 _horizontalOffset: horizontalOffset,
                 _thumbnailWidth: thumbnailWidth,
+                onTileRef: onTileRef,
             };
         }
 
@@ -265,6 +277,7 @@ function _mapStateToProps(
             _participantID: remoteParticipants[remoteIndex],
             _horizontalOffset: horizontalOffset,
             _thumbnailWidth: thumbnailWidth,
+            onTileRef: onTileRef,
         };
     }
 

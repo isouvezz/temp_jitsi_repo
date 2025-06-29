@@ -4,6 +4,7 @@ import ReducerRegistry from '../base/redux/ReducerRegistry';
 import {
     CLEAR_STAGE_PARTICIPANTS,
     REMOVE_STAGE_PARTICIPANT,
+    RESIZE_FILMSTRIP,
     SET_FILMSTRIP_ENABLED,
     SET_FILMSTRIP_HEIGHT,
     SET_FILMSTRIP_VISIBLE,
@@ -21,6 +22,7 @@ import {
     SET_USER_IS_RESIZING,
     SET_VERTICAL_VIEW_DIMENSIONS,
     SET_VISIBLE_REMOTE_PARTICIPANTS,
+    SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET,
     SET_VOLUME
 } from './actionTypes';
 
@@ -253,165 +255,171 @@ ReducerRegistry.register<IFilmstripState>(
     'features/filmstrip',
     (state = DEFAULT_STATE, action): IFilmstripState => {
         switch (action.type) {
-        case SET_FILMSTRIP_ENABLED:
-            return {
-                ...state,
-                enabled: action.enabled
-            };
+            case SET_FILMSTRIP_ENABLED:
+                return {
+                    ...state,
+                    enabled: action.enabled
+                };
 
-        case SET_FILMSTRIP_VISIBLE:
-            return {
-                ...state,
-                visible: action.visible
-            };
+            case SET_FILMSTRIP_VISIBLE:
+                return {
+                    ...state,
+                    visible: action.visible
+                };
 
-        case SET_HORIZONTAL_VIEW_DIMENSIONS:
-            return {
-                ...state,
-                horizontalViewDimensions: action.dimensions
-            };
-        case SET_REMOTE_PARTICIPANTS: {
-            state.remoteParticipants = action.participants;
-            const { visibleParticipantsStartIndex: startIndex, visibleParticipantsEndIndex: endIndex } = state;
+            case SET_HORIZONTAL_VIEW_DIMENSIONS:
+                return {
+                    ...state,
+                    horizontalViewDimensions: action.dimensions
+                };
+            case SET_REMOTE_PARTICIPANTS: {
+                state.remoteParticipants = action.participants;
+                const { visibleParticipantsStartIndex: startIndex, visibleParticipantsEndIndex: endIndex } = state;
 
-            state.visibleRemoteParticipants = new Set(state.remoteParticipants.slice(startIndex, endIndex + 1));
+                state.visibleRemoteParticipants = new Set(state.remoteParticipants.slice(startIndex, endIndex + 1));
 
-            return { ...state };
-        }
-        case SET_TILE_VIEW_DIMENSIONS:
-            return {
-                ...state,
-                tileViewDimensions: action.dimensions
-            };
-        case SET_VERTICAL_VIEW_DIMENSIONS:
-            return {
-                ...state,
-                verticalViewDimensions: action.dimensions
-            };
-        case SET_VOLUME:
-            return {
-                ...state,
-                participantsVolume: {
-                    ...state.participantsVolume,
-
-                    // NOTE: This would fit better in the features/base/participants. But currently we store
-                    // the participants as an array which will make it expensive to search for the volume for
-                    // every participant separately.
-                    [action.participantId]: action.volume
-                }
-            };
-        case SET_VISIBLE_REMOTE_PARTICIPANTS: {
-            const { endIndex, startIndex } = action;
-            const { remoteParticipants } = state;
-            const visibleRemoteParticipants = new Set(remoteParticipants.slice(startIndex, endIndex + 1));
-
-            return {
-                ...state,
-                visibleParticipantsStartIndex: startIndex,
-                visibleParticipantsEndIndex: endIndex,
-                visibleRemoteParticipants
-            };
-        }
-        case PARTICIPANT_LEFT: {
-            const { id, local } = action.participant;
-
-            if (local) {
-                return state;
+                return { ...state };
             }
-            delete state.participantsVolume[id];
+            case SET_TILE_VIEW_DIMENSIONS:
+                return {
+                    ...state,
+                    tileViewDimensions: action.dimensions
+                };
+            case SET_VERTICAL_VIEW_DIMENSIONS:
+                return {
+                    ...state,
+                    verticalViewDimensions: action.dimensions
+                };
+            case SET_VOLUME:
+                return {
+                    ...state,
+                    participantsVolume: {
+                        ...state.participantsVolume,
 
-            return {
-                ...state
-            };
-        }
-        case SET_FILMSTRIP_HEIGHT:{
-            return {
-                ...state,
-                topPanelHeight: {
-                    ...state.topPanelHeight,
-                    current: action.height
-                }
-            };
-        }
-        case SET_FILMSTRIP_WIDTH: {
-            return {
-                ...state,
-                width: {
-                    ...state.width,
-                    current: action.width
-                }
-            };
-        }
-        case SET_USER_FILMSTRIP_HEIGHT: {
-            const { height } = action;
+                        // NOTE: This would fit better in the features/base/participants. But currently we store
+                        // the participants as an array which will make it expensive to search for the volume for
+                        // every participant separately.
+                        [action.participantId]: action.volume
+                    }
+                };
+            case SET_VISIBLE_REMOTE_PARTICIPANTS: {
+                const { endIndex, startIndex } = action;
+                const { remoteParticipants } = state;
+                const visibleRemoteParticipants = new Set(remoteParticipants.slice(startIndex, endIndex + 1));
 
-            return {
-                ...state,
-                topPanelHeight: {
-                    current: height,
-                    userSet: height
-                }
-            };
-        }
-        case SET_USER_FILMSTRIP_WIDTH: {
-            const { width } = action;
+                return {
+                    ...state,
+                    visibleParticipantsStartIndex: startIndex,
+                    visibleParticipantsEndIndex: endIndex,
+                    visibleRemoteParticipants
+                };
+            }
+            case SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET: {
+                return {
+                    ...state,
+                    visibleRemoteParticipants: action.visibleParticipants
+                };
+            }
+            case PARTICIPANT_LEFT: {
+                const { id, local } = action.participant;
 
-            return {
-                ...state,
-                width: {
-                    current: width,
-                    userSet: width
+                if (local) {
+                    return state;
                 }
-            };
-        }
-        case SET_USER_IS_RESIZING: {
-            return {
-                ...state,
-                isResizing: action.resizing
-            };
-        }
-        case SET_STAGE_FILMSTRIP_DIMENSIONS: {
-            return {
-                ...state,
-                stageFilmstripDimensions: action.dimensions
-            };
-        }
-        case SET_STAGE_PARTICIPANTS: {
-            return {
-                ...state,
-                activeParticipants: action.queue
-            };
-        }
-        case REMOVE_STAGE_PARTICIPANT: {
-            return {
-                ...state,
-                activeParticipants: state.activeParticipants.filter(p => p.participantId !== action.participantId)
-            };
-        }
-        case CLEAR_STAGE_PARTICIPANTS: {
-            return {
-                ...state,
-                activeParticipants: []
-            };
-        }
-        case SET_SCREENSHARING_TILE_DIMENSIONS: {
-            return {
-                ...state,
-                screenshareFilmstripDimensions: action.dimensions
-            };
-        }
-        case SET_TOP_PANEL_VISIBILITY: {
-            return {
-                ...state,
-                topPanelVisible: action.visible
-            };
-        }
-        case SET_SCREENSHARE_FILMSTRIP_PARTICIPANT: {
-            return {
-                ...state,
-                screenshareFilmstripParticipantId: action.participantId
-            };
-        }
+                delete state.participantsVolume[id];
+
+                return {
+                    ...state
+                };
+            }
+            case SET_FILMSTRIP_HEIGHT: {
+                return {
+                    ...state,
+                    topPanelHeight: {
+                        ...state.topPanelHeight,
+                        current: action.height
+                    }
+                };
+            }
+            case SET_FILMSTRIP_WIDTH: {
+                return {
+                    ...state,
+                    width: {
+                        ...state.width,
+                        current: action.width
+                    }
+                };
+            }
+            case SET_USER_FILMSTRIP_HEIGHT: {
+                const { height } = action;
+
+                return {
+                    ...state,
+                    topPanelHeight: {
+                        current: height,
+                        userSet: height
+                    }
+                };
+            }
+            case SET_USER_FILMSTRIP_WIDTH: {
+                const { width } = action;
+
+                return {
+                    ...state,
+                    width: {
+                        current: width,
+                        userSet: width
+                    }
+                };
+            }
+            case SET_USER_IS_RESIZING: {
+                return {
+                    ...state,
+                    isResizing: action.resizing
+                };
+            }
+            case SET_STAGE_FILMSTRIP_DIMENSIONS: {
+                return {
+                    ...state,
+                    stageFilmstripDimensions: action.dimensions
+                };
+            }
+            case SET_STAGE_PARTICIPANTS: {
+                return {
+                    ...state,
+                    activeParticipants: action.queue
+                };
+            }
+            case REMOVE_STAGE_PARTICIPANT: {
+                return {
+                    ...state,
+                    activeParticipants: state.activeParticipants.filter(p => p.participantId !== action.participantId)
+                };
+            }
+            case CLEAR_STAGE_PARTICIPANTS: {
+                return {
+                    ...state,
+                    activeParticipants: []
+                };
+            }
+            case SET_SCREENSHARING_TILE_DIMENSIONS: {
+                return {
+                    ...state,
+                    screenshareFilmstripDimensions: action.dimensions
+                };
+            }
+            case SET_TOP_PANEL_VISIBILITY: {
+                return {
+                    ...state,
+                    topPanelVisible: action.visible
+                };
+            }
+            case SET_SCREENSHARE_FILMSTRIP_PARTICIPANT: {
+                return {
+                    ...state,
+                    screenshareFilmstripParticipantId: action.participantId
+                };
+            }
         }
 
         return state;

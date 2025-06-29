@@ -25,7 +25,8 @@ import {
     setUserFilmstripHeight,
     setUserFilmstripWidth,
     setUserIsResizing,
-    setVisibleRemoteParticipants
+    setVisibleRemoteParticipants,
+    setVisibleRemoteParticipantsFromSet
 } from '../../actions.web';
 import {
     ASPECT_RATIO_BREAKPOINT,
@@ -43,6 +44,7 @@ import {
     isStageFilmstripTopPanel,
     shouldRemoteVideosBeVisible
 } from '../../functions.web';
+import { DEFAULT_TILE_VISIBILITY_THRESHOLD } from '../../../base/config/constants';
 
 import AudioTracksContainer from './AudioTracksContainer';
 import Thumbnail from './Thumbnail';
@@ -254,9 +256,13 @@ interface IState {
  *
  * @augments Component
  */
-class Filmstrip extends PureComponent <IProps, IState> {
+class Filmstrip extends PureComponent<IProps, IState> {
 
     _throttledResize: Function;
+    private intersectionObserver: IntersectionObserver | null = null;
+    private tileRefs: Map<string, Element> = new Map();
+    private currentVisibleParticipants: Set<string> = new Set();
+    private visibilityThreshold: number = DEFAULT_TILE_VISIBILITY_THRESHOLD;
 
     /**
      * Initializes a new {@code Filmstrip} instance.
@@ -311,10 +317,43 @@ class Filmstrip extends PureComponent <IProps, IState> {
 
         // @ts-ignore
         document.addEventListener('mousemove', this._throttledResize);
+
+        // 타일뷰에서만 Intersection Observer 설정
+        if (this.props._currentLayout === LAYOUTS.TILE_VIEW) {
+            this._setupIntersectionObserver();
+            this._initializeVisibleParticipants();
+        }
+
+        // 전역 API에 인스턴스 등록
+        if (typeof window !== 'undefined' && (window as any).JitsiMeetJS?.setFilmstripInstance) {
+            (window as any).JitsiMeetJS.setFilmstripInstance(this);
+        }
     }
 
     /**
      * Implements React's {@link Component#componentDidUpdate}.
+     *
+     * @inheritdoc
+     */
+    override componentDidUpdate(prevProps: IProps) {
+        // 레이아웃이 타일뷰로 변경되었을 때 Intersection Observer 설정
+        if (this.props._currentLayout === LAYOUTS.TILE_VIEW && prevProps._currentLayout !== LAYOUTS.TILE_VIEW) {
+            this._setupIntersectionObserver();
+            this._initializeVisibleParticipants();
+        }
+        // 레이아웃이 타일뷰에서 다른 뷰로 변경되었을 때 정리
+        else if (prevProps._currentLayout === LAYOUTS.TILE_VIEW && this.props._currentLayout !== LAYOUTS.TILE_VIEW) {
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+                this.intersectionObserver = null;
+            }
+            this.tileRefs.clear();
+            this.currentVisibleParticipants.clear();
+        }
+    }
+
+    /**
+     * Implements React's {@link Component#componentWillUnmount}.
      *
      * @inheritdoc
      */
@@ -325,6 +364,124 @@ class Filmstrip extends PureComponent <IProps, IState> {
 
         // @ts-ignore
         document.removeEventListener('mousemove', this._throttledResize);
+
+        // Intersection Observer 정리
+        if (this.intersectionObserver) {
+            this.intersectionObserver.disconnect();
+            this.intersectionObserver = null;
+        }
+        this.tileRefs.clear();
+    }
+
+    /**
+     * Sets up the Intersection Observer for tile view to detect when tiles are sufficiently visible.
+     *
+     * @private
+     * @returns {void}
+     */
+    _setupIntersectionObserver() {
+        this.intersectionObserver = new IntersectionObserver(
+            (entries) => {
+                const currentVisible = new Set(this.currentVisibleParticipants);
+                let hasChanges = false;
+
+                entries.forEach(entry => {
+                    const participantId = entry.target.getAttribute('data-participant-id');
+                    if (!participantId) return;
+
+                    const intersectionRatio = entry.intersectionRatio;
+
+                    if (intersectionRatio >= this.visibilityThreshold) {
+                        // 임계값 이상 보이면 추가
+                        if (!currentVisible.has(participantId)) {
+                            currentVisible.add(participantId);
+                            hasChanges = true;
+                        }
+                    } else {
+                        // 임계값 미만이면 제거
+                        if (currentVisible.has(participantId)) {
+                            currentVisible.delete(participantId);
+                            hasChanges = true;
+                        }
+                    }
+                });
+
+                // 변경사항이 있을 때만 업데이트
+                if (hasChanges) {
+                    this.currentVisibleParticipants = new Set(currentVisible);
+                    this.props.dispatch(setVisibleRemoteParticipantsFromSet(currentVisible));
+                }
+            },
+            {
+                threshold: [0, this.visibilityThreshold, 1.0], // 0%, 임계값%, 100%
+                root: null,
+                rootMargin: '0px'
+            }
+        );
+    }
+
+    /**
+     * Initializes the visible participants based on the current grid dimensions.
+     *
+     * @private
+     * @returns {void}
+     */
+    _initializeVisibleParticipants() {
+        const { _columns, _rows, _remoteParticipants } = this.props;
+        const visibleCount = Math.min(_columns * _rows, _remoteParticipants.length);
+        const initialVisible = new Set(_remoteParticipants.slice(0, visibleCount));
+
+        this.currentVisibleParticipants = new Set(initialVisible);
+        this.props.dispatch(setVisibleRemoteParticipantsFromSet(initialVisible));
+    }
+
+    /**
+     * Callback for tile ref to observe intersection.
+     *
+     * @param {string} participantId - The participant ID.
+     * @returns {Function} - The ref callback function.
+     */
+    _onTileRef = (participantId: string) => (element: HTMLElement | null) => {
+        if (element) {
+            this.tileRefs.set(participantId, element);
+            this.intersectionObserver?.observe(element);
+        } else {
+            const existingElement = this.tileRefs.get(participantId);
+            if (existingElement && this.intersectionObserver) {
+                this.intersectionObserver.unobserve(existingElement);
+                this.tileRefs.delete(participantId);
+            }
+        }
+    };
+
+    /**
+     * Sets the visibility threshold for tile view.
+     *
+     * @param {number} threshold - The visibility threshold (0.0 to 1.0).
+     * @returns {void}
+     */
+    setVisibilityThreshold(threshold: number) {
+        if (threshold >= 0 && threshold <= 1) {
+            this.visibilityThreshold = threshold;
+            // 기존 observer 재설정
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+                this._setupIntersectionObserver();
+                // 기존 타일들 다시 observe
+                this.tileRefs.forEach((element, participantId) => {
+                    this.intersectionObserver?.observe(element);
+                });
+            }
+        }
+    }
+
+    /**
+     * Gets the current visibility threshold.
+     *
+     * @returns {number} - The current visibility threshold.
+     */
+    getVisibilityThreshold(): number {
+        return this.visibilityThreshold;
     }
 
     /**
@@ -334,7 +491,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @returns {ReactElement}
      */
     override render() {
-        const filmstripStyle: any = { };
+        const filmstripStyle: any = {};
         const {
             _currentLayout,
             _disableSelfView,
@@ -395,35 +552,35 @@ class Filmstrip extends PureComponent <IProps, IState> {
 
         const filmstrip = (<>
             <div
-                className = { clsx(this.props._videosClassName,
+                className={clsx(this.props._videosClassName,
                     !tileViewActive && (filmstripType === FILMSTRIP_TYPE.MAIN
-                    || (filmstripType === FILMSTRIP_TYPE.STAGE && _topPanelFilmstrip))
+                        || (filmstripType === FILMSTRIP_TYPE.STAGE && _topPanelFilmstrip))
                     && !_resizableFilmstrip && 'filmstrip-hover',
-                    _verticalViewGrid && 'vertical-view-grid') }
-                id = 'remoteVideos'>
+                    _verticalViewGrid && 'vertical-view-grid')}
+                id='remoteVideos'>
                 {!_disableSelfView && !_verticalViewGrid && (
                     <div
-                        className = 'filmstrip__videos'
-                        id = 'filmstripLocalVideo'>
+                        className='filmstrip__videos'
+                        id='filmstripLocalVideo'>
                         {
                             !tileViewActive && filmstripType === FILMSTRIP_TYPE.MAIN
-                            && <div id = 'filmstripLocalVideoThumbnail'>
+                            && <div id='filmstripLocalVideoThumbnail'>
                                 <Thumbnail
-                                    filmstripType = { FILMSTRIP_TYPE.MAIN }
-                                    key = 'local' />
+                                    filmstripType={FILMSTRIP_TYPE.MAIN}
+                                    key='local' />
                             </div>
                         }
                     </div>
                 )}
                 {_localScreenShareId && !_disableSelfView && !_verticalViewGrid && (
                     <div
-                        className = 'filmstrip__videos'
-                        id = 'filmstripLocalScreenShare'>
-                        <div id = 'filmstripLocalScreenShareThumbnail'>
+                        className='filmstrip__videos'
+                        id='filmstripLocalScreenShare'>
+                        <div id='filmstripLocalScreenShareThumbnail'>
                             {
                                 !tileViewActive && filmstripType === FILMSTRIP_TYPE.MAIN && <Thumbnail
-                                    key = 'localScreenShare'
-                                    participantID = { _localScreenShareId } />
+                                    key='localScreenShare'
+                                    participantID={_localScreenShareId} />
                             }
                         </div>
                     </div>
@@ -436,31 +593,31 @@ class Filmstrip extends PureComponent <IProps, IState> {
 
         return (
             <div
-                className = { clsx('filmstrip',
+                className={clsx('filmstrip',
                     this.props._className,
                     classes.filmstrip,
                     _verticalViewGrid && 'no-vertical-padding',
-                    _verticalViewBackground && classes.filmstripBackground) }
-                style = { filmstripStyle }>
+                    _verticalViewBackground && classes.filmstripBackground)}
+                style={filmstripStyle}>
                 <span
-                    aria-level = { 1 }
-                    className = 'sr-only'
-                    role = 'heading'>
-                    { t('filmstrip.accessibilityLabel.heading') }
+                    aria-level={1}
+                    className='sr-only'
+                    role='heading'>
+                    {t('filmstrip.accessibilityLabel.heading')}
                 </span>
-                { toolbar }
+                {toolbar}
                 {_resizableFilmstrip
                     ? <div
-                        className = { clsx('resizable-filmstrip', classes.resizableFilmstripContainer,
-                            _topPanelFilmstrip && 'top-panel-filmstrip') }>
+                        className={clsx('resizable-filmstrip', classes.resizableFilmstripContainer,
+                            _topPanelFilmstrip && 'top-panel-filmstrip')}>
                         <div
-                            className = { clsx('dragHandleContainer',
+                            className={clsx('dragHandleContainer',
                                 classes.dragHandleContainer,
                                 isMouseDown && 'visible',
                                 _topPanelFilmstrip && 'top-panel')
                             }
-                            onMouseDown = { this._onDragHandleMouseDown }>
-                            <div className = { clsx(classes.dragHandle, 'dragHandle') } />
+                            onMouseDown={this._onDragHandleMouseDown}>
+                            <div className={clsx(classes.dragHandle, 'dragHandle')} />
                         </div>
                         {filmstrip}
                     </div>
@@ -637,7 +794,8 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @returns {void}
      */
     _onListItemsRendered({ visibleStartIndex, visibleStopIndex }: {
-        visibleStartIndex: number; visibleStopIndex: number; }) {
+        visibleStartIndex: number; visibleStopIndex: number;
+    }) {
         const { dispatch } = this.props;
         const { startIndex, stopIndex } = this._calculateIndices(visibleStartIndex, visibleStopIndex);
 
@@ -700,26 +858,28 @@ class Filmstrip extends PureComponent <IProps, IState> {
         if (_currentLayout === LAYOUTS.TILE_VIEW || _verticalViewGrid || filmstripType !== FILMSTRIP_TYPE.MAIN) {
             return (
                 <FixedSizeGrid
-                    className = 'filmstrip__videos remote-videos'
-                    columnCount = { _columns }
-                    columnWidth = { _thumbnailWidth + TILE_HORIZONTAL_MARGIN }
-                    height = { _filmstripHeight }
-                    initialScrollLeft = { 0 }
-                    initialScrollTop = { 0 }
-                    itemData = {{ filmstripType }}
-                    itemKey = { this._gridItemKey }
-                    onItemsRendered = { this._onGridItemsRendered }
-                    overscanRowCount = { 1 }
-                    rowCount = { _rows }
-                    rowHeight = { _thumbnailHeight + TILE_VERTICAL_MARGIN }
-                    width = { _filmstripWidth }>
+                    className='filmstrip__videos remote-videos'
+                    columnCount={_columns}
+                    columnWidth={_thumbnailWidth + TILE_HORIZONTAL_MARGIN}
+                    height={_filmstripHeight}
+                    initialScrollLeft={0}
+                    initialScrollTop={0}
+                    itemData={{
+                        filmstripType,
+                        onTileRef: _currentLayout === LAYOUTS.TILE_VIEW ? this._onTileRef : undefined
+                    }}
+                    itemKey={this._gridItemKey}
+                    onItemsRendered={_currentLayout === LAYOUTS.TILE_VIEW ? undefined : this._onGridItemsRendered}
+                    overscanRowCount={1}
+                    rowCount={_rows}
+                    rowHeight={_thumbnailHeight + TILE_VERTICAL_MARGIN}
+                    width={_filmstripWidth}>
                     {
                         ThumbnailWrapper
                     }
                 </FixedSizeGrid>
             );
         }
-
 
         const props: any = {
             itemCount: _remoteParticipantsLength,
@@ -757,7 +917,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
         }
 
         return (
-            <FixedSizeList { ...props }>
+            <FixedSizeList {...props}>
                 {
                     ThumbnailWrapper
                 }
@@ -850,23 +1010,23 @@ class Filmstrip extends PureComponent <IProps, IState> {
 
         return (
             <div
-                className = { clsx(classes.toggleFilmstripContainer,
+                className={clsx(classes.toggleFilmstripContainer,
                     _isVerticalFilmstrip && classes.toggleVerticalFilmstripContainer,
                     _topPanelFilmstrip && classes.toggleTopPanelContainer,
                     _topPanelFilmstrip && !_topPanelVisible && classes.toggleTopPanelContainerHidden,
-                    'toggleFilmstripContainer') }>
+                    'toggleFilmstripContainer')}>
                 <button
-                    aria-expanded = { this.props._mainFilmstripVisible }
-                    aria-label = { t('toolbar.accessibilityLabel.toggleFilmstrip') }
-                    className = { classes.toggleFilmstripButton }
-                    id = 'toggleFilmstripButton'
-                    onFocus = { this._onTabIn }
-                    tabIndex = { 0 }
-                    { ...actions }>
+                    aria-expanded={this.props._mainFilmstripVisible}
+                    aria-label={t('toolbar.accessibilityLabel.toggleFilmstrip')}
+                    className={classes.toggleFilmstripButton}
+                    id='toggleFilmstripButton'
+                    onFocus={this._onTabIn}
+                    tabIndex={0}
+                    {...actions}>
                     <Icon
-                        aria-label = { t('toolbar.accessibilityLabel.toggleFilmstrip') }
-                        size = { 24 }
-                        src = { icon } />
+                        aria-label={t('toolbar.accessibilityLabel.toggleFilmstrip')}
+                        size={24}
+                        src={icon} />
                 </button>
             </div>
         );
@@ -908,9 +1068,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         isVisible = _topPanelVisible;
     }
     const videosClassName = `filmstrip__videos${isVisible ? '' : ' hidden'}${_hasScroll ? ' has-scroll' : ''}`;
-    const className = `${remoteVideosVisible || ownProps._verticalViewGrid ? '' : 'hide-videos'} ${
-        shouldReduceHeight ? 'reduce-height' : ''
-    } ${shiftRight ? 'shift-right' : ''} ${collapseTileView ? 'collapse' : ''} ${isVisible ? '' : 'hidden'}`.trim();
+    const className = `${remoteVideosVisible || ownProps._verticalViewGrid ? '' : 'hide-videos'} ${shouldReduceHeight ? 'reduce-height' : ''
+        } ${shiftRight ? 'shift-right' : ''} ${collapseTileView ? 'collapse' : ''} ${isVisible ? '' : 'hidden'}`.trim();
 
     const _currentLayout = getCurrentLayout(state);
     const _isVerticalFilmstrip = _currentLayout === LAYOUTS.VERTICAL_FILMSTRIP_VIEW
@@ -942,3 +1101,43 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
 }
 
 export default withStyles(translate(connect(_mapStateToProps)(Filmstrip)), styles);
+
+// 전역 API 추가
+declare global {
+    interface Window {
+        JitsiMeetJS?: {
+            setTileVisibilityThreshold?: (threshold: number) => void;
+            getTileVisibilityThreshold?: () => number;
+        };
+    }
+}
+
+// 전역 API 설정
+if (typeof window !== 'undefined') {
+    window.JitsiMeetJS = window.JitsiMeetJS || {};
+
+    // Filmstrip 인스턴스를 저장할 변수
+    let filmstripInstance: Filmstrip | null = null;
+
+    // Filmstrip 인스턴스 설정 함수
+    const setFilmstripInstance = (instance: Filmstrip) => {
+        filmstripInstance = instance;
+    };
+
+    // 전역 API 함수들
+    window.JitsiMeetJS.setTileVisibilityThreshold = (threshold: number) => {
+        if (filmstripInstance) {
+            filmstripInstance.setVisibilityThreshold(threshold);
+        }
+    };
+
+    window.JitsiMeetJS.getTileVisibilityThreshold = () => {
+        if (filmstripInstance) {
+            return filmstripInstance.getVisibilityThreshold();
+        }
+        return DEFAULT_TILE_VISIBILITY_THRESHOLD;
+    };
+
+    // Filmstrip 클래스에 전역 API 설정 함수 추가
+    (Filmstrip as any).setFilmstripInstance = setFilmstripInstance;
+}

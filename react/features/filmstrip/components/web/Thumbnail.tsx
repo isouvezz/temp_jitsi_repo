@@ -253,6 +253,11 @@ export interface IProps extends WithTranslation {
      * there is empty space.
      */
     width?: number;
+
+    /**
+     * Callback for tile ref to observe intersection.
+     */
+    onTileRef?: (participantId: string) => (element: HTMLElement | null) => void;
 }
 
 const defaultStyles = (theme: Theme) => {
@@ -1144,6 +1149,8 @@ class Thumbnail extends Component<IProps, IState> {
                       })}
                 ref={this.containerRef}
                 style={styles.thumbnail}
+                data-participant-id={id}
+                {...(this.props.onTileRef && { ref: this.props.onTileRef(id) })}
             >
                 {/* this "button" is invisible, only here so that
                 keyboard/screen reader users can pin/unpin */}

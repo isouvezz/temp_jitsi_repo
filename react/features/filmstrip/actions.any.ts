@@ -2,7 +2,8 @@ import {
     SET_FILMSTRIP_ENABLED,
     SET_FILMSTRIP_VISIBLE,
     SET_REMOTE_PARTICIPANTS,
-    SET_VISIBLE_REMOTE_PARTICIPANTS
+    SET_VISIBLE_REMOTE_PARTICIPANTS,
+    SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET
 } from './actionTypes';
 
 /**
@@ -71,5 +72,21 @@ export function setVisibleRemoteParticipants(startIndex: number, endIndex: numbe
         type: SET_VISIBLE_REMOTE_PARTICIPANTS,
         startIndex,
         endIndex
+    };
+}
+
+/**
+ * Sets the list of the visible participants in the filmstrip using a Set of participant IDs.
+ *
+ * @param {Set<string>} visibleParticipants - The Set of visible participant IDs.
+ * @returns {{
+ *      type: SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET,
+ *      visibleParticipants: Set<string>
+ * }}
+ */
+export function setVisibleRemoteParticipantsFromSet(visibleParticipants: Set<string>) {
+    return {
+        type: SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET,
+        visibleParticipants
     };
 }

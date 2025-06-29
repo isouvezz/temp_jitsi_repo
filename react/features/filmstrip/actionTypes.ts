@@ -7,14 +7,14 @@
  */
 export const RESIZE_FILMSTRIP = 'RESIZE_FILMSTRIP';
 
- /**
- * The type of (redux) action which sets whether the filmstrip is enabled.
- *
- * {
- *     type: SET_FILMSTRIP_ENABLED,
- *     enabled: boolean
- * }
- */
+/**
+* The type of (redux) action which sets whether the filmstrip is enabled.
+*
+* {
+*     type: SET_FILMSTRIP_ENABLED,
+*     enabled: boolean
+* }
+*/
 export const SET_FILMSTRIP_ENABLED = 'SET_FILMSTRIP_ENABLED';
 
 /**
@@ -100,6 +100,16 @@ export const SET_VOLUME = 'SET_VOLUME';
  * }
  */
 export const SET_VISIBLE_REMOTE_PARTICIPANTS = 'SET_VISIBLE_REMOTE_PARTICIPANTS';
+
+/**
+ * The type of the action which sets the list of visible remote participants in the filmstrip using a Set.
+ *
+ * {
+ *      type: SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET,
+ *      visibleParticipants: Set<string>
+ * }
+ */
+export const SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET = 'SET_VISIBLE_REMOTE_PARTICIPANTS_FROM_SET';
 
 /**
  * The type of action which sets the height for the top panel filmstrip.

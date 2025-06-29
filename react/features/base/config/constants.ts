@@ -10,12 +10,12 @@ export const _CONFIG_STORE_PREFIX = 'config.js';
 /**
  * The toolbar buttons to show on premeeting screens.
  */
-export const PREMEETING_BUTTONS = [ 'microphone', 'camera', 'select-background', 'invite', 'settings' ];
+export const PREMEETING_BUTTONS = ['microphone', 'camera', 'select-background', 'invite', 'settings'];
 
 /**
   * The toolbar buttons to show on 3rdParty prejoin screen.
   */
-export const THIRD_PARTY_PREJOIN_BUTTONS = [ 'microphone', 'camera', 'select-background' ];
+export const THIRD_PARTY_PREJOIN_BUTTONS = ['microphone', 'camera', 'select-background'];
 
 /**
  * The set of feature flags.
@@ -24,7 +24,7 @@ export const THIRD_PARTY_PREJOIN_BUTTONS = [ 'microphone', 'camera', 'select-bac
  */
 
 export const FEATURE_FLAGS = {
-    SSRC_REWRITING: 'ssrcRewritingEnabled'
+  SSRC_REWRITING: 'ssrcRewritingEnabled'
 };
 
 /**
@@ -41,3 +41,11 @@ export const DEFAULT_PRIVACY_URL = 'https://jitsi.org/meet/privacy';
  * The URL at which the help centre is available to the user.
  */
 export const DEFAULT_HELP_CENTRE_URL = 'https://web-cdn.jitsi.net/faq/meet-faq.html';
+
+/**
+ * The default visibility threshold for tile view participants.
+ * Only participants with tiles visible above this threshold (0.0 to 1.0) will be included in visibleRemoteParticipants.
+ * 
+ * @type {number}
+ */
+export const DEFAULT_TILE_VISIBILITY_THRESHOLD = 0.7;
