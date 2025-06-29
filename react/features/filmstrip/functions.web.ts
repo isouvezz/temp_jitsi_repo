@@ -86,17 +86,17 @@ export function shouldRemoteVideosBeVisible(state: IReduxState) {
 
     return Boolean(
         contextMenuOpened
-            || participantCount > 2
+        || participantCount > 2
 
-            // Always show the filmstrip when there is another participant to
-            // show and the  local video is pinned, or the toolbar is displayed.
-            || (participantCount > 1
-                && disable1On1Mode !== null
-                && (state['features/toolbox'].visible
-                    || ((pinnedParticipant = getPinnedParticipant(state))
-                        && pinnedParticipant.local)))
+        // Always show the filmstrip when there is another participant to
+        // show and the  local video is pinned, or the toolbar is displayed.
+        || (participantCount > 1
+            && disable1On1Mode !== null
+            && (state['features/toolbox'].visible
+                || ((pinnedParticipant = getPinnedParticipant(state))
+                    && pinnedParticipant.local)))
 
-            || disable1On1Mode);
+        || disable1On1Mode);
 }
 
 /**
@@ -202,7 +202,7 @@ export function getThumbnailMinHeight(clientWidth: number) {
  * @returns {number} The default aspect ratio for a tile.
  */
 export function getTileDefaultAspectRatio(disableResponsiveTiles: boolean,
-        disableTileEnlargement: boolean, clientWidth: number) {
+    disableTileEnlargement: boolean, clientWidth: number) {
     if (!disableResponsiveTiles && disableTileEnlargement && clientWidth < ASPECT_RATIO_BREAKPOINT) {
         return SQUARE_TILE_ASPECT_RATIO;
     }
@@ -339,7 +339,11 @@ export function calculateResponsiveTileViewDimensions({
 
         if (size) {
             const { height: currentHeight, width: currentWidth, minHeightEnforced, maxVisibleRows } = size;
-            const numberOfVisibleParticipants = Math.min(c * maxVisibleRows, numberOfParticipants);
+            const numberOfVisibleParticipants = Math.min(
+                c * maxVisibleRows,
+                numberOfParticipants,
+                desiredNumberOfVisibleTiles
+            );
 
             let area = Math.round(
                 (currentHeight + TILE_VERTICAL_MARGIN)
@@ -361,7 +365,7 @@ export function calculateResponsiveTileViewDimensions({
                     dimensions = currentDimensions;
                 } else if ((area === dimensions.maxArea)
                     && ((oldNumberOfVisibleParticipants > desiredNumberOfVisibleTiles
-                            && oldNumberOfVisibleParticipants >= numberOfParticipants)
+                        && oldNumberOfVisibleParticipants >= numberOfParticipants)
                         || (oldNumberOfVisibleParticipants < numberOfParticipants
                             && numberOfVisibleParticipants <= desiredNumberOfVisibleTiles))
                 ) { // If the area of the new candidates and the old ones are equal we prefer the one that will have
@@ -373,7 +377,7 @@ export function calculateResponsiveTileViewDimensions({
                 // visible tiles, that's why we prefer more columns when the area is the same.
                 minHeightEnforcedDimensions = currentDimensions;
             } else if (minHeightEnforced && maxVisibleRows === 0) {
-                area = currentHeight * currentWidth * Math.min(c, numberOfParticipants);
+                area = currentHeight * currentWidth * Math.min(c, numberOfParticipants, desiredNumberOfVisibleTiles);
 
                 if (area > zeroVisibleRowsDimensions.maxArea) {
                     zeroVisibleRowsDimensions = {
@@ -399,7 +403,7 @@ export function calculateResponsiveTileViewDimensions({
         height = getThumbnailMinHeight(clientWidth);
         width = aspectRatio * height;
         columns = 1;
-        rows = numberOfParticipants;
+        rows = Math.min(numberOfParticipants, desiredNumberOfVisibleTiles);
     }
 
     return {
@@ -478,7 +482,7 @@ export function calculateThumbnailSizeForTileView({
         width = initialHeight * aspectRatio;
     } else if (initialRatio >= TILE_PORTRAIT_ASPECT_RATIO) {
         width = initialWidth;
-    // eslint-disable-next-line no-negated-condition
+        // eslint-disable-next-line no-negated-condition
     } else if (!minHeightEnforced) {
         height = initialWidth / TILE_PORTRAIT_ASPECT_RATIO;
 
@@ -677,18 +681,18 @@ export function isFilmstripScrollVisible(state: IReduxState) {
     let hasScroll = false;
 
     switch (_currentLayout) {
-    case LAYOUTS.TILE_VIEW:
-        ({ hasScroll = false } = state['features/filmstrip'].tileViewDimensions ?? {});
-        break;
-    case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-    case LAYOUTS.STAGE_FILMSTRIP_VIEW: {
-        ({ hasScroll = false } = state['features/filmstrip'].verticalViewDimensions);
-        break;
-    }
-    case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW: {
-        ({ hasScroll = false } = state['features/filmstrip'].horizontalViewDimensions);
-        break;
-    }
+        case LAYOUTS.TILE_VIEW:
+            ({ hasScroll = false } = state['features/filmstrip'].tileViewDimensions ?? {});
+            break;
+        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+        case LAYOUTS.STAGE_FILMSTRIP_VIEW: {
+            ({ hasScroll = false } = state['features/filmstrip'].verticalViewDimensions);
+            break;
+        }
+        case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW: {
+            ({ hasScroll = false } = state['features/filmstrip'].horizontalViewDimensions);
+            break;
+        }
     }
 
     return hasScroll;
@@ -784,18 +788,18 @@ export function isFilmstripDisabled(state: IReduxState) {
  */
 export function getThumbnailTypeFromLayout(currentLayout: string, filmstripType: string) {
     switch (currentLayout) {
-    case LAYOUTS.TILE_VIEW:
-        return THUMBNAIL_TYPE.TILE;
-    case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-        return THUMBNAIL_TYPE.VERTICAL;
-    case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
-        return THUMBNAIL_TYPE.HORIZONTAL;
-    case LAYOUTS.STAGE_FILMSTRIP_VIEW:
-        if (filmstripType !== FILMSTRIP_TYPE.MAIN) {
+        case LAYOUTS.TILE_VIEW:
             return THUMBNAIL_TYPE.TILE;
-        }
+        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+            return THUMBNAIL_TYPE.VERTICAL;
+        case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
+            return THUMBNAIL_TYPE.HORIZONTAL;
+        case LAYOUTS.STAGE_FILMSTRIP_VIEW:
+            if (filmstripType !== FILMSTRIP_TYPE.MAIN) {
+                return THUMBNAIL_TYPE.TILE;
+            }
 
-        return THUMBNAIL_TYPE.VERTICAL;
+            return THUMBNAIL_TYPE.VERTICAL;
     }
 }
 
