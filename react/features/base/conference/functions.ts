@@ -186,7 +186,13 @@ export function getConferenceName(stateful: IStateful): string {
  * @returns {string} - The name of the conference formatted for the title.
  */
 export function getConferenceNameForTitle(stateful: IStateful) {
-    return safeStartCase(safeDecodeURIComponent(getConferenceState(toState(stateful)).room ?? ""));
+    const state = toState(stateful);
+    const { extra } = state["features/base/jwt"];
+
+    // JWT의 extra.title을 우선적으로 사용하고, 없으면 기존 방식 사용
+    const roomName = extra?.title || safeStartCase(safeDecodeURIComponent(getConferenceState(toState(stateful)).room ?? ""));
+
+    return roomName;
 }
 
 /**
