@@ -344,7 +344,7 @@ export function calculateResponsiveTileViewDimensions({
         if (size) {
             const { height: currentHeight, width: currentWidth, minHeightEnforced, maxVisibleRows } = size;
             const numberOfVisibleParticipants = Math.min(
-                c * maxVisibleRows,
+                c * (maxVisibleRows ?? 0),
                 numberOfParticipants,
                 desiredNumberOfVisibleTiles
             );
@@ -410,7 +410,7 @@ export function calculateResponsiveTileViewDimensions({
         height = getThumbnailMinHeight(clientWidth);
         width = aspectRatio * height;
         columns = 1;
-        rows = Math.min(numberOfParticipants, desiredNumberOfVisibleTiles);
+        rows = Math.min(numberOfParticipants, desiredNumberOfVisibleTiles || numberOfParticipants);
     }
 
     return {
@@ -418,6 +418,7 @@ export function calculateResponsiveTileViewDimensions({
         width,
         columns,
         rows,
+        numberOfVisibleParticipants: finalNumberOfVisibleParticipants || 0,
     };
 }
 
@@ -478,12 +479,13 @@ export function calculateThumbnailSizeForTileView({
             height,
             width: aspectRatio * height,
             minHeightEnforced,
-            maxVisibleRows: desiredNumberOfVisibleTiles
-                ? Math.min(
-                      Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
-                      Math.ceil(desiredNumberOfVisibleTiles / columns)
-                  )
-                : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+            maxVisibleRows:
+                desiredNumberOfVisibleTiles && desiredNumberOfVisibleTiles > 0
+                    ? Math.min(
+                          Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+                          Math.ceil(desiredNumberOfVisibleTiles / columns)
+                      )
+                    : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
         };
     }
 
@@ -517,12 +519,13 @@ export function calculateThumbnailSizeForTileView({
         height,
         width,
         minHeightEnforced,
-        maxVisibleRows: desiredNumberOfVisibleTiles
-            ? Math.min(
-                  Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
-                  Math.ceil(desiredNumberOfVisibleTiles / columns)
-              )
-            : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+        maxVisibleRows:
+            desiredNumberOfVisibleTiles && desiredNumberOfVisibleTiles > 0
+                ? Math.min(
+                      Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+                      Math.ceil(desiredNumberOfVisibleTiles / columns)
+                  )
+                : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
     };
 }
 
