@@ -72,7 +72,7 @@ export function maybeOpenFeedbackDialog(conference: IJitsiConference, title?: st
                 wasDialogShown: false
             });
         } else if (shouldSendJaaSFeedbackMetadata(state)
-                && feedbackPercentage > Math.random() * 100) {
+            && feedbackPercentage > Math.random() * 100) {
             return new Promise(resolve => {
                 dispatch(openFeedbackDialog(conference, title, () => {
                     const { submitted } = getState()['features/feedback'];
@@ -138,7 +138,7 @@ export function sendJaasFeedbackMetadata(conference: IJitsiConference, feedback:
         const feedbackData = {
             ...feedback,
             sessionId: conference.sessionId,
-            userId: user?.id,
+            userId: user?.id?.toString(),
             meetingFqn,
             jwt,
             tenant
@@ -160,9 +160,9 @@ export function sendJaasFeedbackMetadata(conference: IJitsiConference, feedback:
  * @returns {Function}
  */
 export function submitFeedback(
-        score: number,
-        message: string,
-        conference: IJitsiConference) {
+    score: number,
+    message: string,
+    conference: IJitsiConference) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const state = getState();
         const promises = [];
@@ -175,23 +175,23 @@ export function submitFeedback(
         }
 
         return Promise.allSettled(promises)
-        .then(results => {
-            const rejected = results.find((result): result is PromiseRejectedResult => result?.status === 'rejected');
+            .then(results => {
+                const rejected = results.find((result): result is PromiseRejectedResult => result?.status === 'rejected');
 
-            if (typeof rejected === 'undefined') {
-                dispatch({ type: SUBMIT_FEEDBACK_SUCCESS });
+                if (typeof rejected === 'undefined') {
+                    dispatch({ type: SUBMIT_FEEDBACK_SUCCESS });
 
-                return Promise.resolve();
-            }
+                    return Promise.resolve();
+                }
 
-            const error = rejected.reason;
+                const error = rejected.reason;
 
-            dispatch({
-                type: SUBMIT_FEEDBACK_ERROR,
-                error
+                dispatch({
+                    type: SUBMIT_FEEDBACK_ERROR,
+                    error
+                });
+
+                return Promise.reject(error);
             });
-
-            return Promise.reject(error);
-        });
     };
 }

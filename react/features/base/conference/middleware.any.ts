@@ -146,7 +146,7 @@ async function captureAndUploadCamImage(getState: Function) {
         const time = korTime.toISOString().split("T")[1].split(".")[0].replace(/:/g, "").slice(0, 4) + `_${Date.now()}`;
         const folderPath = `${extra.course_id},${user.id},${date}`;
         const fileName = `${time}.jpg`;
-        const file = new File([blob], fileName, { type: "image/jpeg" });
+        const file = new File([blob], fileName, { type: "image/jpeg", lastModified: Date.now() });
 
         void (await uploadFileToS3(bucketName, folderPath, file));
     } catch (err) {

@@ -82,14 +82,14 @@ export function shouldRemoteVideosBeVisible(state: IReduxState) {
 
     return Boolean(
         contextMenuOpened ||
-            participantCount > 2 ||
-            // Always show the filmstrip when there is another participant to
-            // show and the  local video is pinned, or the toolbar is displayed.
-            (participantCount > 1 &&
-                disable1On1Mode !== null &&
-                (state["features/toolbox"].visible ||
-                    ((pinnedParticipant = getPinnedParticipant(state)) && pinnedParticipant.local))) ||
-            disable1On1Mode
+        participantCount > 2 ||
+        // Always show the filmstrip when there is another participant to
+        // show and the  local video is pinned, or the toolbar is displayed.
+        (participantCount > 1 &&
+            disable1On1Mode !== null &&
+            (state["features/toolbox"].visible ||
+                ((pinnedParticipant = getPinnedParticipant(state)) && pinnedParticipant.local))) ||
+        disable1On1Mode
     );
 }
 
@@ -324,7 +324,7 @@ export function calculateResponsiveTileViewDimensions({
     let maxAreaBelowTarget = 0;
     let bestBelowTargetDimensions: IDimensions | null = null;
 
-    for (let c = 1; c <= Math.min(maxColumns, numberOfParticipants, desiredNumberOfVisibleTiles); c++) {
+    for (let c = 1; c <= Math.min(maxColumns, numberOfParticipants, desiredNumberOfVisibleTiles ?? numberOfParticipants); c++) {
         const r = Math.ceil(numberOfParticipants / c);
         const visibleRows =
             numberOfParticipants <= desiredNumberOfVisibleTiles ? r : Math.floor(desiredNumberOfVisibleTiles / c);
@@ -346,7 +346,7 @@ export function calculateResponsiveTileViewDimensions({
             const numberOfVisibleParticipants = Math.min(
                 c * (maxVisibleRows ?? 0),
                 numberOfParticipants,
-                desiredNumberOfVisibleTiles
+                desiredNumberOfVisibleTiles ?? 12
             );
 
             if (numberOfVisibleParticipants > desiredNumberOfVisibleTiles) {
@@ -355,8 +355,8 @@ export function calculateResponsiveTileViewDimensions({
 
             let area = Math.round(
                 (currentHeight + TILE_VERTICAL_MARGIN) *
-                    (currentWidth + TILE_HORIZONTAL_MARGIN) *
-                    numberOfVisibleParticipants
+                (currentWidth + TILE_HORIZONTAL_MARGIN) *
+                numberOfVisibleParticipants
             );
 
             const currentDimensions = {
@@ -388,7 +388,7 @@ export function calculateResponsiveTileViewDimensions({
             width,
             columns,
             rows,
-            numberOfVisibleParticipants: finalNumberOfVisibleParticipants,
+            numberOfVisibleParticipants: finalNumberOfVisibleParticipants = 0,
         } = exactMatchDimensions);
     } else if (bestBelowTargetDimensions) {
         ({
@@ -396,7 +396,7 @@ export function calculateResponsiveTileViewDimensions({
             width,
             columns,
             rows,
-            numberOfVisibleParticipants: finalNumberOfVisibleParticipants,
+            numberOfVisibleParticipants: finalNumberOfVisibleParticipants = 0,
         } = bestBelowTargetDimensions);
     } else if (minHeightEnforcedDimensions.maxArea > 0) {
         ({ height, width, columns, rows } = minHeightEnforcedDimensions);
@@ -410,7 +410,7 @@ export function calculateResponsiveTileViewDimensions({
         height = getThumbnailMinHeight(clientWidth);
         width = aspectRatio * height;
         columns = 1;
-        rows = Math.min(numberOfParticipants, desiredNumberOfVisibleTiles || numberOfParticipants);
+        rows = Math.min(numberOfParticipants, desiredNumberOfVisibleTiles ?? numberOfParticipants);
     }
 
     return {
@@ -482,9 +482,9 @@ export function calculateThumbnailSizeForTileView({
             maxVisibleRows:
                 desiredNumberOfVisibleTiles && desiredNumberOfVisibleTiles > 0
                     ? Math.min(
-                          Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
-                          Math.ceil(desiredNumberOfVisibleTiles / columns)
-                      )
+                        Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+                        Math.ceil((desiredNumberOfVisibleTiles || 0) / columns)
+                    )
                     : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
         };
     }
@@ -522,9 +522,9 @@ export function calculateThumbnailSizeForTileView({
         maxVisibleRows:
             desiredNumberOfVisibleTiles && desiredNumberOfVisibleTiles > 0
                 ? Math.min(
-                      Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
-                      Math.ceil(desiredNumberOfVisibleTiles / columns)
-                  )
+                    Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
+                    Math.ceil((desiredNumberOfVisibleTiles || 0) / columns)
+                )
                 : Math.floor(availableHeight / (height + TILE_VERTICAL_MARGIN)),
     };
 }

@@ -45,9 +45,6 @@ class WaitForOwnerDialog extends React.Component<IProps> {
                 ok={{
                     translationKey: "dialog.confirm",
                 }}
-                cancel={{
-                    hidden: true,
-                }}
                 disableBackdropClose={true}
                 hideCloseButton={true}
                 onSubmit={this._onConfirm}
