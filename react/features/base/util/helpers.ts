@@ -13,7 +13,7 @@ export function assignIfDefined(target: Object, source: Object) {
         if (source.hasOwnProperty(nextKey)) {
             const value = source[nextKey as keyof typeof source];
 
-            if (typeof value !== 'undefined') {
+            if (typeof value !== "undefined") {
                 to[nextKey] = value;
             }
         }
@@ -21,7 +21,6 @@ export function assignIfDefined(target: Object, source: Object) {
 
     return to;
 }
-
 
 const MATCH_OPERATOR_REGEXP = /[|\\{}()[\]^$+*?.-]/g;
 
@@ -34,11 +33,11 @@ const MATCH_OPERATOR_REGEXP = /[|\\{}()[\]^$+*?.-]/g;
  * @returns {string}
  */
 export function escapeRegexp(s: string) {
-    if (typeof s !== 'string') {
-        throw new TypeError('Expected a string');
+    if (typeof s !== "string") {
+        throw new TypeError("Expected a string");
     }
 
-    return s.replace(MATCH_OPERATOR_REGEXP, '\\$&');
+    return s.replace(MATCH_OPERATOR_REGEXP, "\\$&");
 }
 
 /**
@@ -49,7 +48,7 @@ export function escapeRegexp(s: string) {
  */
 export function getBaseUrl(w: typeof window = window) {
     const doc = w.document;
-    const base = doc.querySelector('base');
+    const base = doc.querySelector("base");
 
     if (base?.href) {
         return base.href;
@@ -72,11 +71,11 @@ export function getJitsiMeetGlobalNS() {
         window.JitsiMeetJS = {};
     }
 
-    if (!window.JitsiMeetJS.app) {
-        window.JitsiMeetJS.app = {};
+    if (!(window.JitsiMeetJS as any).app) {
+        (window.JitsiMeetJS as any).app = {};
     }
 
-    return window.JitsiMeetJS.app;
+    return (window.JitsiMeetJS as any).app;
 }
 
 /**
@@ -101,7 +100,7 @@ export function getJitsiMeetGlobalNSConnectionTimes() {
  * @param {string} msg - A custom message to print in addition to the error.
  * @returns {void}
  */
-export function reportError(e: Error, msg = '') {
+export function reportError(e: Error, msg = "") {
     console.error(msg, e);
     window.onerror?.(msg, undefined, undefined, undefined, e);
 }
@@ -121,11 +120,15 @@ export function setColorAlpha(color: string, opacity: number) {
     let b, g, r;
 
     try {
-        if (color.startsWith('rgb')) {
-            [ r, g, b ] = color.split('(')[1].split(')')[0].split(',').map(c => c.trim());
-        } else if (color.startsWith('#')) {
+        if (color.startsWith("rgb")) {
+            [r, g, b] = color
+                .split("(")[1]
+                .split(")")[0]
+                .split(",")
+                .map((c) => c.trim());
+        } else if (color.startsWith("#")) {
             if (color.length === 4) {
-                [ r, g, b ] = parseShorthandColor(color);
+                [r, g, b] = parseShorthandColor(color);
             } else {
                 r = parseInt(color.substring(1, 3), 16);
                 g = parseInt(color.substring(3, 5), 16);
@@ -162,7 +165,7 @@ function parseShorthandColor(color: string) {
     b += b;
     b = parseInt(b, 16);
 
-    return [ r, g, b ];
+    return [r, g, b];
 }
 
 /**
@@ -174,9 +177,8 @@ function parseShorthandColor(color: string) {
  */
 export function objectSort(object: Object, callback: Function) {
     return Object.entries(object)
-        .sort(([ , a ], [ , b ]) => callback(a, b))
-        .reduce((row, [ key, value ]) => {
-            return { ...row,
-                [key]: value };
+        .sort(([, a], [, b]) => callback(a, b))
+        .reduce((row, [key, value]) => {
+            return { ...row, [key]: value };
         }, {});
 }
