@@ -615,15 +615,6 @@ export function createConference(overrideRoom?: string | String) {
         connection[JITSI_CONNECTION_CONFERENCE_KEY] = conference;
 
         conference[JITSI_CONFERENCE_URL_KEY] = locationURL;
-        //추후 필요시 활성화
-        // Override getBreakoutRooms to always return false
-        conference.getBreakoutRooms = () => ({
-            isSupported: () => false,
-            isBreakoutRoom: () => false,
-            createBreakoutRoom: () => {},
-            removeBreakoutRoom: () => {},
-            sendParticipantToRoom: () => {},
-        });
 
         dispatch(_conferenceWillJoin(conference));
 
