@@ -114,17 +114,19 @@ class Watermarks extends Component<IProps, State> {
         let reactElement = null;
 
         if (this.state.showBrandWatermark) {
+            // 기존 코드 (주석 처리)
+            // reactElement = <div className="watermark rightwatermark" style={_RIGHT_WATERMARK_STYLE} />;
+            // const { brandWatermarkLink } = this.state;
+            // if (brandWatermarkLink) {
+            //     reactElement = (
+            //         <a href={brandWatermarkLink} target="_new">
+            //             {reactElement}
+            //         </a>
+            //     );
+            // }
+
+            // 클릭 이벤트 없는 새로운 코드
             reactElement = <div className="watermark rightwatermark" style={_RIGHT_WATERMARK_STYLE} />;
-
-            const { brandWatermarkLink } = this.state;
-
-            if (brandWatermarkLink) {
-                reactElement = (
-                    <a href={brandWatermarkLink} target="_new">
-                        {reactElement}
-                    </a>
-                );
-            }
         }
 
         return reactElement;
@@ -153,20 +155,23 @@ class Watermarks extends Component<IProps, State> {
                 height: "100px",
             } as const;
 
-            reactElement = <div className={className} style={style} />;
+            // 기존 코드 (주석 처리)
+            // reactElement = <div className={className} style={style} />;
+            // if (_logoLink) {
+            //     reactElement = (
+            //         <a
+            //             aria-label={t("jitsiHome", { logo: interfaceConfig.APP_NAME })}
+            //             className={className}
+            //             // href={_logoLink}
+            //             target="_new"
+            //         >
+            //             {reactElement}
+            //         </a>
+            //     );
+            // }
 
-            if (_logoLink) {
-                reactElement = (
-                    <a
-                        aria-label={t("jitsiHome", { logo: interfaceConfig.APP_NAME })}
-                        className={className}
-                        href={_logoLink}
-                        target="_new"
-                    >
-                        {reactElement}
-                    </a>
-                );
-            }
+            // 클릭 이벤트 없는 새로운 코드
+            reactElement = <div className={className} style={style} />;
         }
 
         return reactElement;
@@ -182,10 +187,18 @@ class Watermarks extends Component<IProps, State> {
         if (this.state.showPoweredBy) {
             const { t } = this.props;
 
+            // 기존 코드 (주석 처리)
+            // return (
+            //     <a className="poweredby" href="http://jitsi.org" target="_new">
+            //         <span>{t("poweredby")} jitsi.org</span>
+            //     </a>
+            // );
+
+            // 클릭 이벤트 없는 새로운 코드
             return (
-                <a className="poweredby" href="http://jitsi.org" target="_new">
+                <div className="poweredby">
                     <span>{t("poweredby")} jitsi.org</span>
-                </a>
+                </div>
             );
         }
 
@@ -216,14 +229,14 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     // conference 객체 존재 여부로 워터마크 표시 여부 결정
     let _showJitsiWatermark = !isConferenceJoined;
     let _logoUrl: string | undefined = logoImageUrl;
-    let _logoLink = "https://bootcamp.glob-dev.kong.yk8s.me/";
+    // let _logoLink = "https://bootcamp.glob-dev.kong.yk8s.me/";
 
     if (useDynamicBrandingData) {
         if (isVpaasMeeting(state)) {
             _showJitsiWatermark = !customizationFailed && Boolean(logoImageUrl);
         } else if (defaultBranding) {
             _logoUrl = defaultLogoUrl;
-            _logoLink = JITSI_WATERMARK_LINK;
+            // _logoLink = JITSI_WATERMARK_LINK;
         }
     } else {
         // When there is no custom branding data use defaults
@@ -232,7 +245,6 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     }
 
     return {
-        _logoLink,
         _logoUrl,
         _showJitsiWatermark,
     };
