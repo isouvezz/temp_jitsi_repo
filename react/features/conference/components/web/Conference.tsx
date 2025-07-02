@@ -292,14 +292,14 @@ class Conference extends AbstractConference<IProps, any> {
                 <ReactionAnimations />
 
                 {/* Course Time Dialog */}
-                {!_showPrejoin && !_showLobby && !_showVisitorsQueue && !_isWithinCourseTime && _courseTimeInfo && (
+                {/* {!_showPrejoin && !_showLobby && !_showVisitorsQueue && !_isWithinCourseTime && _courseTimeInfo && (
                     <CourseTimeDialog
                         onClose={() => {}}
                         startTime={_courseTimeInfo.start_date}
                         endTime={_courseTimeInfo.end_date}
                         courseId={_courseId}
                     />
-                )}
+                )} */}
             </div>
         );
     }
