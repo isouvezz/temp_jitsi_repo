@@ -5,7 +5,7 @@
  *     type: CLEAR_TOOLBOX_TIMEOUT
  * }
  */
-export const CLEAR_TOOLBOX_TIMEOUT = 'CLEAR_TOOLBOX_TIMEOUT';
+export const CLEAR_TOOLBOX_TIMEOUT = "CLEAR_TOOLBOX_TIMEOUT";
 
 /**
  * The type of (redux) action which signals that a custom button was pressed.
@@ -16,7 +16,7 @@ export const CLEAR_TOOLBOX_TIMEOUT = 'CLEAR_TOOLBOX_TIMEOUT';
  *      text: string
  * }}
  */
-export const CUSTOM_BUTTON_PRESSED = 'CUSTOM_BUTTON_PRESSED';
+export const CUSTOM_BUTTON_PRESSED = "CUSTOM_BUTTON_PRESSED";
 
 /**
  * The type of (redux) action which updates whether the conference is or is not
@@ -27,7 +27,7 @@ export const CUSTOM_BUTTON_PRESSED = 'CUSTOM_BUTTON_PRESSED';
  *     fullScreen: boolean
  * }
  */
-export const FULL_SCREEN_CHANGED = 'FULL_SCREEN_CHANGED';
+export const FULL_SCREEN_CHANGED = "FULL_SCREEN_CHANGED";
 
 /**
  * The type of (redux) action which sets the buttonsWithNotifyClick redux property.
@@ -37,7 +37,7 @@ export const FULL_SCREEN_CHANGED = 'FULL_SCREEN_CHANGED';
  *     buttonsWithNotifyClick: Map<string, NOTIFY_CLICK_MODE>
  * }
  */
-export const SET_BUTTONS_WITH_NOTIFY_CLICK = 'SET_BUTTONS_WITH_NOTIFY_CLICK';
+export const SET_BUTTONS_WITH_NOTIFY_CLICK = "SET_BUTTONS_WITH_NOTIFY_CLICK";
 
 /**
  * The type of (redux) action which sets the participantMenuButtonsWithNotifyClick redux property.
@@ -47,7 +47,7 @@ export const SET_BUTTONS_WITH_NOTIFY_CLICK = 'SET_BUTTONS_WITH_NOTIFY_CLICK';
  *     participantMenuButtonsWithNotifyClick: Map<string, NOTIFY_CLICK_MODE>
  * }
  */
-export const SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK = 'SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK';
+export const SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK = "SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK";
 
 /**
  * The type of (redux) action which requests full screen mode be entered or
@@ -58,7 +58,7 @@ export const SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK = 'SET_PARTICIPANT_M
  *     fullScreen: boolean
  * }
  */
-export const SET_FULL_SCREEN = 'SET_FULL_SCREEN';
+export const SET_FULL_SCREEN = "SET_FULL_SCREEN";
 
 /**
  * The type of the (redux) action which shows/hides the hangup menu.
@@ -68,7 +68,7 @@ export const SET_FULL_SCREEN = 'SET_FULL_SCREEN';
  *     visible: boolean
  * }
  */
-export const SET_HANGUP_MENU_VISIBLE = 'SET_HANGUP_MENU_VISIBLE';
+export const SET_HANGUP_MENU_VISIBLE = "SET_HANGUP_MENU_VISIBLE";
 
 /**
  * The type of the (redux) action which sets the main toolbar thresholds.
@@ -78,12 +78,12 @@ export const SET_HANGUP_MENU_VISIBLE = 'SET_HANGUP_MENU_VISIBLE';
  *     mainToolbarButtonsThresholds: IMainToolbarButtonThresholds
  * }
  */
-export const SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS = 'SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS';
+export const SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS = "SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS";
 
 /**
  * The type of the redux action that toggles whether the overflow menu(s) should be shown as drawers.
  */
-export const SET_OVERFLOW_DRAWER = 'SET_OVERFLOW_DRAWER';
+export const SET_OVERFLOW_DRAWER = "SET_OVERFLOW_DRAWER";
 
 /**
  * The type of the (redux) action which shows/hides the OverflowMenu.
@@ -93,8 +93,7 @@ export const SET_OVERFLOW_DRAWER = 'SET_OVERFLOW_DRAWER';
  *     visible: boolean
  * }
  */
-export const SET_OVERFLOW_MENU_VISIBLE = 'SET_OVERFLOW_MENU_VISIBLE';
-
+export const SET_OVERFLOW_MENU_VISIBLE = "SET_OVERFLOW_MENU_VISIBLE";
 
 /**
  * The type of the action which sets enabled toolbar buttons.
@@ -104,7 +103,7 @@ export const SET_OVERFLOW_MENU_VISIBLE = 'SET_OVERFLOW_MENU_VISIBLE';
  *     toolbarButtons: Array<string>
  * }
  */
-export const SET_TOOLBAR_BUTTONS = 'SET_TOOLBAR_BUTTONS';
+export const SET_TOOLBAR_BUTTONS = "SET_TOOLBAR_BUTTONS";
 
 /**
  * The type of the action which sets the indicator which determines whether a
@@ -115,7 +114,7 @@ export const SET_TOOLBAR_BUTTONS = 'SET_TOOLBAR_BUTTONS';
  *     hovered: boolean
  * }
  */
-export const SET_TOOLBAR_HOVERED = 'SET_TOOLBAR_HOVERED';
+export const SET_TOOLBAR_HOVERED = "SET_TOOLBAR_HOVERED";
 
 /**
  * The type of the (redux) action which enables/disables the Toolbox.
@@ -125,7 +124,7 @@ export const SET_TOOLBAR_HOVERED = 'SET_TOOLBAR_HOVERED';
  *     enabled: boolean
  * }
  */
-export const SET_TOOLBOX_ENABLED = 'SET_TOOLBOX_ENABLED';
+export const SET_TOOLBOX_ENABLED = "SET_TOOLBOX_ENABLED";
 
 /**
  * The type of the action which sets a new Toolbox visibility timeout and its
@@ -137,7 +136,7 @@ export const SET_TOOLBOX_ENABLED = 'SET_TOOLBOX_ENABLED';
  *     timeoutMS: number
  * }
  */
-export const SET_TOOLBOX_TIMEOUT = 'SET_TOOLBOX_TIMEOUT';
+export const SET_TOOLBOX_TIMEOUT = "SET_TOOLBOX_TIMEOUT";
 
 /**
  * The type of the (redux) action which shows/hides the Toolbox.
@@ -147,7 +146,7 @@ export const SET_TOOLBOX_TIMEOUT = 'SET_TOOLBOX_TIMEOUT';
  *     visible: boolean
  * }
  */
-export const SET_TOOLBOX_VISIBLE = 'SET_TOOLBOX_VISIBLE';
+export const SET_TOOLBOX_VISIBLE = "SET_TOOLBOX_VISIBLE";
 
 /**
  * The type of the redux action which toggles the toolbox visibility regardless of it's current state.
@@ -156,7 +155,7 @@ export const SET_TOOLBOX_VISIBLE = 'SET_TOOLBOX_VISIBLE';
  *     type: TOGGLE_TOOLBOX_VISIBLE
  * }
  */
-export const TOGGLE_TOOLBOX_VISIBLE = 'TOGGLE_TOOLBOX_VISIBLE';
+export const TOGGLE_TOOLBOX_VISIBLE = "TOGGLE_TOOLBOX_VISIBLE";
 
 /**
  * The type of the redux action which sets whether the toolbox should be shifted up or not.
@@ -165,4 +164,14 @@ export const TOGGLE_TOOLBOX_VISIBLE = 'TOGGLE_TOOLBOX_VISIBLE';
  *     type: SET_TOOLBOX_SHIFT_UP
  * }
  */
-export const SET_TOOLBOX_SHIFT_UP = 'SET_TOOLBOX_SHIFT_UP';
+export const SET_TOOLBOX_SHIFT_UP = "SET_TOOLBOX_SHIFT_UP";
+
+/**
+ * The type of the redux action which sets the leave classroom state.
+ *
+ * {
+ *     type: SET_LEAVE_CLASSROOM,
+ *     isLeaveClassroom: boolean
+ * }
+ */
+export const SET_LEAVE_CLASSROOM = "SET_LEAVE_CLASSROOM";

@@ -6,6 +6,7 @@ import { endConference } from '../../../base/conference/actions';
 import { isLocalParticipantModerator } from '../../../base/participants/functions';
 import { BUTTON_TYPES } from '../../../base/ui/constants.web';
 import { isInBreakoutRoom } from '../../../breakout-rooms/functions';
+import { setLeaveClassroom } from '../../actions.web';
 
 import { HangupContextMenuItem } from './HangupContextMenuItem';
 
@@ -40,6 +41,7 @@ export const EndConferenceButton = (props: IProps) => {
     const _isInBreakoutRoom = useSelector(isInBreakoutRoom);
 
     const onEndConference = useCallback(() => {
+        dispatch(setLeaveClassroom(true));
         dispatch(endConference());
     }, [ dispatch ]);
 

@@ -45,6 +45,17 @@ export function isToolboxVisible(state: IReduxState) {
 }
 
 /**
+ * Indicates if the user is leaving the classroom or not.
+ *
+ * @param {IReduxState} state - The state from the Redux store.
+ * @returns {boolean} - True to indicate that the user is leaving the classroom, false -
+ * otherwise.
+ */
+export function isLeaveClassroom(state: IReduxState) {
+    return state["features/toolbox"].isLeaveClassroom;
+}
+
+/**
  * Indicates if the audio settings button is disabled or not.
  *
  * @param {IReduxState} state - The state from the Redux store.

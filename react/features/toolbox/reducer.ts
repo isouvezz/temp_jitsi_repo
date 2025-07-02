@@ -1,5 +1,5 @@
-import ReducerRegistry from '../base/redux/ReducerRegistry';
-import { set } from '../base/redux/functions';
+import ReducerRegistry from "../base/redux/ReducerRegistry";
+import { set } from "../base/redux/functions";
 
 import {
     CLEAR_TOOLBOX_TIMEOUT,
@@ -16,10 +16,11 @@ import {
     SET_TOOLBOX_SHIFT_UP,
     SET_TOOLBOX_TIMEOUT,
     SET_TOOLBOX_VISIBLE,
-    TOGGLE_TOOLBOX_VISIBLE
-} from './actionTypes';
-import { NATIVE_THRESHOLDS, THRESHOLDS } from './constants';
-import { IMainToolbarButtonThresholds, NOTIFY_CLICK_MODE } from './types';
+    TOGGLE_TOOLBOX_VISIBLE,
+    SET_LEAVE_CLASSROOM,
+} from "./actionTypes";
+import { NATIVE_THRESHOLDS, THRESHOLDS } from "./constants";
+import { IMainToolbarButtonThresholds, NOTIFY_CLICK_MODE } from "./types";
 
 /**
  * Array of thresholds for the main toolbar buttons that will inlude only the usable entries from  THRESHOLDS array.
@@ -59,9 +60,16 @@ const INITIAL_STATE = {
     hovered: false,
 
     /**
+     * The indicator which determines whether the user is leaving the classroom.
+     *
+     * @type {boolean}
+     */
+    isLeaveClassroom: false,
+
+    /**
      * The thresholds for screen size and visible main toolbar buttons.
      */
-    mainToolbarButtonsThresholds: navigator.product === 'ReactNative' ? NATIVE_THRESHOLDS : FILTERED_THRESHOLDS,
+    mainToolbarButtonsThresholds: navigator.product === "ReactNative" ? NATIVE_THRESHOLDS : FILTERED_THRESHOLDS,
 
     participantMenuButtonsWithNotifyClick: new Map(),
 
@@ -99,13 +107,12 @@ const INITIAL_STATE = {
      */
     toolbarButtons: [],
 
-
     /**
      * The indicator that determines whether the Toolbox is visible.
      *
      * @type {boolean}
      */
-    visible: false
+    visible: false,
 };
 
 export interface IToolboxState {
@@ -114,6 +121,7 @@ export interface IToolboxState {
     fullScreen?: boolean;
     hangupMenuVisible: boolean;
     hovered: boolean;
+    isLeaveClassroom: boolean;
     mainToolbarButtonsThresholds: IMainToolbarButtonThresholds;
     overflowDrawer: boolean;
     overflowMenuVisible: boolean;
@@ -124,92 +132,97 @@ export interface IToolboxState {
     visible: boolean;
 }
 
-ReducerRegistry.register<IToolboxState>(
-    'features/toolbox',
-    (state = INITIAL_STATE, action): IToolboxState => {
-        switch (action.type) {
+ReducerRegistry.register<IToolboxState>("features/toolbox", (state = INITIAL_STATE, action): IToolboxState => {
+    switch (action.type) {
         case CLEAR_TOOLBOX_TIMEOUT:
             return {
                 ...state,
-                timeoutID: undefined
+                timeoutID: undefined,
             };
 
         case FULL_SCREEN_CHANGED:
             return {
                 ...state,
-                fullScreen: action.fullScreen
+                fullScreen: action.fullScreen,
             };
 
         case SET_HANGUP_MENU_VISIBLE:
             return {
                 ...state,
-                hangupMenuVisible: action.visible
+                hangupMenuVisible: action.visible,
             };
 
         case SET_OVERFLOW_DRAWER:
             return {
                 ...state,
-                overflowDrawer: action.displayAsDrawer
+                overflowDrawer: action.displayAsDrawer,
             };
 
         case SET_OVERFLOW_MENU_VISIBLE:
             return {
                 ...state,
-                overflowMenuVisible: action.visible
+                overflowMenuVisible: action.visible,
             };
 
         case SET_TOOLBAR_BUTTONS:
             return {
                 ...state,
-                toolbarButtons: action.toolbarButtons
+                toolbarButtons: action.toolbarButtons,
             };
         case SET_BUTTONS_WITH_NOTIFY_CLICK:
             return {
                 ...state,
-                buttonsWithNotifyClick: action.buttonsWithNotifyClick
+                buttonsWithNotifyClick: action.buttonsWithNotifyClick,
             };
 
         case SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS:
             return {
                 ...state,
-                mainToolbarButtonsThresholds: action.mainToolbarButtonsThresholds
+                mainToolbarButtonsThresholds: action.mainToolbarButtonsThresholds,
             };
         case SET_TOOLBAR_HOVERED:
             return {
                 ...state,
-                hovered: action.hovered
+                hovered: action.hovered,
             };
 
         case SET_TOOLBOX_ENABLED:
             return {
                 ...state,
-                enabled: action.enabled
+                enabled: action.enabled,
             };
 
         case SET_TOOLBOX_TIMEOUT:
             return {
                 ...state,
-                timeoutID: action.timeoutID
+                timeoutID: action.timeoutID,
             };
 
         case SET_TOOLBOX_SHIFT_UP:
             return {
                 ...state,
-                shiftUp: action.shiftUp
+                shiftUp: action.shiftUp,
             };
 
         case SET_TOOLBOX_VISIBLE:
-            return set(state, 'visible', action.visible);
+            return set(state, "visible", action.visible);
 
         case SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK:
             return {
                 ...state,
-                participantMenuButtonsWithNotifyClick: action.participantMenuButtonsWithNotifyClick
+                participantMenuButtonsWithNotifyClick: action.participantMenuButtonsWithNotifyClick,
             };
 
         case TOGGLE_TOOLBOX_VISIBLE:
-            return set(state, 'visible', !state.visible);
-        }
+            return set(state, "visible", !state.visible);
 
-        return state;
-    });
+        case SET_LEAVE_CLASSROOM:
+            console.log("SET_LEAVE_CLASSROOM reducer called with:", action.leaveClassroom);
+            return {
+                ...state,
+                isLeaveClassroom: action.leaveClassroom,
+            };
+    }
+
+    return state;
+});

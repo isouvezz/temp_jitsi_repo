@@ -1,26 +1,22 @@
-import { throttle } from 'lodash-es';
+import { throttle } from "lodash-es";
 
-import { IStore } from '../app/types';
-import { IConfig } from '../base/config/configType';
-import { NOTIFICATIONS_ENABLED } from '../base/flags/constants';
-import { getFeatureFlag } from '../base/flags/functions';
-import { getParticipantCount } from '../base/participants/functions';
+import { IStore } from "../app/types";
+import { IConfig } from "../base/config/configType";
+import { NOTIFICATIONS_ENABLED } from "../base/flags/constants";
+import { getFeatureFlag } from "../base/flags/functions";
+import { getParticipantCount } from "../base/participants/functions";
+import { isLeaveClassroom } from "../toolbox/functions.web";
 
-import {
-    CLEAR_NOTIFICATIONS,
-    HIDE_NOTIFICATION,
-    SET_NOTIFICATIONS_ENABLED,
-    SHOW_NOTIFICATION
-} from './actionTypes';
+import { CLEAR_NOTIFICATIONS, HIDE_NOTIFICATION, SET_NOTIFICATIONS_ENABLED, SHOW_NOTIFICATION } from "./actionTypes";
 import {
     NOTIFICATION_ICON,
     NOTIFICATION_TIMEOUT,
     NOTIFICATION_TIMEOUT_TYPE,
     NOTIFICATION_TYPE,
     SILENT_JOIN_THRESHOLD,
-    SILENT_LEFT_THRESHOLD
-} from './constants';
-import { INotificationProps } from './types';
+    SILENT_LEFT_THRESHOLD,
+} from "./constants";
+import { INotificationProps } from "./types";
 
 /**
  * Function that returns notification timeout value based on notification timeout type.
@@ -29,7 +25,7 @@ import { INotificationProps } from './types';
  * @param {Object} notificationTimeouts - Config notification timeouts.
  * @returns {number}
  */
-function getNotificationTimeout(type?: string, notificationTimeouts?: IConfig['notificationTimeouts']) {
+function getNotificationTimeout(type?: string, notificationTimeouts?: IConfig["notificationTimeouts"]) {
     if (type === NOTIFICATION_TIMEOUT_TYPE.SHORT) {
         return notificationTimeouts?.short ?? NOTIFICATION_TIMEOUT.SHORT;
     } else if (type === NOTIFICATION_TIMEOUT_TYPE.MEDIUM) {
@@ -52,7 +48,7 @@ function getNotificationTimeout(type?: string, notificationTimeouts?: IConfig['n
  */
 export function clearNotifications() {
     return {
-        type: CLEAR_NOTIFICATIONS
+        type: CLEAR_NOTIFICATIONS,
     };
 }
 
@@ -69,7 +65,7 @@ export function clearNotifications() {
 export function hideNotification(uid: string) {
     return {
         type: HIDE_NOTIFICATION,
-        uid
+        uid,
     };
 }
 
@@ -85,7 +81,7 @@ export function hideNotification(uid: string) {
 export function setNotificationsEnabled(enabled: boolean) {
     return {
         type: SET_NOTIFICATIONS_ENABLED,
-        enabled
+        enabled,
     };
 }
 
@@ -97,10 +93,13 @@ export function setNotificationsEnabled(enabled: boolean) {
  * @returns {Object}
  */
 export function showErrorNotification(props: INotificationProps, type = NOTIFICATION_TIMEOUT_TYPE.STICKY) {
-    return showNotification({
-        ...props,
-        appearance: NOTIFICATION_TYPE.ERROR
-    }, type);
+    return showNotification(
+        {
+            ...props,
+            appearance: NOTIFICATION_TYPE.ERROR,
+        },
+        type
+    );
 }
 
 /**
@@ -111,10 +110,13 @@ export function showErrorNotification(props: INotificationProps, type = NOTIFICA
  * @returns {Object}
  */
 export function showSuccessNotification(props: INotificationProps, type?: string) {
-    return showNotification({
-        ...props,
-        appearance: NOTIFICATION_TYPE.SUCCESS
-    }, type);
+    return showNotification(
+        {
+            ...props,
+            appearance: NOTIFICATION_TYPE.SUCCESS,
+        },
+        type
+    );
 }
 
 /**
@@ -125,20 +127,18 @@ export function showSuccessNotification(props: INotificationProps, type?: string
  * @returns {Function}
  */
 export function showNotification(props: INotificationProps = {}, type?: string) {
-    return function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
-        const { disabledNotifications = [], notifications, notificationTimeouts } = getState()['features/base/config'];
+    return function (dispatch: IStore["dispatch"], getState: IStore["getState"]) {
+        const { disabledNotifications = [], notifications, notificationTimeouts } = getState()["features/base/config"];
         const enabledFlag = getFeatureFlag(getState(), NOTIFICATIONS_ENABLED, true);
 
         const { descriptionKey, titleKey } = props;
 
-        const shouldDisplay = enabledFlag
-            && !(disabledNotifications.includes(descriptionKey ?? '')
-                || disabledNotifications.includes(titleKey ?? ''))
-            && (!notifications
-                || notifications.includes(descriptionKey ?? '')
-                || notifications.includes(titleKey ?? ''));
+        const shouldDisplay =
+            enabledFlag &&
+            !(disabledNotifications.includes(descriptionKey ?? "") || disabledNotifications.includes(titleKey ?? "")) &&
+            (!notifications || notifications.includes(descriptionKey ?? "") || notifications.includes(titleKey ?? ""));
 
-        if (typeof APP !== 'undefined') {
+        if (typeof APP !== "undefined") {
             APP.API.notifyNotificationTriggered(titleKey, descriptionKey);
         }
 
@@ -147,7 +147,7 @@ export function showNotification(props: INotificationProps = {}, type?: string) 
                 type: SHOW_NOTIFICATION,
                 props,
                 timeout: getNotificationTimeout(type, notificationTimeouts),
-                uid: props.uid || Date.now().toString()
+                uid: props.uid || Date.now().toString(),
             });
         }
     };
@@ -161,11 +161,13 @@ export function showNotification(props: INotificationProps = {}, type?: string) 
  * @returns {Object}
  */
 export function showWarningNotification(props: INotificationProps, type?: string) {
-
-    return showNotification({
-        ...props,
-        appearance: NOTIFICATION_TYPE.WARNING
-    }, type);
+    return showNotification(
+        {
+            ...props,
+            appearance: NOTIFICATION_TYPE.WARNING,
+        },
+        type
+    );
 }
 
 /**
@@ -176,13 +178,16 @@ export function showWarningNotification(props: INotificationProps, type?: string
  * @returns {Object}
  */
 export function showMessageNotification(props: INotificationProps, type?: string) {
-    return showNotification({
-        ...props,
-        concatText: true,
-        titleKey: 'notify.chatMessages',
-        appearance: NOTIFICATION_TYPE.NORMAL,
-        icon: NOTIFICATION_ICON.MESSAGE
-    }, type);
+    return showNotification(
+        {
+            ...props,
+            concatText: true,
+            titleKey: "notify.chatMessages",
+            appearance: NOTIFICATION_TYPE.NORMAL,
+            icon: NOTIFICATION_ICON.MESSAGE,
+        },
+        type
+    );
 }
 
 /**
@@ -202,52 +207,54 @@ let joinedParticipantsNames: string[] = [];
  * @private
  * @type {Function}
  */
-const _throttledNotifyParticipantConnected = throttle((dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-    const participantCount = getParticipantCount(getState());
+const _throttledNotifyParticipantConnected = throttle(
+    (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
+        const participantCount = getParticipantCount(getState());
 
-    // Skip join notifications altogether for large meetings.
-    if (participantCount > SILENT_JOIN_THRESHOLD) {
+        // Skip join notifications altogether for large meetings.
+        if (participantCount > SILENT_JOIN_THRESHOLD) {
+            joinedParticipantsNames = [];
+
+            return;
+        }
+
+        const joinedParticipantsCount = joinedParticipantsNames.length;
+
+        let notificationProps;
+
+        if (joinedParticipantsCount >= 3) {
+            notificationProps = {
+                titleArguments: {
+                    name: joinedParticipantsNames[0],
+                },
+                titleKey: "notify.connectedThreePlusMembers",
+            };
+        } else if (joinedParticipantsCount === 2) {
+            notificationProps = {
+                titleArguments: {
+                    first: joinedParticipantsNames[0],
+                    second: joinedParticipantsNames[1],
+                },
+                titleKey: "notify.connectedTwoMembers",
+            };
+        } else if (joinedParticipantsCount) {
+            notificationProps = {
+                titleArguments: {
+                    name: joinedParticipantsNames[0],
+                },
+                titleKey: "notify.connectedOneMember",
+            };
+        }
+
+        if (notificationProps) {
+            dispatch(showNotification(notificationProps, NOTIFICATION_TIMEOUT_TYPE.SHORT));
+        }
+
         joinedParticipantsNames = [];
-
-        return;
-    }
-
-    const joinedParticipantsCount = joinedParticipantsNames.length;
-
-    let notificationProps;
-
-    if (joinedParticipantsCount >= 3) {
-        notificationProps = {
-            titleArguments: {
-                name: joinedParticipantsNames[0]
-            },
-            titleKey: 'notify.connectedThreePlusMembers'
-        };
-    } else if (joinedParticipantsCount === 2) {
-        notificationProps = {
-            titleArguments: {
-                first: joinedParticipantsNames[0],
-                second: joinedParticipantsNames[1]
-            },
-            titleKey: 'notify.connectedTwoMembers'
-        };
-    } else if (joinedParticipantsCount) {
-        notificationProps = {
-            titleArguments: {
-                name: joinedParticipantsNames[0]
-            },
-            titleKey: 'notify.connectedOneMember'
-        };
-    }
-
-    if (notificationProps) {
-        dispatch(
-            showNotification(notificationProps, NOTIFICATION_TIMEOUT_TYPE.SHORT));
-    }
-
-    joinedParticipantsNames = [];
-
-}, 2000, { leading: false });
+    },
+    2000,
+    { leading: false }
+);
 
 /**
  * An array of names of participants that have left the conference. The array
@@ -266,52 +273,55 @@ let leftParticipantsNames: string[] = [];
  * @private
  * @type {Function}
  */
-const _throttledNotifyParticipantLeft = throttle((dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-    const participantCount = getParticipantCount(getState());
+const _throttledNotifyParticipantLeft = throttle(
+    (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
+        const participantCount = getParticipantCount(getState());
+        const leaveClassroomState = isLeaveClassroom(getState());
 
-    // Skip left notifications altogether for large meetings.
-    if (participantCount > SILENT_LEFT_THRESHOLD) {
+        // Skip left notifications altogether for large meetings or when leaving classroom.
+        if (participantCount > SILENT_LEFT_THRESHOLD || leaveClassroomState) {
+            leftParticipantsNames = [];
+
+            return;
+        }
+
+        const leftParticipantsCount = leftParticipantsNames.length;
+
+        let notificationProps;
+
+        if (leftParticipantsCount >= 3) {
+            notificationProps = {
+                titleArguments: {
+                    name: leftParticipantsNames[0],
+                },
+                titleKey: "notify.leftThreePlusMembers",
+            };
+        } else if (leftParticipantsCount === 2) {
+            notificationProps = {
+                titleArguments: {
+                    first: leftParticipantsNames[0],
+                    second: leftParticipantsNames[1],
+                },
+                titleKey: "notify.leftTwoMembers",
+            };
+        } else if (leftParticipantsCount) {
+            notificationProps = {
+                titleArguments: {
+                    name: leftParticipantsNames[0],
+                },
+                titleKey: "notify.leftOneMember",
+            };
+        }
+
+        if (notificationProps) {
+            dispatch(showNotification(notificationProps, NOTIFICATION_TIMEOUT_TYPE.SHORT));
+        }
+
         leftParticipantsNames = [];
-
-        return;
-    }
-
-    const leftParticipantsCount = leftParticipantsNames.length;
-
-    let notificationProps;
-
-    if (leftParticipantsCount >= 3) {
-        notificationProps = {
-            titleArguments: {
-                name: leftParticipantsNames[0]
-            },
-            titleKey: 'notify.leftThreePlusMembers'
-        };
-    } else if (leftParticipantsCount === 2) {
-        notificationProps = {
-            titleArguments: {
-                first: leftParticipantsNames[0],
-                second: leftParticipantsNames[1]
-            },
-            titleKey: 'notify.leftTwoMembers'
-        };
-    } else if (leftParticipantsCount) {
-        notificationProps = {
-            titleArguments: {
-                name: leftParticipantsNames[0]
-            },
-            titleKey: 'notify.leftOneMember'
-        };
-    }
-
-    if (notificationProps) {
-        dispatch(
-            showNotification(notificationProps, NOTIFICATION_TIMEOUT_TYPE.SHORT));
-    }
-
-    leftParticipantsNames = [];
-
-}, 2000, { leading: false });
+    },
+    2000,
+    { leading: false }
+);
 
 /**
  * Queues the display of a notification of a participant having connected to
@@ -324,7 +334,7 @@ const _throttledNotifyParticipantLeft = throttle((dispatch: IStore['dispatch'], 
 export function showParticipantJoinedNotification(displayName: string) {
     joinedParticipantsNames.push(displayName);
 
-    return (dispatch: IStore['dispatch'], getState: IStore['getState']) =>
+    return (dispatch: IStore["dispatch"], getState: IStore["getState"]) =>
         _throttledNotifyParticipantConnected(dispatch, getState);
 }
 
@@ -339,6 +349,6 @@ export function showParticipantJoinedNotification(displayName: string) {
 export function showParticipantLeftNotification(displayName: string) {
     leftParticipantsNames.push(displayName);
 
-    return (dispatch: IStore['dispatch'], getState: IStore['getState']) =>
+    return (dispatch: IStore["dispatch"], getState: IStore["getState"]) =>
         _throttledNotifyParticipantLeft(dispatch, getState);
 }

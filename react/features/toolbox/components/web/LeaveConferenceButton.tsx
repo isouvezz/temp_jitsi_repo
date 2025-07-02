@@ -18,6 +18,7 @@ import { openLeaveReasonDialog } from "../../../conference/actions.web";
 
 import { HangupContextMenuItem } from "./HangupContextMenuItem";
 import LeaveConferenceDialog from "./LeaveConferenceDialog";
+import { setLeaveClassroom } from "../../actions.web";
 
 /**
  * The type of the React {@code Component} props of {@link LeaveConferenceButton}.
@@ -54,6 +55,7 @@ export const LeaveConferenceButton = (props: IProps) => {
         }).length + (isModerator ? 1 : 0);
 
     const onLeaveConference = useCallback(() => {
+        dispatch(setLeaveClassroom(true));
         if (isModerator && moderatorCount === 1) {
             dispatch(openDialog(LeaveConferenceDialog));
         } else {
