@@ -1,22 +1,22 @@
-import { IStore } from '../app/types';
-import { getMeetingRegion, getRecordingSharingUrl } from '../base/config/functions';
-import { MEET_FEATURES } from '../base/jwt/constants';
-import { isJwtFeatureEnabled } from '../base/jwt/functions';
-import JitsiMeetJS, { JitsiRecordingConstants } from '../base/lib-jitsi-meet';
-import { getLocalParticipant, getParticipantDisplayName } from '../base/participants/functions';
-import { BUTTON_TYPES } from '../base/ui/constants.any';
-import { copyText } from '../base/util/copyText';
-import { getVpaasTenant, isVpaasMeeting } from '../jaas/functions';
+import { IStore } from "../app/types";
+import { getMeetingRegion, getRecordingSharingUrl } from "../base/config/functions";
+import { MEET_FEATURES } from "../base/jwt/constants";
+import { isJwtFeatureEnabled } from "../base/jwt/functions";
+import JitsiMeetJS, { JitsiRecordingConstants } from "../base/lib-jitsi-meet";
+import { getLocalParticipant, getParticipantDisplayName } from "../base/participants/functions";
+import { BUTTON_TYPES } from "../base/ui/constants.any";
+import { copyText } from "../base/util/copyText";
+import { getVpaasTenant, isVpaasMeeting } from "../jaas/functions";
 import {
     hideNotification,
     showErrorNotification,
     showNotification,
-    showWarningNotification
-} from '../notifications/actions';
-import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TYPE } from '../notifications/constants';
-import { INotificationProps } from '../notifications/types';
-import { setRequestingSubtitles } from '../subtitles/actions.any';
-import { isRecorderTranscriptionsRunning } from '../transcribing/functions';
+    showWarningNotification,
+} from "../notifications/actions";
+import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TYPE } from "../notifications/constants";
+import { INotificationProps } from "../notifications/types";
+import { setRequestingSubtitles } from "../subtitles/actions.any";
+import { isRecorderTranscriptionsRunning } from "../transcribing/functions";
 
 import {
     CLEAR_RECORDING_SESSIONS,
@@ -27,12 +27,12 @@ import {
     SET_START_RECORDING_NOTIFICATION_SHOWN,
     SET_STREAM_KEY,
     START_LOCAL_RECORDING,
-    STOP_LOCAL_RECORDING
-} from './actionTypes';
-import {
-    RECORDING_METADATA_ID,
-    START_RECORDING_NOTIFICATION_ID
-} from './constants';
+    STOP_LOCAL_RECORDING,
+    SET_AUTO_RECORDING_STARTED_BY_ME,
+    SET_RECORDING_START_TIME,
+    START_AUTO_RECORDING_CHECK_INTERVAL,
+} from "./actionTypes";
+import { RECORDING_METADATA_ID, START_RECORDING_NOTIFICATION_ID } from "./constants";
 import {
     getRecordButtonProps,
     getRecordingLink,
@@ -41,10 +41,9 @@ import {
     isRecordingSharingEnabled,
     isSavingRecordingOnDropbox,
     sendMeetingHighlight,
-    shouldAutoTranscribeOnRecord
-} from './functions';
-import logger from './logger';
-
+    shouldAutoTranscribeOnRecord,
+} from "./functions";
+import logger from "./logger";
 
 /**
  * Clears the data of every recording sessions.
@@ -55,10 +54,9 @@ import logger from './logger';
  */
 export function clearRecordingSessions() {
     return {
-        type: CLEAR_RECORDING_SESSIONS
+        type: CLEAR_RECORDING_SESSIONS,
     };
 }
-
 
 /**
  * Marks the start recording notification as shown.
@@ -69,7 +67,7 @@ export function clearRecordingSessions() {
  */
 export function setStartRecordingNotificationShown() {
     return {
-        type: SET_START_RECORDING_NOTIFICATION_SHOWN
+        type: SET_START_RECORDING_NOTIFICATION_SHOWN,
     };
 }
 
@@ -84,7 +82,7 @@ export function setStartRecordingNotificationShown() {
 export function setHighlightMomentButtonState(disabled: boolean) {
     return {
         type: SET_MEETING_HIGHLIGHT_BUTTON_STATE,
-        disabled
+        disabled,
     };
 }
 
@@ -97,15 +95,13 @@ export function setHighlightMomentButtonState(disabled: boolean) {
  * @returns {Function}
  */
 export function hidePendingRecordingNotification(streamType: string) {
-    return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        const { pendingNotificationUids } = getState()['features/recording'];
+    return (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
+        const { pendingNotificationUids } = getState()["features/recording"];
         const pendingNotificationUid = pendingNotificationUids[streamType];
 
         if (pendingNotificationUid) {
             dispatch(hideNotification(pendingNotificationUid));
-            dispatch(
-                _setPendingRecordingNotificationUid(
-                    undefined, streamType));
+            dispatch(_setPendingRecordingNotificationUid(undefined, streamType));
         }
     };
 }
@@ -122,7 +118,7 @@ export function hidePendingRecordingNotification(streamType: string) {
 export function setLiveStreamKey(streamKey: string) {
     return {
         type: SET_STREAM_KEY,
-        streamKey
+        streamKey,
     };
 }
 
@@ -135,19 +131,25 @@ export function setLiveStreamKey(streamKey: string) {
  * @returns {Function}
  */
 export function showPendingRecordingNotification(streamType: string) {
-    return (dispatch: IStore['dispatch']) => {
-        const isLiveStreaming
-            = streamType === JitsiMeetJS.constants.recording.mode.STREAM;
-        const dialogProps = isLiveStreaming ? {
-            descriptionKey: 'liveStreaming.pending',
-            titleKey: 'dialog.liveStreaming'
-        } : {
-            descriptionKey: 'recording.pending',
-            titleKey: 'dialog.recording'
-        };
-        const notification = dispatch(showNotification({
-            ...dialogProps
-        }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
+    return (dispatch: IStore["dispatch"]) => {
+        const isLiveStreaming = streamType === JitsiMeetJS.constants.recording.mode.STREAM;
+        const dialogProps = isLiveStreaming
+            ? {
+                  descriptionKey: "liveStreaming.pending",
+                  titleKey: "dialog.liveStreaming",
+              }
+            : {
+                  descriptionKey: "recording.pending",
+                  titleKey: "dialog.recording",
+              };
+        const notification = dispatch(
+            showNotification(
+                {
+                    ...dialogProps,
+                },
+                NOTIFICATION_TIMEOUT_TYPE.MEDIUM
+            )
+        );
 
         if (notification) {
             dispatch(_setPendingRecordingNotificationUid(notification.uid, streamType));
@@ -163,16 +165,21 @@ export function showPendingRecordingNotification(streamType: string) {
  * @returns {Function}
  */
 export function highlightMeetingMoment() {
-    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+    return async (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         dispatch(setHighlightMomentButtonState(true));
 
         const success = await sendMeetingHighlight(getState());
 
         if (success) {
-            dispatch(showNotification({
-                descriptionKey: 'recording.highlightMomentSucessDescription',
-                titleKey: 'recording.highlightMomentSuccess'
-            }, NOTIFICATION_TIMEOUT_TYPE.SHORT));
+            dispatch(
+                showNotification(
+                    {
+                        descriptionKey: "recording.highlightMomentSucessDescription",
+                        titleKey: "recording.highlightMomentSuccess",
+                    },
+                    NOTIFICATION_TIMEOUT_TYPE.SHORT
+                )
+            );
         }
 
         dispatch(setHighlightMomentButtonState(false));
@@ -209,18 +216,19 @@ export function showRecordingWarning(props: Object) {
  * @returns {showNotification}
  */
 export function showStoppedRecordingNotification(streamType: string, participantName?: string) {
-    const isLiveStreaming
-        = streamType === JitsiMeetJS.constants.recording.mode.STREAM;
+    const isLiveStreaming = streamType === JitsiMeetJS.constants.recording.mode.STREAM;
     const descriptionArguments = { name: participantName };
-    const dialogProps = isLiveStreaming ? {
-        descriptionKey: participantName ? 'liveStreaming.offBy' : 'liveStreaming.off',
-        descriptionArguments,
-        titleKey: 'dialog.liveStreaming'
-    } : {
-        descriptionKey: participantName ? 'recording.offBy' : 'recording.off',
-        descriptionArguments,
-        titleKey: 'dialog.recording'
-    };
+    const dialogProps = isLiveStreaming
+        ? {
+              descriptionKey: participantName ? "liveStreaming.offBy" : "liveStreaming.off",
+              descriptionArguments,
+              titleKey: "dialog.liveStreaming",
+          }
+        : {
+              descriptionKey: participantName ? "recording.offBy" : "recording.off",
+              descriptionArguments,
+              titleKey: "dialog.recording",
+          };
 
     return showNotification(dialogProps, NOTIFICATION_TIMEOUT_TYPE.SHORT);
 }
@@ -235,10 +243,11 @@ export function showStoppedRecordingNotification(streamType: string, participant
  * @returns {Function}
  */
 export function showStartedRecordingNotification(
-        mode: string,
-        initiator: { getId: Function; } | string,
-        sessionId: string) {
-    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+    mode: string,
+    initiator: { getId: Function } | string,
+    sessionId: string
+) {
+    return async (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         const state = getState();
         const initiatorId = getResourceId(initiator);
         const participantName = getParticipantDisplayName(state, initiatorId);
@@ -247,31 +256,33 @@ export function showStartedRecordingNotification(
             type: string;
         } = {
             dialogProps: {
-                descriptionKey: participantName ? 'liveStreaming.onBy' : 'liveStreaming.on',
+                descriptionKey: participantName ? "liveStreaming.onBy" : "liveStreaming.on",
                 descriptionArguments: { name: participantName },
-                titleKey: 'dialog.liveStreaming'
+                titleKey: "dialog.liveStreaming",
             },
-            type: NOTIFICATION_TIMEOUT_TYPE.SHORT
+            type: NOTIFICATION_TIMEOUT_TYPE.SHORT,
         };
 
         if (mode !== JitsiMeetJS.constants.recording.mode.STREAM) {
             const recordingSharingUrl = getRecordingSharingUrl(state);
             const iAmRecordingInitiator = getLocalParticipant(state)?.id === initiatorId;
-            const { showRecordingLink } = state['features/base/config'].recordings || {};
+            const { showRecordingLink } = state["features/base/config"].recordings || {};
 
             notifyProps.dialogProps = {
                 customActionHandler: undefined,
                 customActionNameKey: undefined,
-                descriptionKey: participantName ? 'recording.onBy' : 'recording.on',
+                descriptionKey: participantName ? "recording.onBy" : "recording.on",
                 descriptionArguments: { name: participantName },
-                titleKey: 'dialog.recording'
+                titleKey: "dialog.recording",
             };
 
             // fetch the recording link from the server for recording initiators in jaas meetings
-            if (recordingSharingUrl
-                && isVpaasMeeting(state)
-                && iAmRecordingInitiator
-                && !isSavingRecordingOnDropbox(state)) {
+            if (
+                recordingSharingUrl &&
+                isVpaasMeeting(state) &&
+                iAmRecordingInitiator &&
+                !isSavingRecordingOnDropbox(state)
+            ) {
                 const region = getMeetingRegion(state);
                 const tenant = getVpaasTenant(state);
 
@@ -279,37 +290,33 @@ export function showStartedRecordingNotification(
                     const response = await getRecordingLink(recordingSharingUrl, sessionId, region, tenant);
                     const { url: link, urlExpirationTimeMillis: ttl } = response;
 
-                    if (typeof APP === 'object') {
+                    if (typeof APP === "object") {
                         APP.API.notifyRecordingLinkAvailable(link, ttl);
                     }
 
                     // add the option to copy recording link
                     if (showRecordingLink) {
-                        const actions = [
-                            ...notifyProps.dialogProps.customActionNameKey ?? [],
-                            'recording.copyLink'
-                        ];
-                        const handlers = [
-                            ...notifyProps.dialogProps.customActionHandler ?? [],
-                            () => copyText(link)
-                        ];
+                        const actions = [...(notifyProps.dialogProps.customActionNameKey ?? []), "recording.copyLink"];
+                        const handlers = [...(notifyProps.dialogProps.customActionHandler ?? []), () => copyText(link)];
 
                         notifyProps.dialogProps = {
                             ...notifyProps.dialogProps,
                             customActionNameKey: actions,
                             customActionHandler: handlers,
-                            titleKey: 'recording.on',
-                            descriptionKey: 'recording.linkGenerated'
+                            titleKey: "recording.on",
+                            descriptionKey: "recording.linkGenerated",
                         };
 
                         notifyProps.type = NOTIFICATION_TIMEOUT_TYPE.STICKY;
                     }
                 } catch (err) {
-                    dispatch(showErrorNotification({
-                        titleKey: 'recording.errorFetchingLink'
-                    }));
+                    dispatch(
+                        showErrorNotification({
+                            titleKey: "recording.errorFetchingLink",
+                        })
+                    );
 
-                    return logger.error('Could not fetch recording link', err);
+                    return logger.error("Could not fetch recording link", err);
                 }
             }
         }
@@ -330,10 +337,7 @@ export function showStartedRecordingNotification(
  */
 export function updateRecordingSessionData(session: any) {
     const status = session.getStatus();
-    const timestamp
-        = status === JitsiRecordingConstants.status.ON
-            ? Date.now() / 1000
-            : undefined;
+    const timestamp = status === JitsiRecordingConstants.status.ON ? Date.now() / 1000 : undefined;
 
     return {
         type: RECORDING_SESSION_UPDATED,
@@ -345,8 +349,8 @@ export function updateRecordingSessionData(session: any) {
             mode: session.getMode(),
             status,
             terminator: session.getTerminator(),
-            timestamp
-        }
+            timestamp,
+        },
     };
 }
 
@@ -359,7 +363,7 @@ export function updateRecordingSessionData(session: any) {
 export function setSelectedRecordingService(selectedRecordingService: string) {
     return {
         type: SET_SELECTED_RECORDING_SERVICE,
-        selectedRecordingService
+        selectedRecordingService,
     };
 }
 
@@ -381,7 +385,7 @@ function _setPendingRecordingNotificationUid(uid: string | undefined, streamType
     return {
         type: SET_PENDING_RECORDING_NOTIFICATION_UID,
         streamType,
-        uid
+        uid,
     };
 }
 
@@ -394,7 +398,7 @@ function _setPendingRecordingNotificationUid(uid: string | undefined, streamType
 export function startLocalVideoRecording(onlySelf?: boolean) {
     return {
         type: START_LOCAL_RECORDING,
-        onlySelf
+        onlySelf,
     };
 }
 
@@ -405,7 +409,7 @@ export function startLocalVideoRecording(onlySelf?: boolean) {
  */
 export function stopLocalVideoRecording() {
     return {
-        type: STOP_LOCAL_RECORDING
+        type: STOP_LOCAL_RECORDING,
     };
 }
 
@@ -416,63 +420,117 @@ export function stopLocalVideoRecording() {
  * @returns {void}
  */
 export function showStartRecordingNotificationWithCallback(openRecordingDialog: Function) {
-    return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+    return (dispatch: IStore["dispatch"], getState: IStore["getState"]) => {
         let state = getState();
-        const { recordings } = state['features/base/config'];
+        const { recordings } = state["features/base/config"];
         const { suggestRecording } = recordings || {};
         const recordButtonProps = getRecordButtonProps(state);
         const isAlreadyRecording = isRecordingRunning(state) || isRecorderTranscriptionsRunning(state);
-        const wasNotificationShown = state['features/recording'].wasStartRecordingSuggested;
+        const wasNotificationShown = state["features/recording"].wasStartRecordingSuggested;
 
-        if (!suggestRecording
-            || isAlreadyRecording
-            || !recordButtonProps.visible
-            || recordButtonProps.disabled
-            || wasNotificationShown) {
+        if (
+            !suggestRecording ||
+            isAlreadyRecording ||
+            !recordButtonProps.visible ||
+            recordButtonProps.disabled ||
+            wasNotificationShown
+        ) {
             return;
         }
 
         dispatch(setStartRecordingNotificationShown());
-        dispatch(showNotification({
-            titleKey: 'notify.suggestRecordingTitle',
-            descriptionKey: 'notify.suggestRecordingDescription',
-            uid: START_RECORDING_NOTIFICATION_ID,
-            customActionType: [ BUTTON_TYPES.PRIMARY ],
-            customActionNameKey: [ 'notify.suggestRecordingAction' ],
-            customActionHandler: [ () => {
-                state = getState();
-                const { recordingService } = state['features/base/config'];
-                const canBypassDialog = recordingService?.enabled
-                    && isJwtFeatureEnabled(state, MEET_FEATURES.RECORDING, false);
+        dispatch(
+            showNotification(
+                {
+                    titleKey: "notify.suggestRecordingTitle",
+                    descriptionKey: "notify.suggestRecordingDescription",
+                    uid: START_RECORDING_NOTIFICATION_ID,
+                    customActionType: [BUTTON_TYPES.PRIMARY],
+                    customActionNameKey: ["notify.suggestRecordingAction"],
+                    customActionHandler: [
+                        () => {
+                            state = getState();
+                            const { recordingService } = state["features/base/config"];
+                            const canBypassDialog =
+                                recordingService?.enabled && isJwtFeatureEnabled(state, MEET_FEATURES.RECORDING, false);
 
-                if (canBypassDialog) {
-                    const options = {
-                        'file_recording_metadata': {
-                            share: isRecordingSharingEnabled(state)
-                        }
-                    };
+                            if (canBypassDialog) {
+                                const options = {
+                                    file_recording_metadata: {
+                                        share: isRecordingSharingEnabled(state),
+                                    },
+                                };
 
-                    const { conference } = state['features/base/conference'];
-                    const autoTranscribeOnRecord = shouldAutoTranscribeOnRecord(state);
+                                const { conference } = state["features/base/conference"];
+                                const autoTranscribeOnRecord = shouldAutoTranscribeOnRecord(state);
 
-                    conference?.startRecording({
-                        mode: JitsiRecordingConstants.mode.FILE,
-                        appData: JSON.stringify(options)
-                    });
+                                conference?.startRecording({
+                                    mode: JitsiRecordingConstants.mode.FILE,
+                                    appData: JSON.stringify(options),
+                                });
 
-                    if (autoTranscribeOnRecord) {
-                        conference?.getMetadataHandler().setMetadata(RECORDING_METADATA_ID, {
-                            isTranscribingEnabled: true
-                        });
-                        dispatch(setRequestingSubtitles(true, false, null));
-                    }
-                } else {
-                    openRecordingDialog();
-                }
+                                if (autoTranscribeOnRecord) {
+                                    conference?.getMetadataHandler().setMetadata(RECORDING_METADATA_ID, {
+                                        isTranscribingEnabled: true,
+                                    });
+                                    dispatch(setRequestingSubtitles(true, false, null));
+                                }
+                            } else {
+                                openRecordingDialog();
+                            }
 
-                dispatch(hideNotification(START_RECORDING_NOTIFICATION_ID));
-            } ],
-            appearance: NOTIFICATION_TYPE.NORMAL
-        }, NOTIFICATION_TIMEOUT_TYPE.EXTRA_LONG));
+                            dispatch(hideNotification(START_RECORDING_NOTIFICATION_ID));
+                        },
+                    ],
+                    appearance: NOTIFICATION_TYPE.NORMAL,
+                },
+                NOTIFICATION_TIMEOUT_TYPE.EXTRA_LONG
+            )
+        );
+    };
+}
+
+/**
+ * Sets the auto recording started by me flag.
+ *
+ * @param {boolean} startedByMe - Whether the recording was started by me.
+ * @returns {{
+ *     type: SET_AUTO_RECORDING_STARTED_BY_ME,
+ *     startedByMe: boolean
+ * }}
+ */
+export function setAutoRecordingStartedByMe(startedByMe: boolean) {
+    return {
+        type: SET_AUTO_RECORDING_STARTED_BY_ME,
+        startedByMe,
+    };
+}
+
+/**
+ * Sets the recording start time for auto recording management.
+ *
+ * @param {number} startTime - The recording start timestamp.
+ * @returns {{
+ *     type: SET_RECORDING_START_TIME,
+ *     startTime: number
+ * }}
+ */
+export function setRecordingStartTime(startTime: number) {
+    return {
+        type: SET_RECORDING_START_TIME,
+        startTime,
+    };
+}
+
+/**
+ * Starts auto recording check interval.
+ *
+ * @returns {{
+ *     type: START_AUTO_RECORDING_CHECK_INTERVAL
+ * }}
+ */
+export function startAutoRecordingCheckInterval() {
+    return {
+        type: START_AUTO_RECORDING_CHECK_INTERVAL,
     };
 }
