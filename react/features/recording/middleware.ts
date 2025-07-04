@@ -81,13 +81,13 @@ const AUTO_RECORDING_CONFIG = {
     // 녹화 재시작 간격 (분) - 체크 간격의 2배
     RESTART_INTERVAL_MINUTES: 20,
     // 재시작 여유 시간 (밀리초)
-    RESTART_BUFFER_MS: 30000, // 30초
+    RESTART_BUFFER_MS: 50000, // 500초
     // 재시작 대기 시간 (밀리초)
-    RESTART_DELAY_MS: 3000, // 3초
+    RESTART_DELAY_MS: 5000, // 5초
 };
 
 // 자동 녹화 체크 타이머
-let autoRecordingCheckInterval: number | null = null;
+let autoRecordingCheckInterval: ReturnType<typeof setInterval> | null = null;
 
 /**
  * 자동 녹화 체크 함수 - 30분마다 실행
@@ -128,8 +128,16 @@ function checkAutoRecording(dispatch: IStore["dispatch"], getState: IStore["getS
         const elapsedTime = Date.now() - recordingStartTime;
         const restartInterval = AUTO_RECORDING_CONFIG.RESTART_INTERVAL_MINUTES * 60 * 1000; // 분을 밀리초로 변환
 
-        // 재시작 간격의 배수인지 확인 (20분, 40분, 60분...)
-        if (elapsedTime > 0 && elapsedTime % restartInterval < AUTO_RECORDING_CONFIG.RESTART_BUFFER_MS) {
+        // 재시작 간격의 배수 근처인지 확인 (앞뒤 여유시간 포함)
+        const timeSinceLastRestart = elapsedTime % restartInterval;
+        const timeUntilNextRestart = restartInterval - timeSinceLastRestart;
+
+        // 재시작 간격의 배수 전후로 여유시간 허용
+        if (
+            elapsedTime > 0 &&
+            (timeSinceLastRestart < AUTO_RECORDING_CONFIG.RESTART_BUFFER_MS ||
+                timeUntilNextRestart < AUTO_RECORDING_CONFIG.RESTART_BUFFER_MS)
+        ) {
             // 설정된 여유 시간 내
             logger.info(
                 `Auto recording: Restarting cloud recording after ${AUTO_RECORDING_CONFIG.RESTART_INTERVAL_MINUTES} minutes`
